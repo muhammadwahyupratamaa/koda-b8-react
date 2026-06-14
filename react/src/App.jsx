@@ -9,14 +9,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Login />,
   },
-  // {
-  //   path: "/register",
-  //   element: <Register />,
-  // },
-  // {
-  //   path: "/forgot-password",
-  //   element: <ForgotPassword />,
-  // },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
 ]);
 
 function App() {

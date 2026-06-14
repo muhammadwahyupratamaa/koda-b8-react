@@ -1,17 +1,17 @@
 import AuthLayout from "../../components/auth/AuthLayout";
 import { Link } from "react-router-dom";
-import { Mail, Lock, SquareArrowRight } from "lucide-react";
+import { Mail, Lock, SquareArrowRight,Eye } from "lucide-react";
 
 function Login() {
   return (
-    <AuthLayout>
+    <AuthLayout bannerType="login">
       <form className="flex flex-col gap-7 mb-10">
         <section className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Masuk ke Akun</h1>
           <p className="text-xl">
-            Belum Punya Akun ?{" "}
-            <Link to="/Register" className="text-blue-600">
-              Daftar Gratis
+            Belum Punya Akun ? 
+            <Link to="/register" className="text-blue-600">
+               <span> Daftar Gratis</span>
             </Link>
           </p>
         </section>
@@ -63,14 +63,18 @@ function Login() {
               </div>
             </div>
 
-            <div className="flex w-full items-center bg-gray-100 gap-5 border-1 rounded-xl p-5">
-              <Lock className="w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="email@contoh.com"
-              />
+            <div className="flex w-full justify-between items-center bg-gray-100 gap-5 border-1 rounded-xl p-5">
+              <div className="flex gap-5">
+                <Lock className="w-5 h-5 text-gray-400" />
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Masukkan Kata sandi"
+                />
+              </div>
+
+              <Eye className="w-5 h-5 text-gray-400"  />
             </div>
           </div>
         </section>
@@ -97,9 +101,11 @@ function Login() {
         </div>
 
         <div>
-            <p className="text-center">
-                Dengan masuk, kamu menyetujui <span className="text-blue-500">Syarat & Ketentuan</span> dan <span className="text-blue-500">Kebijakan Privasi</span>  kami.
-            </p>
+          <p className="text-center">
+            Dengan masuk, kamu menyetujui{" "}
+            <span className="text-blue-500">Syarat & Ketentuan</span> dan{" "}
+            <span className="text-blue-500">Kebijakan Privasi</span> kami.
+          </p>
         </div>
       </footer>
     </AuthLayout>
