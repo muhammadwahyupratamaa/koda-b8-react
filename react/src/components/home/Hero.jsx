@@ -27,7 +27,7 @@ function Hero() {
               className="flex w-52 items-center gap-2 rounded-xl text-base bg-white px-6 py-4 font-semibold text-blue-600 transition hover:bg-gray-100"
             >
               Lihat Promo
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-5 w-5 " />
             </Link>
           </div>
         </div>
@@ -42,11 +42,11 @@ function Hero() {
       />
 
       <button className="absolute left-6 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white transition cursor-pointer hover:bg-white/30">
-        <ArrowLeft className="h-6 w-6" />
+        <ArrowLeft className="h-6 w-6 hidden lg:flex" />
       </button>
 
       <button className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white transition cursor-pointer hover:bg-white/30">
-        <ArrowRight className="h-6 w-6" />
+        <ArrowRight className="h-6 w-6 hidden lg:flex" />
       </button>
 
     
