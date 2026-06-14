@@ -4,15 +4,11 @@ function TopBar() {
   return (
     <header className="w-full bg-blue-600 text-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-        
         <div className="flex items-center gap-2 text-sm">
           <MapPin className="w-5 h-5" />
-          <p>
-            Kirim ke Jakarta Selatan
-          </p>
+          <p>Kirim ke Jakarta Selatan</p>
         </div>
 
-        
         <div className="flex items-center gap-6 text-sm">
           <div className="flex items-center gap-2">
             <Phone className="w-5 h-5" />
