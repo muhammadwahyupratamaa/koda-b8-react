@@ -7,7 +7,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import AppLayout from "./components/layout/AppLayout";
 
 import LandingPage from "./pages/main/LandingPage";
-import BrowserProducts from "./pages/main/BrowseProducts";
+import BrowseProducts from "./pages/main/BrowseProducts";
 import DetailPage from "./pages/main/DetailPage";
 import Cart from "./pages/main/Cart"
 
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       },
       {
         path: "products",
-        element: <BrowserProducts />,
+        element: <BrowseProducts />,
       },
       {
         path: "detail",

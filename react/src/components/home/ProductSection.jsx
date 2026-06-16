@@ -28,7 +28,7 @@ function ProductSection({ title, products }) {
               rating={product.rating}
               review={product.review}
               price={product.price}
-              oldPrice={product.oldPrice}
+              priceDisc={product.priceDisc}
             />
           ))}
         </section>

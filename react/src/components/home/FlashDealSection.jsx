@@ -45,7 +45,7 @@ function FlashDealSection({ title, products, isFlashDeal = false }) {
               rating={product.rating}
               review={product.review}
               price={product.price}
-              oldPrice={product.oldPrice}
+              priceDisc={product.priceDisc}
             />
           ))}
         </section>

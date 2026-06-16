@@ -18,7 +18,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 2,
@@ -28,7 +28,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 3,
@@ -38,7 +38,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 4,
@@ -48,7 +48,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
   ];
 
@@ -61,7 +61,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 2,
@@ -71,7 +71,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 3,
@@ -81,7 +81,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 4,
@@ -91,7 +91,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 5,
@@ -101,7 +101,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 6,
@@ -111,7 +111,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
     {
       id: 7,
@@ -121,7 +121,7 @@ function LandingPage() {
       rating: 4.8,
       review: 512,
       price: "Rp 450.000",
-      oldPrice: "Rp 650.000",
+      priceDisc: "Rp 650.000",
     },
   ];
 
