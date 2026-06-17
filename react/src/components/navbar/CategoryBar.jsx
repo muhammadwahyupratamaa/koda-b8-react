@@ -2,7 +2,7 @@ import { ChevronDown, Menu } from "lucide-react";
 
 function CategoryBar() {
   return (
-    <nav className="w-full border-b border-gray-200 bg-white pl-10">
+    <nav className="w-full border-b sticky top-27 left-0 z-50   border-gray-200 bg-white pl-10">
       <div className="mx-auto flex max-w-7xl items-center gap-5 px-4 py-3">
         <button
           type="button"

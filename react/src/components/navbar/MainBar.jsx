@@ -2,7 +2,7 @@ import { Bell, Heart, Search, ShoppingCart, User } from "lucide-react";
 
 function MainBar() {
   return (
-    <nav className="w-full border-b border-gray-200 bg-white">
+    <nav className="w-full border-b sticky top-9 left-0 z-50 border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-start gap-6 px-4 py-4">
         <div className="flex-shrink-0 flex gap-2 justify-center items-center">
           <div className="bg-blue-600 rounded-xl w-10 h-10 flex justify-center items-center">
