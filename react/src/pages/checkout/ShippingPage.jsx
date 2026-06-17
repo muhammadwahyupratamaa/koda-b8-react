@@ -14,7 +14,7 @@ function ShippingPage() {
             <p className="text-sm text-blue-600 mt-2">Pengiriman</p>
           </div>
 
-          <div className="w-32 h-[2px] bg-gray-300 mx-5"></div>
+          <div className="w-32 h-1 bg-gray-300 mx-5"></div>
 
           <div className="flex flex-col items-center">
             <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-medium">
@@ -24,7 +24,7 @@ function ShippingPage() {
             <p className="text-sm text-gray-400 mt-2">Pembayaran</p>
           </div>
 
-          <div className="w-32 h-[2px] bg-gray-300 mx-5"></div>
+          <div className="w-32 h-1 bg-gray-300 mx-5"></div>
 
           <div className="flex flex-col items-center">
             <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-medium">
