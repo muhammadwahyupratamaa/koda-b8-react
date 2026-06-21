@@ -20,6 +20,7 @@ function ShippingPage() {
     city: "Jakarta Barat",
     province: "DKI Jakarta",
     postalCode: "11530",
+    shippingMethod: "JNE Reguler",
   };
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">

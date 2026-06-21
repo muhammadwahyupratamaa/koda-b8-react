@@ -73,12 +73,17 @@ function checkout() {
 
   if (cart.length === 0) return null;
 
+  const shipping = JSON.parse(localStorage.getItem("shipping"));
+  const payment = localStorage.getItem("payment");
+
   const orders = getOrders();
 
   const order = {
     id: Date.now(),
     orderNumber: `BM${Date.now()}`,
     items: cart,
+    shipping,
+    payment,
     total: cart.reduce((total, item) => total + item.price * item.qty, 0),
     createdAt: new Date().toISOString(),
     status: "Diproses",
@@ -89,6 +94,8 @@ function checkout() {
   saveOrders(orders);
 
   clearCart();
+  localStorage.removeItem("shipping");
+  localStorage.removeItem("payment");
 
   return order;
 }

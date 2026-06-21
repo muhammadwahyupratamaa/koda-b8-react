@@ -48,7 +48,7 @@ function SuccessPage() {
             <FiTruck className="w-5 h-5 text-blue-600 mt-1" />
 
             <div>
-              <p className="font-medium">JNE Reguler</p>
+              <p className="font-medium">{order.shipping?.shippingMethod}</p>
 
               <p className="text-sm text-gray-400">
                 Estimasi tiba: 2-3 Juni 2026
@@ -63,7 +63,8 @@ function SuccessPage() {
               <p className="font-medium">Alamat Pengiriman</p>
 
               <p className="text-sm text-gray-400">
-                Jl. Kebon Jeruk No.15, Jakarta Barat, DKI Jakarta 11530
+                {order.shipping?.address}, {order.shipping?.city},
+                {order.shipping?.province} {order.shipping?.postalCode}
               </p>
             </div>
           </div>
