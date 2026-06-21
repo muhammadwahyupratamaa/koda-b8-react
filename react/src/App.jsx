@@ -19,10 +19,18 @@ import ShippingPage from "./pages/checkout/ShippingPage";
 import PaymentPage from "./pages/checkout/PaymentPage";
 import ConfirmationPage from "./pages/checkout/ConfirmationPage";
 import SuccessPage from "./pages/checkout/SuccessPage";
+
+// Profile Pages
 import MyOrderPage from "./pages/profile/MyOrderPage";
 import WishlistPage from "./pages/profile/WishlistPage";
 import AddressListPage from "./pages/profile/AddressListPage";
 import EditProfilePage from "./pages/profile/EditProfilePage";
+
+// Context
+import { AuthProvider } from "./context/AuthContext";
+
+// Components
+import ProtectedRoute from "./pages/auth/ProtectedRoute";
 
 const router = createBrowserRouter([
   // ================= AUTH =================
@@ -58,26 +66,46 @@ const router = createBrowserRouter([
       },
       {
         path: "cart",
-        element: <Cart />,
+        element: (
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "checkout",
         children: [
           {
             path: "shipping",
-            element: <ShippingPage />,
+            element: (
+              <ProtectedRoute>
+                <ShippingPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "payment",
-            element: <PaymentPage />,
+            element: (
+              <ProtectedRoute>
+                <PaymentPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "confirmation",
-            element: <ConfirmationPage />,
+            element: (
+              <ProtectedRoute>
+                <ConfirmationPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "success",
-            element: <SuccessPage />,
+            element: (
+              <ProtectedRoute>
+                <SuccessPage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -85,20 +113,36 @@ const router = createBrowserRouter([
         path: "profile",
         children: [
           {
-            path: "profileorder",
-            element: <MyOrderPage />,
+            path: "orders",
+            element: (
+              <ProtectedRoute>
+                <MyOrderPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "wishlist",
-            element: <WishlistPage />,
+            element: (
+              <ProtectedRoute>
+                <WishlistPage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: "address",
-            element: <AddressListPage />,
+            element: (
+              <ProtectedRoute>
+                <AddressListPage />
+              </ProtectedRoute>
+            ),
           },
           {
-            path: "editprofile",
-            element: <EditProfilePage />,
+            path: "edit",
+            element: (
+              <ProtectedRoute>
+                <EditProfilePage />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -107,7 +151,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 export default App;

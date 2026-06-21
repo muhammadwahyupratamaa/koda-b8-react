@@ -1,17 +1,47 @@
 import AuthLayout from "../../components/auth/AuthLayout";
-import { Link } from "react-router-dom";
-import { Mail, Lock, SquareArrowRight,Eye } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, SquareArrowRight, Eye } from "lucide-react";
+import authService from "../../services/authService";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import loginSchema from "../../validation/loginSchema";
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
+  const navigate = useNavigate();
+  const {login} = useAuth()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+    mode: "onBlur",
+  });
+
+  const onSubmit = (data) => {
+  try {
+    const user = authService.login(data);
+
+    login(user);
+
+    window.alert("Login berhasil!");
+
+    navigate("/");
+  } catch (error) {
+    window.alert(error.message);
+  }
+};
   return (
     <AuthLayout bannerType="login">
-      <form className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <section className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Masuk ke Akun</h1>
           <p className="text-xl">
-            Belum Punya Akun ? 
+            Belum Punya Akun ?
             <Link to="/register" className="text-blue-600">
-               <span> Daftar Gratis</span>
+              <span> Daftar Gratis</span>
             </Link>
           </p>
         </section>
@@ -39,15 +69,27 @@ function Login() {
         <section className="flex flex-col gap-5">
           <div className="flex flex-col gap-5">
             <p>Email</p>
-            <div className="flex w-full items-center bg-gray-100 gap-4 border rounded-xl px-5 py-4">
-              <Mail className="w-5 h-5 text-gray-400" />
+            <div
+              className={`flex w-full items-center bg-gray-100 gap-4 border ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              } rounded-xl px-5 py-4`}
+            >
+              <Mail
+                className={`w-5 h-5  text-gray-400 ${errors.email ? "text-red-500" : "text-gray-300"}`}
+              />
               <input
                 type="email"
-                name="email"
+                {...register("email")}
                 id="email"
                 placeholder="email@contoh.com"
+                className="bg-transparent outline-none flex-1"
               />
             </div>
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-2 ml-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -63,19 +105,31 @@ function Login() {
               </div>
             </div>
 
-            <div className="flex w-full justify-between items-center bg-gray-100 gap-4 border rounded-xl px-5 py-4">
+            <div
+              className={`flex w-full justify-between items-center bg-gray-100 gap-4 border ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              } rounded-xl px-5 py-4`}
+            >
               <div className="flex gap-5">
-                <Lock className="w-5 h-5 text-gray-400" />
+                <Lock
+                  className={`w-5 h-5  text-gray-400 ${errors.password ? "text-red-500" : "text-gray-300"}`}
+                />
                 <input
                   type="password"
-                  name="password"
+                  {...register("password")}
                   id="password"
                   placeholder="Masukkan Kata sandi"
+                  className="bg-transparent outline-none flex-1"
                 />
               </div>
 
-              <Eye className="w-5 h-5 text-gray-400"  />
+              <Eye className="w-5 h-5 text-gray-400" />
             </div>
+            {errors.password && (
+              <p className="text-sm text-red-500 mt-2 ml-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
         </section>
 
@@ -87,10 +141,10 @@ function Login() {
         <div className="bg-blue-600 rounded-xl flex justify-center items-center ">
           <button
             type="submit"
-            className="text-white text-xl flex items-center gap-3 justify-center py-4"
+            className="text-white text-xl flex cursor-pointer w-full items-center gap-3 justify-center py-4"
           >
             <SquareArrowRight />
-            <p className="flex -items-center">Masuk</p>
+            <p className="flex items-center">Masuk</p>
           </button>
         </div>
       </form>

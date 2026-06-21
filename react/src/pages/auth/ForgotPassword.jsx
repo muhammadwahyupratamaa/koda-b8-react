@@ -1,11 +1,39 @@
 import AuthLayout from "../../components/auth/AuthLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, ArrowLeft, Navigation } from "lucide-react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import forgotPasswordSchema from "../../validation/forgotPasswordSchema";
+import authService from "../../services/authService";
 
 function ForgotPassword() {
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(forgotPasswordSchema),
+  });
+
+  const onSubmit = (data) => {
+    try {
+      authService.forgotPassword(data.email);
+
+      alert("Tautan Reset Password sudah dikirim ke Email Anda!!");
+
+      navigate("/login");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <AuthLayout bannerType="forgotPassword">
-      <form className="flex flex-col gap-7 mb-10">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-7 mb-10"
+      >
         <article>
           <Link to="/" className="text-gray-500 text-base flex gap-3">
             <ArrowLeft className="w-5 h-5 text-gray-500" /> kembali ke login
@@ -22,15 +50,21 @@ function ForgotPassword() {
         <section className="flex flex-col gap-5">
           <div className="flex flex-col gap-5">
             <p>Alamat Email</p>
-            <div className="flex w-full items-center bg-gray-100 gap-5 border-1 rounded-xl p-5 ">
+
+            <div className="flex w-full items-center bg-gray-100 gap-5 border rounded-xl p-5">
               <Mail className="w-5 h-5 text-gray-400" />
+
               <input
                 type="email"
-                name="email"
-                id="email"
                 placeholder="email@contoh.com"
+                className="w-full outline-none bg-transparent"
+                {...register("email")}
               />
             </div>
+
+            {errors.email && (
+              <p className="text-sm text-red-500">{errors.email.message}</p>
+            )}
           </div>
         </section>
 

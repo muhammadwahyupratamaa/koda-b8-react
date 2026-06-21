@@ -1,8 +1,11 @@
 import { Bell, Heart, Search, ShoppingCart, User } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function MainBar() {
+  const { user } = useAuth();
   return (
-    <nav className="w-full border-b sticky top-9 left-0 z-50 border-gray-200 bg-white">
+    <nav className="w-full border-b  border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-start gap-6 px-4 py-4">
         <div className="flex-shrink-0 flex gap-2 justify-center items-center">
           <div className="bg-blue-600 rounded-xl w-10 h-10 flex justify-center items-center">
@@ -29,18 +32,34 @@ function MainBar() {
             <Bell className="h-5 w-5" />
           </button>
 
-          <button className="flex items-center gap-2 cursor-pointer transition hover:text-blue-600">
-            <User className="h-5 w-5" />
-            <span className="text-sm font-medium">Budi</span>
-          </button>
+          {user ? (
+            <Link
+              to="/profile/edit"
+              className="flex items-center gap-2 transition hover:text-blue-600"
+            >
+              <User className="h-5 w-5" />
+              <span>{user.fullName}</span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-2 transition hover:text-blue-600"
+            >
+              <User className="h-5 w-5" />
+              <span>Login</span>
+            </Link>
+          )}
 
-          <button className=" cursor-pointer transition hover:text-blue-600">
+          <Link
+            to="/profile/wishlist"
+            className="transition hover:text-blue-600"
+          >
             <Heart className="h-5 w-5" />
-          </button>
+          </Link>
 
-          <button className="cursor-pointer relative transition hover:text-blue-600">
+          <Link to="/cart" className="relative transition hover:text-blue-600">
             <ShoppingCart className="h-5 w-5" />
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
