@@ -1,58 +1,72 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
+import cartService from "../../services/cartService";
+import { useEffect, useState } from "react";
 
 function Cart() {
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    setCart(cartService.getCart());
+  }, []);
+
+  const subtotal = cart.reduce((total, item) => {
+    return total + item.price * item.qty;
+  }, 0);
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-[2fr_1fr] gap-6">
         {/* LEFT */}
         <div className="flex flex-col gap-6">
-          <div className="border border-gray-200 rounded-xl p-5">
-            <div className="flex justify-between">
-              <div className="flex gap-4">
-                <img
-                  src={headphoneWirelessPremium}
-                  alt=""
-                  className="w-24 h-24 rounded-xl object-cover"
-                />
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="border border-gray-200 rounded-xl p-5"
+            >
+              <div className="flex justify-between">
+                <div className="flex gap-4">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-24 h-24 rounded-xl object-cover"
+                  />
 
-                <div>
-                  <h2 className="text-lg font-medium">
-                    Headphone Wireless Premium
-                  </h2>
+                  <div>
+                    <h2 className="text-lg font-medium">{item.name}</h2>
 
-                  <p className="text-sm text-gray-400 mt-1">Hitam</p>
+                    <p className="text-sm text-gray-400 mt-1">{item.color}</p>
 
-                  <div className="flex items-center border border-gray-200 rounded-lg w-fit mt-3">
-                    <button className="px-3 py-2 cursor-pointer">
-                      <FiMinus className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center border border-gray-200 rounded-lg w-fit mt-3">
+                      <button className="px-3 py-2 cursor-pointer">
+                        <FiMinus />
+                      </button>
 
-                    <span className="px-5 text-sm">1</span>
+                      <span className="px-5">{item.qty}</span>
 
-                    <button className="px-3 py-2 cursor-pointer">
-                      <FiPlus className="w-4 h-4" />
+                      <button className="px-3 py-2 cursor-pointer">
+                        <FiPlus />
+                      </button>
+                    </div>
+
+                    <button className="flex items-center gap-2 mt-3 text-sm text-gray-500">
+                      <FiHeart />
+                      Simpan ke Wishlist
                     </button>
                   </div>
+                </div>
 
-                  <button className="flex items-center gap-2 mt-3 text-sm text-gray-500 cursor-pointer">
-                    <FiHeart className="w-4 h-4" />
-                    Simpan ke Wishlist
+                <div className="flex flex-col justify-between items-end">
+                  <button>
+                    <FiTrash2 className="text-gray-400" />
                   </button>
+
+                  <p className="text-2xl font-semibold text-blue-600">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </p>
                 </div>
               </div>
-
-              <div className="flex flex-col justify-between items-end">
-                <button className="cursor-pointer">
-                  <FiTrash2 className="w-5 h-5 text-gray-400" />
-                </button>
-
-                <p className="text-2xl font-semibold text-blue-600">
-                  Rp 450.000
-                </p>
-              </div>
             </div>
-          </div>
+          ))}
 
           <div className="border border-gray-200 rounded-xl p-5">
             <div className="flex items-center gap-2 mb-5">
@@ -85,7 +99,7 @@ function Cart() {
 
           <div className="space-y-4 text-sm">
             <div className="flex justify-between">
-              <p className="text-gray-500">Subtotal (1 item)</p>
+              <p className="text-gray-500">Subtotal ({cart.length} item)</p>
 
               <p>Rp 450.000</p>
             </div>
@@ -100,9 +114,11 @@ function Cart() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between text-lg font-semibold">
-            <p>Total</p>
+            <p>Rp {subtotal.toLocaleString("id-ID")}</p>
 
-            <p className="text-blue-600">Rp 450.000</p>
+            <p className="text-blue-600">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
           </div>
 
           <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl mt-6 cursor-pointer">

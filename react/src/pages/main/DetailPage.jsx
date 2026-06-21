@@ -11,12 +11,25 @@ import {
   FiMinus,
   FiPlus,
 } from "react-icons/fi";
-
-
+import cartService from "../../services/cartService";
 
 function DetailPage() {
+  const product = {
+    id: 1,
+    name: "Headphone Wireless Premium",
+    image: headphoneWirelessPremium,
+    price: 450000,
+    color: "Hitam",
+    qty: 1,
+  };
 
-    const produkTerkait = [
+  const handleAddToCart = () => {
+    cartService.addToCart(product);
+
+    alert("Produk berhasil ditambahkan ke keranjang");
+  };
+
+  const produkTerkait = [
     {
       id: 1,
       image: headphoneWirelessPremium,
@@ -190,7 +203,10 @@ function DetailPage() {
           </div>
 
           <div className="grid grid-cols-[1fr_1fr_60px] gap-3 mt-8">
-            <button className="border-2 text-base border-orange-500 text-orange-500 rounded-xl py-3 flex justify-center items-center gap-2 font-medium cursor-pointer hover:bg-orange-50">
+            <button
+              onClick={handleAddToCart}
+              className="border-2 text-base border-orange-500 text-orange-500 rounded-xl py-3 flex justify-center items-center gap-2 font-medium cursor-pointer hover:bg-orange-50"
+            >
               <FaShoppingCart />
               Tambah ke Keranjang
             </button>
@@ -232,9 +248,9 @@ function DetailPage() {
         </div>
       </section>
 
-      <section className=" border-1 border-gray-200 mt-10 rounded-xl">
-        <div className="flex gap-6 text-sm border-b-1 border-gray-100 p-4 pb-0 text-gray-500 justify-start">
-          <p className="text-blue-600 border-b-1 border-blue-600">Deskripsi</p>
+      <section className=" border border-gray-200 mt-10 rounded-xl">
+        <div className="flex gap-6 text-sm border-b border-gray-100 p-4 pb-0 text-gray-500 justify-start">
+          <p className="text-blue-600 border-b border-blue-600">Deskripsi</p>
           <p>Spesifikasi</p>
           <p>Ulasan (2)</p>
         </div>
@@ -249,9 +265,6 @@ function DetailPage() {
       </section>
 
       <ProductSection title="Produk Terkait" products={produkTerkait} />
-
-
-
     </main>
   );
 }
