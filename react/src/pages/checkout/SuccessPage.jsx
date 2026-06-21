@@ -1,7 +1,15 @@
 import { FiCheck, FiPackage, FiTruck, FiMapPin, FiBox } from "react-icons/fi";
 import { BsBoxSeam } from "react-icons/bs";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function SuccessPage() {
+  const navigate = useNavigate();
+  const { state: order } = useLocation();
+
+  if (!order) {
+    navigate("/");
+    return null;
+  }
   return (
     <main className="max-w-7xl mx-auto px-4 py-10">
       <div className="flex flex-col items-center">
@@ -22,14 +30,16 @@ function SuccessPage() {
             <p className="text-sm text-gray-400">Nomor Pesanan</p>
 
             <p className="text-blue-600 text-xl font-semibold mt-1">
-              #BM28371132
+              #{order?.orderNumber}
             </p>
           </div>
 
           <div className="text-end">
             <p className="text-sm text-gray-400">Total Pembayaran</p>
 
-            <p className="text-2xl font-semibold mt-1">Rp 450.000</p>
+            <p className="text-2xl font-semibold mt-1">
+              Rp {order?.total?.toLocaleString("id-ID")}
+            </p>
           </div>
         </div>
 
@@ -119,15 +129,24 @@ function SuccessPage() {
       </section>
 
       <div className="max-w-3xl mx-auto flex justify-between gap-4 mt-8">
-        <button className="bg-blue-600 hover:bg-blue-700 flex gap-2 justify-center items-center text-white rounded-xl px-15 py-3 cursor-pointer">
+        <button
+          onClick={() => navigate("/profile/orders")}
+          className="bg-blue-600 hover:bg-blue-700 flex gap-2 justify-center items-center text-white rounded-xl px-15 py-3 cursor-pointer"
+        >
           <BsBoxSeam /> Lacak Pesanan
         </button>
 
-        <button className="border border-gray-200 rounded-xl px-15 py-3 hover:bg-gray-100 cursor-pointer">
+        <button
+          onClick={() => navigate("/profile/orders")}
+          className="border border-gray-200 rounded-xl px-15 py-3 hover:bg-gray-100 cursor-pointer"
+        >
           Lihat Riwayat Pesanan
         </button>
 
-        <button className="text-blue-600 font-medium cursor-pointer">
+        <button
+          onClick={() => navigate("/")}
+          className="text-blue-600 font-medium cursor-pointer"
+        >
           Lanjut Belanja →
         </button>
       </div>

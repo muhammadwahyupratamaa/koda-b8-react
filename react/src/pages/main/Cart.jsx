@@ -2,13 +2,34 @@ import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
 import cartService from "../../services/cartService";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCart(cartService.getCart());
   }, []);
+
+  const refreshCart = () => {
+    setCart(cartService.getCart());
+  };
+
+  const handleIncrease = (id) => {
+    cartService.increaseQty(id);
+    refreshCart();
+  };
+
+  const handleDecrease = (id) => {
+    cartService.decreaseQty(id);
+    refreshCart();
+  };
+
+  const handleRemove = (id) => {
+    cartService.removeItem(id);
+    refreshCart();
+  };
 
   const subtotal = cart.reduce((total, item) => {
     return total + item.price * item.qty;
@@ -38,13 +59,13 @@ function Cart() {
 
                     <div className="flex items-center border border-gray-200 rounded-lg w-fit mt-3">
                       <button className="px-3 py-2 cursor-pointer">
-                        <FiMinus />
+                        <FiMinus onClick={() => handleDecrease(item.id)} />
                       </button>
 
                       <span className="px-5">{item.qty}</span>
 
                       <button className="px-3 py-2 cursor-pointer">
-                        <FiPlus />
+                        <FiPlus onClick={() => handleIncrease(item.id)} />
                       </button>
                     </div>
 
@@ -57,7 +78,10 @@ function Cart() {
 
                 <div className="flex flex-col justify-between items-end">
                   <button>
-                    <FiTrash2 className="text-gray-400" />
+                    <FiTrash2
+                      onClick={() => handleRemove(item.id)}
+                      className="text-gray-400"
+                    />
                   </button>
 
                   <p className="text-2xl font-semibold text-blue-600">
@@ -121,7 +145,10 @@ function Cart() {
             </p>
           </div>
 
-          <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl mt-6 cursor-pointer">
+          <button
+            onClick={() => navigate("/checkout/shipping")}
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl mt-6 cursor-pointer"
+          >
             Checkout Aman
           </button>
 

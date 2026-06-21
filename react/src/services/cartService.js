@@ -20,8 +20,88 @@ function addToCart(product) {
   saveCart(cart);
 }
 
+function increaseQty(id) {
+  const cart = getCart();
+
+  const item = cart.find((item) => item.id === id);
+
+  if (item) {
+    item.qty += 1;
+  }
+
+  saveCart(cart);
+}
+
+function decreaseQty(id) {
+  let cart = getCart();
+
+  const item = cart.find((item) => item.id === id);
+
+  if (!item) return;
+
+  if (item.qty > 1) {
+    item.qty -= 1;
+  } else {
+    cart = cart.filter((item) => item.id !== id);
+  }
+
+  saveCart(cart);
+}
+
+function removeItem(id) {
+  const cart = getCart().filter((item) => item.id !== id);
+
+  saveCart(cart);
+}
+
+function clearCart() {
+  localStorage.removeItem("cart");
+}
+
+// Orders
+
+function getOrders() {
+  return JSON.parse(localStorage.getItem("orders") || "[]");
+}
+
+function saveOrders(orders) {
+  localStorage.setItem("orders", JSON.stringify(orders));
+}
+
+function checkout() {
+  const cart = getCart();
+
+  if (cart.length === 0) return null;
+
+  const orders = getOrders();
+
+  const order = {
+    id: Date.now(),
+    orderNumber: `BM${Date.now()}`,
+    items: cart,
+    total: cart.reduce((total, item) => total + item.price * item.qty, 0),
+    createdAt: new Date().toISOString(),
+    status: "Diproses",
+  };
+
+  orders.unshift(order);
+
+  saveOrders(orders);
+
+  clearCart();
+
+  return order;
+}
+
 export default {
   getCart,
   saveCart,
   addToCart,
+  increaseQty,
+  decreaseQty,
+  removeItem,
+  clearCart,
+  getOrders,
+  saveOrders,
+  checkout,
 };

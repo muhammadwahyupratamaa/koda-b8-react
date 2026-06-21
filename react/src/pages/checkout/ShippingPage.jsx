@@ -1,7 +1,26 @@
 import { FiTruck, FiLock, FiChevronRight } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
+import { useNavigate } from "react-router-dom";
+import cartService from "../../services/cartService";
 
 function ShippingPage() {
+  const navigate = useNavigate();
+  const cart = cartService.getCart();
+
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.qty,
+    0,
+  );
+
+  const shippingData = {
+    name: "Budi Santoso",
+    phone: "0812-3456-7890",
+    email: "budi@email.com",
+    address: "Jl. Kebon Jeruk No.15",
+    city: "Jakarta Barat",
+    province: "DKI Jakarta",
+    postalCode: "11530",
+  };
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -194,7 +213,14 @@ function ShippingPage() {
             </div>
           </div>
 
-          <button className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 flex justify-center items-center gap-2 font-medium cursor-pointer">
+          <button
+            onClick={() => {
+              localStorage.setItem("shipping", JSON.stringify(shippingData));
+
+              navigate("/checkout/payment");
+            }}
+            className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 flex justify-center items-center gap-2 font-medium cursor-pointer"
+          >
             Lanjut ke Pembayaran
             <FiChevronRight className="w-5 h-5" />
           </button>
@@ -204,31 +230,38 @@ function ShippingPage() {
         <section className="border border-gray-200 rounded-xl p-5 h-fit">
           <h2 className="text-2xl font-medium mb-6">Ringkasan Pesanan</h2>
 
-          <div className="flex justify-between items-start border-b border-gray-200 pb-5">
-            <div className="flex gap-3 justify-center items-center">
-              <img
-                src={headphoneWirelessPremium}
-                alt="Headphone"
-                className="w-14 h-14 rounded-lg object-cover"
-              />
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-start border-b border-gray-200 pb-5 mb-5"
+            >
+              <div className="flex gap-3 justify-center items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
+
+                <div>
+                  <p className="text-sm font-medium text-gray-500">
+                    {item.name}
+                  </p>
+                </div>
+              </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-500">
-                  Headphone Wireless Premium
-                </p>
+                <p className="text-sm text-gray-500">x{item.qty}</p>
               </div>
             </div>
-
-            <div>
-              <p className="text-sm text-gray-500">x1</p>
-            </div>
-          </div>
+          ))}
 
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">Subtotal</p>
+              <p className="text-gray-500">
+                Rp {subtotal.toLocaleString("id-ID")}
+              </p>
 
-              <p>Rp 450.000</p>
+              <p>Rp {subtotal.toLocaleString("id-ID")}</p>
             </div>
 
             <div className="flex justify-between items-center text-sm">
@@ -241,9 +274,13 @@ function ShippingPage() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between items-center">
-            <p className="text-lg font-medium">Total</p>
+            <p className="text-lg font-medium">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
 
-            <p className="text-2xl font-semibold text-blue-600">Rp 450.000</p>
+            <p className="text-2xl font-semibold text-blue-600">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
           </div>
 
           <div className="flex justify-center items-center gap-2 mt-6">

@@ -2,8 +2,18 @@ import { FiCheck, FiChevronRight, FiLock } from "react-icons/fi";
 
 import { GiDiceSixFacesFive } from "react-icons/gi";
 import { headphoneWirelessPremium } from "../../assets";
+import { useNavigate } from "react-router-dom";
+import cartService from "../../services/cartService";
 
 function ConfirmationPage() {
+  const navigate = useNavigate();
+  const cart = cartService.getCart();
+  const shipping = JSON.parse(localStorage.getItem("shipping"));
+  const payment = localStorage.getItem("payment");
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.qty,
+    0,
+  );
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -48,11 +58,12 @@ function ConfirmationPage() {
             <h3 className="font-medium mb-3">Alamat Pengiriman</h3>
 
             <p className="text-sm text-gray-500">
-              Budi Santoso • 0812-3456-7890
+              {shipping.name} • {shipping.phone}
             </p>
 
             <p className="text-sm text-gray-500 mt-2">
-              Jl. Kebon Jeruk No.15, Jakarta Barat, DKI Jakarta 11530
+              {shipping.address}, {shipping.city}, {shipping.province}{" "}
+              {shipping.postalCode}
             </p>
           </div>
 
@@ -67,25 +78,30 @@ function ConfirmationPage() {
           <div className="bg-gray-50 rounded-xl p-5">
             <h3 className="font-medium mb-4">Produk yang Dipesan</h3>
 
-            <div className="flex justify-between items-center">
-              <div className="flex gap-3">
-                <img
-                  src={headphoneWirelessPremium}
-                  alt=""
-                  className="w-14 h-14 rounded-lg"
-                />
+            {cart.map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center mb-4"
+              >
+                <div className="flex gap-3">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-14 h-14 rounded-lg"
+                  />
 
-                <div>
-                  <p className="text-sm font-medium">
-                    Headphone Wireless Premium
-                  </p>
+                  <div>
+                    <p className="text-sm font-medium">{item.name}</p>
 
-                  <p className="text-xs text-gray-400 mt-1">x1</p>
+                    <p className="text-xs text-gray-400">x{item.qty}</p>
+                  </div>
                 </div>
-              </div>
 
-              <p className="text-blue-600 font-medium">Rp 450.000</p>
-            </div>
+                <p className="text-blue-600 font-medium">
+                  Rp {item.price.toLocaleString("id-ID")}
+                </p>
+              </div>
+            ))}
           </div>
 
           <div className="bg-slate-100 rounded-xl p-5 flex gap-3 mt-6">
@@ -99,13 +115,25 @@ function ConfirmationPage() {
           </div>
 
           <div className="flex justify-between gap-2 mt-8">
-            <button className="border border-gray-200 rounded-xl px-8 py-3 hover:bg-gray-100 cursor-pointer">
+            <button
+              onClick={() => navigate("/checkout/payment")}
+              className="border border-gray-200 rounded-xl px-8 py-3 hover:bg-gray-100 cursor-pointer"
+            >
               Kembali
             </button>
 
-            <button className="bg-orange-500 w-full justify-center  hover:bg-orange-600 rounded-xl px-10 py-3 text-white flex items-center gap-2 cursor-pointer">
+            <button
+              onClick={() => {
+                const order = cartService.checkout();
+
+                navigate("/checkout/success", {
+                  state: order,
+                });
+              }}
+              className="bg-orange-500 w-full justify-center  hover:bg-orange-600 rounded-xl px-10 py-3 text-white flex items-center gap-2 cursor-pointer"
+            >
               <FiLock className="w-4 h-4" />
-              Bayar Rp 450.000 Sekarang
+              Bayar Rp {subtotal.toLocaleString("id-ID")} Sekarang
             </button>
           </div>
         </section>
@@ -114,31 +142,36 @@ function ConfirmationPage() {
         <section className="border border-gray-200 rounded-xl p-5 h-fit">
           <h2 className="text-2xl font-medium mb-6">Ringkasan Pesanan</h2>
 
-          <div className="flex justify-between items-start border-b border-gray-200 pb-5">
-            <div className="flex gap-3 justify-center items-center">
-              <img
-                src={headphoneWirelessPremium}
-                alt="Headphone"
-                className="w-14 h-14 rounded-lg object-cover"
-              />
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-start border-b border-gray-200 pb-5 mb-5"
+            >
+              <div className="flex gap-3 items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
 
-              <div>
-                <p className="text-sm font-medium text-gray-500">
-                  Headphone Wireless Premium
-                </p>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">
+                    {item.name}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <p className="text-sm text-gray-500">x1</p>
+              <p className="text-sm text-gray-500">x{item.qty}</p>
             </div>
-          </div>
+          ))}
 
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">Subtotal</p>
+              <p className="text-gray-500">
+                Rp {subtotal.toLocaleString("id-ID")}
+              </p>
 
-              <p>Rp 450.000</p>
+              <p>Rp {subtotal.toLocaleString("id-ID")}</p>
             </div>
 
             <div className="flex justify-between items-center text-sm">
@@ -151,9 +184,13 @@ function ConfirmationPage() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between items-center">
-            <p className="text-lg font-medium">Total</p>
+            <p className="text-lg font-medium">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
 
-            <p className="text-2xl font-semibold text-blue-600">Rp 450.000</p>
+            <p className="text-2xl font-semibold text-blue-600">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
           </div>
 
           <div className="flex justify-center items-center gap-2 mt-6">

@@ -14,7 +14,7 @@ function ProfileSidebar({ active }) {
       key: "orders",
       title: "Pesanan Saya",
       icon: FiBox,
-      path: "/profile/profileorder",
+      path: "/profile/orders",
     },
     {
       key: "wishlist",
@@ -32,7 +32,7 @@ function ProfileSidebar({ active }) {
       key: "profile",
       title: "Pengaturan Profil",
       icon: FiSettings,
-      path: "/profile/editprofile",
+      path: "/profile/edit",
     },
   ];
 

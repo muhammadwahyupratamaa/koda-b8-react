@@ -1,12 +1,20 @@
 import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
 
 import { headphoneWirelessPremium } from "../../assets";
+import { useNavigate } from "react-router-dom";
+import cartService from "../../services/cartService";
 
 function PaymentPage() {
+  const navigate = useNavigate();
+  const paymentMethod = "Virtual Account BCA";
+  const cart = cartService.getCart();
+
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.qty,
+    0,
+  );
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
-      
-
       <section className="flex justify-center items-center mb-10">
         <div className="flex items-center">
           <div className="flex flex-col items-center">
@@ -97,11 +105,21 @@ function PaymentPage() {
           </div>
 
           <div className="flex justify-between gap-2 mt-8">
-            <button className="border border-gray-200 rounded-xl px-8 py-3 cursor-pointer hover:bg-gray-100">
+            <button
+              type="button"
+              onClick={() => navigate("/checkout/shipping")}
+              className="border border-gray-200 rounded-xl px-8 py-3 cursor-pointer hover:bg-gray-100"
+            >
               Kembali
             </button>
 
-            <button className="bg-blue-600 hover:bg-blue-700 justify-center rounded-xl w-full px-12 py-3 text-white flex items-center gap-2 cursor-pointer">
+            <button
+              onClick={() => {
+                localStorage.setItem("payment", paymentMethod);
+                navigate("/checkout/confirmation");
+              }}
+              className="bg-blue-600 hover:bg-blue-700 justify-center rounded-xl w-full px-12 py-3 text-white flex items-center gap-2 cursor-pointer"
+            >
               Lanjut ke Konfirmasi
               <FiChevronRight className="w-5 h-5" />
             </button>
@@ -112,31 +130,34 @@ function PaymentPage() {
         <section className="border border-gray-200 rounded-xl p-5 h-fit">
           <h2 className="text-2xl font-medium mb-6">Ringkasan Pesanan</h2>
 
-          <div className="flex justify-between items-start border-b border-gray-200 pb-5">
-            <div className="flex gap-3 justify-center items-center">
-              <img
-                src={headphoneWirelessPremium}
-                alt="Headphone"
-                className="w-14 h-14 rounded-lg object-cover"
-              />
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-start border-b border-gray-200 pb-5 mb-5"
+            >
+              <div className="flex gap-3 items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-14 h-14 rounded-lg object-cover"
+                />
 
-              <div>
-                <p className="text-sm font-medium text-gray-500">
-                  Headphone Wireless Premium
-                </p>
+                <div>
+                  <p className="text-sm font-medium text-gray-500">
+                    {item.name}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <p className="text-sm text-gray-500">x1</p>
+              <p className="text-sm text-gray-500">x{item.qty}</p>
             </div>
-          </div>
+          ))}
 
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">Subtotal</p>
+              <p className="text-gray-500">Rp {subtotal.toLocaleString("id-ID")}</p>
 
-              <p>Rp 450.000</p>
+              <p>Rp {subtotal.toLocaleString("id-ID")}</p>
             </div>
 
             <div className="flex justify-between items-center text-sm">
@@ -149,9 +170,9 @@ function PaymentPage() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between items-center">
-            <p className="text-lg font-medium">Total</p>
+            <p className="text-lg font-medium">Rp {subtotal.toLocaleString("id-ID")}</p>
 
-            <p className="text-2xl font-semibold text-blue-600">Rp 450.000</p>
+            <p className="text-2xl font-semibold text-blue-600">Rp {subtotal.toLocaleString("id-ID")}</p>
           </div>
 
           <div className="flex justify-center items-center gap-2 mt-6">
