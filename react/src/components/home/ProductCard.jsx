@@ -1,8 +1,22 @@
+import { useNavigate } from "react-router-dom";
 import { star } from "../../assets";
 
-function ProductCard({ brand, name, image, rating, review, price, priceDisc }) {
+function ProductCard({
+  id,
+  brand,
+  name,
+  image,
+  rating,
+  review,
+  price,
+  priceDisc,
+}) {
+  const navigate = useNavigate();
   return (
-    <div className="border-1 border-gray-400 rounded-lg">
+    <div
+      onClick={() => navigate(`/detail/${id}`)}
+      className="border border-gray-400 rounded-lg cursor-pointer hover:shadow-lg transition"
+    >
       <div className="mb-5">
         <img src={image} className="w-full rounded-t-lg" />
       </div>

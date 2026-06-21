@@ -13,8 +13,12 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import cartService from "../../services/cartService";
+import { useParams } from "react-router-dom";
 
 function DetailPage() {
+  const { id } = useParams();
+
+  console.log(id);
   const product = {
     id: 1,
     image: headphoneWirelessPremium,
@@ -160,9 +164,13 @@ function DetailPage() {
 
           <div className="bg-slate-100 rounded-xl p-5 mt-3">
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold text-blue-600">Rp {product.price.toLocaleString("id-ID")}</h2>
+              <h2 className="text-2xl font-bold text-blue-600">
+                Rp {product.price.toLocaleString("id-ID")}
+              </h2>
 
-              <p className="line-through text-lg text-gray-400">Rp {product.oldPrice.toLocaleString("id-ID")}</p>
+              <p className="line-through text-lg text-gray-400">
+                Rp {product.oldPrice.toLocaleString("id-ID")}
+              </p>
 
               <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full">
                 Hemat 31%

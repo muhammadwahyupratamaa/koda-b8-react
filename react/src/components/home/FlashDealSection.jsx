@@ -6,9 +6,7 @@ function FlashDealSection({ title, products, isFlashDeal = false }) {
   return (
     <section className="w-full mt-10">
       <section className="max-w-7xl p-4 mx-auto">
-
         <div className="flex justify-between mb-5">
-
           {isFlashDeal ? (
             <div className="flex gap-5">
               <div className="bg-red-600 p-1 rounded-lg">
@@ -39,6 +37,7 @@ function FlashDealSection({ title, products, isFlashDeal = false }) {
           {products.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               image={product.image}
               brand={product.brand}
               name={product.name}
@@ -49,7 +48,6 @@ function FlashDealSection({ title, products, isFlashDeal = false }) {
             />
           ))}
         </section>
-
       </section>
     </section>
   );

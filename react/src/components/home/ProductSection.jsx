@@ -22,6 +22,7 @@ function ProductSection({ title, products }) {
           {products.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id}
               image={product.image}
               brand={product.brand}
               name={product.name}
