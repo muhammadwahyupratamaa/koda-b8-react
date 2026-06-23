@@ -38,7 +38,7 @@ function Login() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
         <section className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Masuk ke Akun</h1>
-          <p className="text-xl">
+          <p className="text-lg">
             Belum Punya Akun ?
             <Link to="/register" className="text-blue-600">
               <span> Daftar Gratis</span>
@@ -47,11 +47,11 @@ function Login() {
         </section>
 
         <section className=" flex gap-5">
-          <div className="w-full rounded-xl flex justify-center items-center text-gray-500 text-xl border-2">
+          <div className="w-full rounded-xl hover:bg-gray-100 flex justify-center items-center text-gray-500 text-lg border-2">
             <Link to={"https://www.google.com/?hl=id"}> Google</Link>
           </div>
 
-          <div className="w-full py-3 rounded-xl flex justify-center items-center text-gray-500 text-xl border-2">
+          <div className="w-full hover:bg-gray-100 py-2 rounded-xl flex justify-center items-center text-gray-500 text-lg border-2">
             <Link to={"https://www.google.com/?hl=id"}> Facebook</Link>
           </div>
         </section>
@@ -66,8 +66,8 @@ function Login() {
           <div className="flex-1 h-px bg-gray-300"></div>
         </div>
 
-        <section className="flex flex-col gap-5">
-          <div className="flex flex-col gap-5">
+        <section className="flex flex-col gap-3">
+          <div className="flex flex-col gap-2">
             <p>Email</p>
             <div
               className={`flex w-full items-center bg-gray-100 gap-4 border ${
@@ -75,7 +75,7 @@ function Login() {
               } rounded-xl px-5 py-4`}
             >
               <Mail
-                className={`w-5 h-5  text-gray-400 ${errors.email ? "text-red-500" : "text-gray-300"}`}
+                className={`w-5 h-5 text-gray-400 ${errors.email ? "text-red-500" : "text-gray-300"}`}
               />
               <input
                 type="email"
@@ -95,7 +95,7 @@ function Login() {
           <div className="flex flex-col gap-2">
             <div className="flex justify-between">
               <div>
-                <p className="text-lg">Kata Sandi</p>
+                <p >Kata Sandi</p>
               </div>
 
               <div>
@@ -135,27 +135,27 @@ function Login() {
 
         <div className="flex gap-2 text-gray-700">
           <input type="checkbox" name="remember" id="remember" />
-          <label htmlFor="remember">Ingat saya selama 30 hari</label>
+          <label htmlFor="remember" className="text-sm">Ingat saya selama 30 hari</label>
         </div>
 
-        <div className="bg-blue-600 rounded-xl flex justify-center items-center ">
+        <div className="bg-emerald-600 rounded-xl flex justify-center items-center ">
           <button
             type="submit"
-            className="text-white text-xl flex cursor-pointer w-full items-center gap-3 justify-center py-4"
+            className="text-white hover:bg-emerald-700 hover:rounded-xl text-lg flex cursor-pointer w-full items-center gap-3 justify-center py-3"
           >
             <SquareArrowRight />
-            <p className="flex items-center">Masuk</p>
+            <p className="flex text-base items-center">Masuk</p>
           </button>
         </div>
       </form>
 
-      <footer className="flex flex-col justify-center items-center gap-3">
-        <div>
+      <footer className="flex flex-col mt-2 justify-center items-center gap-3">
+        <div className="text-sm">
           <p>🔒 Login aman dengan enkripsi SSL 256-bit</p>
         </div>
 
         <div>
-          <p className="text-center">
+          <p className="text-center text-sm">
             Dengan masuk, kamu menyetujui{" "}
             <span className="text-blue-500">Syarat & Ketentuan</span> dan{" "}
             <span className="text-blue-500">Kebijakan Privasi</span> kami.

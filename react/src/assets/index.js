@@ -1,7 +1,8 @@
 // Auth
 import authBanner from "./auth-banner.svg";
-import authForgotPassword from "./auth-forgotpassword.svg";
-import authRegister from "./auth-register.jpg";
+import authForgotPassword from "./forgotpass.png";
+import authRegister from "./register1.png";
+import login from "./login1.png"
 
 // Hero
 import hero from "./hero.png";
@@ -31,6 +32,7 @@ export {
   authBanner,
   authForgotPassword,
   authRegister,
+  login,
 
   // Hero
   hero,

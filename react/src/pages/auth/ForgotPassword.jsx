@@ -29,19 +29,16 @@ function ForgotPassword() {
     }
   };
   return (
-    <AuthLayout bannerType="forgotPassword">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-7 mb-10"
-      >
+    <AuthLayout bannerType="forgotPassword" center={false}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-7">
         <article>
-          <Link to="/" className="text-gray-500 text-base flex gap-3">
+          <Link to="/login" className="text-gray-500 text-base flex gap-3">
             <ArrowLeft className="w-5 h-5 text-gray-500" /> kembali ke login
           </Link>
         </article>
         <section className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold">Lupa Kata Sandi?</h1>
-          <p className="text-lg text-gray-500">
+          <p className="text-sm text-gray-500">
             Tidak perlu khawatir. Masukkan email yang terdaftar dan kami akan
             mengirimkan tautan untuk membuat kata sandi baru.
           </p>
@@ -51,7 +48,13 @@ function ForgotPassword() {
           <div className="flex flex-col gap-5">
             <p>Alamat Email</p>
 
-            <div className="flex w-full items-center bg-gray-100 gap-5 border rounded-xl p-5">
+            <div
+              className={`flex items-center gap-4 rounded-2xl border bg-white px-5 py-4 shadow-sm transition-all duration-300 ${
+                errors.email
+                  ? "border-red-500"
+                  : "border-slate-300 focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-100"
+              }`}
+            >
               <Mail className="w-5 h-5 text-gray-400" />
 
               <input
@@ -68,10 +71,10 @@ function ForgotPassword() {
           </div>
         </section>
 
-        <div className="bg-blue-600 rounded-xl flex justify-center items-center ">
+        <div className="bg-emerald-600 hover:bg-emerald-700 transition-all duration-300 rounded-xl flex justify-center items-center ">
           <button
             type="submit"
-            className="text-white text-2xl flex items-center gap-5 cursor-pointer justify-center py-5"
+            className="w-full py-4 font-semibold text-white flex items-center justify-center gap-3"
           >
             <Navigation className="w-5 h-5" />
             <p className="flex -items-center">kirim Tautan Reset</p>
@@ -79,13 +82,13 @@ function ForgotPassword() {
         </div>
       </form>
 
-      <footer className="flex flex-col justify-center items-center gap-5">
+      <footer className="mt-8 flex flex-col gap-5">
         <div className=" flex flex-col justify-center bg-gray-200 w-full rounded-xl p-5">
           <div className="text-xl font-semibold ">
             <h3>💡 Tips keamanan:</h3>
           </div>
 
-          <div className="text-gray-500 text-lg ">
+          <div className="text-gray-500 text-sm ">
             <p>• Pastikan kamu memeriksa folder spam/junk email</p>
             <p>• Tautan reset hanya berlaku selama 30 menit</p>
             <p>• Jangan bagikan tautan reset kepada siapapun</p>
