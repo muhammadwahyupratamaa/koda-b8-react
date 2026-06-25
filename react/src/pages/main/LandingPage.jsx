@@ -7,50 +7,13 @@ import CategorySection from "../../components/home/CategorySection";
 import Hero from "../../components/home/Hero";
 import FlashDealSection from "../../components/home/FlashDealSection";
 import ProductSection from "../../components/home/ProductSection";
+import productService from "../../services/productService";
 
 function LandingPage() {
-  const flashDeal = [
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 2,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 3,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 4,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-  ];
+  const flashDeal = productService.getRelatedProducts(
+    product.category,
+    product.id,
+  );
 
   const produkTerbaru = [
     {

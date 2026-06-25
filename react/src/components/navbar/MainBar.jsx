@@ -10,6 +10,7 @@ import {
   FaUserCircle,
   FaBars,
 } from "react-icons/fa";
+import SearchBar from "../common/SearchBar";
 
 function MainBar() {
   const { user } = useAuth();
@@ -35,16 +36,7 @@ function MainBar() {
           </Link>
 
           <div className="mx-8 hidden flex-1 lg:block">
-            <div className="relative">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-
-              <input
-                aria-label="search"
-                type="text"
-                placeholder="Cari produk, merek, kategori..."
-                className="w-full rounded-full border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white"
-              />
-            </div>
+            <SearchBar placeholder="Cari produk, merek, kategori..." />
           </div>
 
           <div className="hidden items-center gap-2 lg:flex">
@@ -116,16 +108,7 @@ function MainBar() {
         </div>
 
         <div className="pb-5 lg:hidden">
-          <div className="relative">
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-
-            <input
-              aria-label="search"
-              type="text"
-              placeholder="Cari produk..."
-              className="w-full rounded-full border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white"
-            />
-          </div>
+          <SearchBar placeholder="Cari produk..." />
         </div>
       </div>
     </nav>

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "slug": "headphone-wireless-premium",
+    "name": "Headphone Wireless Premium",
+    "brand": "SoundWave",
+    "category": "Electronic",
+
+    "price": 450000,
+    "priceDisc": 650000,
+    "discount": 31,
+
+    "rating": 4.8,
+    "review": 512,
+    "sold": 1248,
+    "stock": 45,
+    "isFeatured": true,
+
+    "colors": [
+      "Hitam",
+      "Putih",
+      "Biru"
+    ],
+
+    "image": "headphoneWirelessPremium",
+
+    "gallery": [
+      "headphoneWirelessPremium",
+      "headphoneWirelessPremium",
+      "headphoneWirelessPremium"
+    ],
+
+    "description": "Headphone wireless premium dengan Active Noise Cancellation, Bluetooth 5.3, baterai hingga 40 jam."
+  }
+]

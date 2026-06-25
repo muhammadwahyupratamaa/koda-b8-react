@@ -42,7 +42,7 @@ function AuthBanner({ bannerType }) {
   }
 
   return (
-    <section className="relative flex h-full overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-500">
+    <section className="relative sm:hidden md:hidden lg:flex h-full overflow-hidden bg-gradient-to-br from-emerald-700 via-emerald-600 to-emerald-500">
       <img
         src={background}
         alt="Banner"

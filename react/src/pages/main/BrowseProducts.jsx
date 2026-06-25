@@ -1,130 +1,9 @@
 import { GoChevronRight } from "react-icons/go";
 import ProductCard from "../../components/home/ProductCard";
-import { headphoneWirelessPremium } from "../../assets";
+import productService from "../../services/productService";
 
 function BrowseProducts() {
-  const products = [
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      preDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-    {
-      id: 1,
-      image: headphoneWirelessPremium,
-      brand: "SoundWave",
-      name: "Headphone Wireless Premium",
-      rating: 4.8,
-      review: 512,
-      price: "Rp 450.000",
-      priceDisc: "Rp 650.000",
-    },
-  ];
+  const products = productService.getProducts();
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -218,7 +97,7 @@ function BrowseProducts() {
 
         <section>
           <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-gray-400">18 produk ditemukan</p>
+            <p className="text-sm text-gray-400">{products.length} produk ditemukan</p>
 
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-400">Urutkan:</span>
@@ -234,16 +113,7 @@ function BrowseProducts() {
 
           <div className="grid grid-cols-4 gap-4">
             {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                image={product.image}
-                brand={product.brand}
-                name={product.name}
-                rating={product.rating}
-                review={product.review}
-                price={product.price}
-                priceDisc={product.priceDisc}
-              />
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 

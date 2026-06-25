@@ -43,20 +43,7 @@ function Hero() {
           <img
             src={hero3}
             alt="Hero"
-            className="
-            relative
-            rounded-2xl
-            z-10
-            w-full
-            max-w-sm
-            drop-shadow-[0_35px_40px_rgba(0,0,0,.15)]
-            transition-all
-            duration-700
-            hover:scale-105
-            sm:max-w-md
-            md:max-w-xl
-            lg:max-w-2xl
-            "
+            className="relativ rounded-2xl z-10 w-full max-w-sm transition-all duration-300 hover:-translate-y-1 sm:max-w-md md:max-w-xl lg:max-w-2xl "
           />
         </div>
       </div>

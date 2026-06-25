@@ -20,7 +20,7 @@ function ProductCard({ product }) {
   return (
     <div
       onClick={() => navigate(`/detail/${id}`)}
-      className="cursor-pointer overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-emerald-300 hover:shadow-xl"
+      className="cursor-pointer overflow-hidden w-70 rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-emerald-300 hover:shadow-xl"
     >
       <div className="relative overflow-hidden bg-slate-100">
         {discount > 0 && (
@@ -84,7 +84,7 @@ function ProductCard({ product }) {
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg active:scale-95 "
         >
           <ShoppingCart size={18} />
-          Tambah ke Keranjang
+          Tambah ke Keranjang 
         </button>
       </div>
     </div>
