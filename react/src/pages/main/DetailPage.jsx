@@ -82,7 +82,11 @@ function DetailPage() {
           <div className="flex gap-3 mt-4">
             {product.gallery.map((image, index) => (
               <button key={index}>
-                <img src={image}className="rounded-xl"  alt={`${product.name}-${index + 1}`} />
+                <img
+                  src={image}
+                  className="rounded-xl"
+                  alt={`${product.name}-${index + 1}`}
+                />
               </button>
             ))}
           </div>
@@ -90,30 +94,31 @@ function DetailPage() {
 
         {/* RIGHT  */}
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-7">
           <p className="text-sm text-gray-400">
             {product.brand} • {product.category}
           </p>
 
-          <h1 className="text-2xl font-semibold ">{product.name}</h1>
+          <div className="flex flex-col justify-start items-start gap-2 ">
+            <h1 className="text-2xl font-semibold ">{product.name}</h1>
+            <div className="flex gap-2 mb-2">
+              <div className="flex text-yellow-400">
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+                <FaStar />
+              </div>
 
-          <div className="flex items-center gap-3 ">
-            <div className="flex text-yellow-400">
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-              <FaStar />
-            </div>
+              <p className="text-sm text-gray-500">
+                {product.rating} ({product.review} ulasan)
+              </p>
 
-            <p className="text-sm text-gray-500">
-              {product.rating} ({product.review} ulasan)
-            </p>
+              <div className="flex items-center gap-1 text-green-600 text-sm">
+                <FaCheck />
 
-            <div className="flex items-center gap-1 text-green-600 text-sm">
-              <FaCheck />
-
-              <p>Stok tersedia {product.stock}</p>
+                <p>Stok tersedia {product.stock}</p>
+              </div>
             </div>
           </div>
 

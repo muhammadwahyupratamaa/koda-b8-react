@@ -1,9 +1,16 @@
 import { GoChevronRight } from "react-icons/go";
 import ProductCard from "../../components/home/ProductCard";
 import productService from "../../services/productService";
+import { useSearchParams } from "react-router-dom";
 
 function BrowseProducts() {
   const products = productService.getProducts();
+  conts[searchParams] = useSearchParams();
+  const keyword = searchParams.get("search") || "";
+
+  const product = keyword
+    ? productService.searchProducts(keyword)
+    : productService.getProducts();
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -15,8 +22,21 @@ function BrowseProducts() {
         <span>Toko</span>
       </section>
 
-      <h1 className="text-3xl font-semibold mb-8">Semua Produk</h1>
-
+      <h1 className="text-3xl font-semibold mb-8">
+        {keyword ? `Hasil Pencarian "${keyword}"` : "Semua Produk"}
+      </h1>
+      {products.length === 0 ? (
+        <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300">
+          <p className="text-slate-500">Produk tidak ditemukan.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-4 gap-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+      
       <section className="grid grid-cols-[260px_1fr] gap-8">
         <aside className="border border-gray-200 rounded-xl p-5 h-fit">
           <div className="mb-8">
@@ -97,7 +117,9 @@ function BrowseProducts() {
 
         <section>
           <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-gray-400">{products.length} produk ditemukan</p>
+            <p className="text-sm text-gray-400">
+              {products.length} produk ditemukan
+            </p>
 
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-400">Urutkan:</span>
