@@ -2,7 +2,7 @@
 import authBanner from "./auth-banner.svg";
 import authForgotPassword from "./forgotpass.png";
 import authRegister from "./register1.png";
-import login from "./login1.png"
+import login from "./login1.png";
 
 // Hero
 import hero from "./hero.png";
@@ -26,6 +26,27 @@ import viteLogo from "./vite.svg";
 // landing page
 import bgLandingPage from "./Electronics sale.svg";
 import bgLandingPage1 from "./Fashion sale.svg";
+
+// Data
+import keyboardMechanical from "./keyboardMechanical.png";
+import gamingMouse from "./gamingMouse.png";
+import smartWatch from "./smartWatch.png";
+import bluetoothSpeaker from "./bluetoothSpeaker.jpg";
+import hoodieOversized from "./hoodieOversized.jpeg";
+import basicTshirt from "./basicTshirt.jpeg";
+import runningShoes from "./runningShoes.png";
+import denimJacket from "./denimJacket.webp";
+import backpack from "./backpack.webp";
+import officeChair from "./officeChair.webp";
+import studyTable from "./studyTable.webp";
+import bookshelf from "./bookshelf.jpg";
+import coffeeTable from "./coffeeTable.jpg";
+import deskLamp from "./deskLamp.jpg";
+import waterBottle from "./waterBottle.jpg";
+import yogaMat from "./yogaMat.avif";
+import coffeeMug from "./coffeeMug.jpg";
+import travelSuitcase from "./travelSuitcase.webp";
+import portableBlender from "./portableBlender.webp";
 
 export {
   // Auth
@@ -56,4 +77,25 @@ export {
   // Landing page
   bgLandingPage,
   bgLandingPage1,
+
+  // Data
+  keyboardMechanical,
+  gamingMouse,
+  smartWatch,
+  bluetoothSpeaker,
+  hoodieOversized,
+  basicTshirt,
+  runningShoes,
+  denimJacket,
+  backpack,
+  officeChair,
+  studyTable,
+  bookshelf,
+  coffeeTable,
+  deskLamp,
+  waterBottle,
+  yogaMat,
+  coffeeMug,
+  travelSuitcase,
+  portableBlender,
 };

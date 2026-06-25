@@ -187,7 +187,6 @@ function DetailPage() {
               <FaShoppingCart />
               Tambah ke Keranjang
             </button>
-
             <button
               onClick={handleBuyNow}
               className="bg-orange-500 text-base rounded-xl py-3 text-white font-medium hover:bg-orange-600 cursor-pointer"

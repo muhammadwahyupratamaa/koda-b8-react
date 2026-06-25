@@ -28,7 +28,7 @@ function WishListPage() {
               {wishlist.map((product) => (
                 <WishlistCard
                   key={product.id}
-                  {...product}
+                  product={product}
                   onRemove={() => setWishlist(wishlistService.getWishlist())}
                 />
               ))}

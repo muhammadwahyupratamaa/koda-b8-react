@@ -3,18 +3,15 @@ import { FaStar } from "react-icons/fa";
 import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
 
-function WishlistCard({
-  id,
-  image,
-  brand,
-  name,
-  rating,
-  review,
-  price,
-  priceDisc,
-  discount,
-  onRemove,
-}) {
+function WishlistCard({ product, onRemove }) {
+  const { id, image, brand, name, rating, review, price, priceDisc, discount } =
+    product;
+
+  console.log({
+    price: product.price,
+    priceDisc: product.priceDisc,
+    product,
+  });
   return (
     <article className="w-full max-w-[320px] border border-gray-200 rounded-xl overflow-hidden bg-white">
       <div className="relative">

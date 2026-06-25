@@ -4,11 +4,10 @@ import productService from "../../services/productService";
 import { useSearchParams } from "react-router-dom";
 
 function BrowseProducts() {
-  const products = productService.getProducts();
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("search") || "";
 
-  const product = keyword
+  const displayedProducts = keyword
     ? productService.searchProducts(keyword)
     : productService.getProducts();
 
@@ -25,17 +24,6 @@ function BrowseProducts() {
       <h1 className="text-3xl font-semibold mb-8">
         {keyword ? `Hasil Pencarian "${keyword}"` : "Semua Produk"}
       </h1>
-      {products.length === 0 ? (
-        <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300">
-          <p className="text-slate-500">Produk tidak ditemukan.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-4 gap-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      )}
 
       <section className="grid grid-cols-[260px_1fr] gap-8">
         <aside className="border border-gray-200 rounded-xl p-5 h-fit">
@@ -49,12 +37,12 @@ function BrowseProducts() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-base font-semibold mb-5">Merek</h2>
+            <h2 className="text-base font-semibold mb-5">Brand : </h2>
 
             <div className="flex flex-col gap-3 text-sm text-gray-500">
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                TechMaster
+                KeyForce
               </label>
 
               <label className="flex items-center gap-2">
@@ -64,22 +52,47 @@ function BrowseProducts() {
 
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                PhoneX
+                ClickPro
               </label>
 
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                OptiCam
+                TimeFit
               </label>
 
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                FashionID
+                BoomSound
               </label>
 
               <label className="flex items-center gap-2">
                 <input type="checkbox" />
-                SportPro
+                UrbanWear
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                DailyWear
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                RunMax
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                BlueWear
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                ComfortSeat
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input type="checkbox" />
+                HydroGo
               </label>
             </div>
           </div>
@@ -118,7 +131,7 @@ function BrowseProducts() {
         <section>
           <div className="flex justify-between items-center mb-6">
             <p className="text-sm text-gray-400">
-              {products.length} produk ditemukan
+              {displayedProducts.length} produk ditemukan
             </p>
 
             <div className="flex items-center gap-3">
@@ -133,11 +146,17 @@ function BrowseProducts() {
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {displayedProducts.length === 0 ? (
+            <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300">
+              <p className="text-slate-500">Produk tidak ditemukan.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-4 gap-4">
+              {displayedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
 
           <div className="flex justify-center mt-10">
             <button className="border border-blue-600 text-blue-600 rounded-lg px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">

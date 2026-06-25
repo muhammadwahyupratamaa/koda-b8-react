@@ -2,6 +2,25 @@ import {
   bgLandingPage,
   bgLandingPage1,
   headphoneWirelessPremium,
+  keyboardMechanical,
+  gamingMouse,
+  smartWatch,
+  bluetoothSpeaker,
+  hoodieOversized,
+  basicTshirt,
+  runningShoes,
+  denimJacket,
+  backpack,
+  officeChair,
+  studyTable,
+  bookshelf,
+  coffeeTable,
+  deskLamp,
+  waterBottle,
+  yogaMat,
+  coffeeMug,
+  travelSuitcase,
+  portableBlender,
 } from "../../assets";
 import CategorySection from "../../components/home/CategorySection";
 import Hero from "../../components/home/Hero";
@@ -11,8 +30,8 @@ import productService from "../../services/productService";
 
 function LandingPage() {
   const flashDeal = productService.getFlashDeals();
-  const produkTerbaru = productService.getFeaturedProduct();
-  const produkUnggulan = productService.getNewestProducts();
+  const produkTerbaru = productService.getNewestProducts();
+  const produkUnggulan = productService.getFeaturedProduct();
 
   return (
     <main className="w-full">
@@ -74,7 +93,7 @@ function LandingPage() {
           <h3> Kenapa Belanja di BeliMudah?</h3>
         </div>
 
-        <section className="w-full grid grid-cols-4 px-4 gap-3 justify-center  items-center text-center">
+        <section className="w-full grid grid-cols-4 p-5 gap-3 justify-center  items-center text-center">
           <div className="flex flex-col gap-2">
             <p className="text-2xl">🚚</p>
             <p className="text-sm">Gratis Ongkir</p>
