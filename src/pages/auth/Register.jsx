@@ -179,7 +179,7 @@ function Register() {
         </section>
 
         <div className="flex gap-4 text-xs text-gray-700">
-          <input type="checkbox" name="remember" id="remember" />
+          <input type="checkbox" name="remember" id="remember" required />
           <label htmlFor="remember">
             <p>
               Saya Menyetujui

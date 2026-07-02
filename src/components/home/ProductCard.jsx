@@ -68,11 +68,11 @@ function ProductCard({ product }) {
         </div>
 
         <div className="mt-5">
-          <h4 className="text-2xl font-bold text-emerald-600">{price}</h4>
+          <h4 className="text-2xl font-bold text-emerald-600">{`Rp.${price}`}</h4>
 
           {priceDisc && (
             <p className="mt-1 text-sm text-slate-400 line-through">
-              {priceDisc}
+              {`Rp.${priceDisc}`}
             </p>
           )}
         </div>

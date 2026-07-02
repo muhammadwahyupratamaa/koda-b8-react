@@ -1,0 +1,32 @@
+name: Automation build images
+run-name: Running build images
+on:
+  label:
+    types:
+      - created
+  push:
+    branches:
+      - main
+    tags:
+      - v1.*
+
+  permission: read-all
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+  steps:
+    - name: Check out repository code
+      uses: actions/checkout@v6
+    - name: Setup nodejs version
+      uses: actions/setup-node@v6
+      with:
+        node-version: "v26.3.0"
+    - name: installing node dependecies
+      run: npm install
+    - name: Login to docker
+      run: echo -n ${{ secrets.GITHUB.TOKEN }} | docker login ghcr.io | --username ${{github.actor}} --password-stdin
+    - name: Build images
+      run: docker build . -t ghcr.io/${{github.repository}}:pra
+    - name: Push to ghcr.io
+      run: docker push ghcr.io/${{github.repository}}:pra

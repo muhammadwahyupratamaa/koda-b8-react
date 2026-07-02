@@ -5,6 +5,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
 
+const formatRupiah = (number) => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(number);
+}
+
 function Cart() {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
@@ -137,7 +144,7 @@ function Cart() {
                 <p>Subtotal</p>
 
                 <p className="text-blue-600">
-                  Rp {subtotal.toLocaleString("id-ID")}
+                  {formatRupiah(subtotal)}
                 </p>
               </div>
             </div>
@@ -152,10 +159,10 @@ function Cart() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between text-lg font-semibold">
-            <p>Rp {subtotal.toLocaleString("id-ID")}</p>
+            <p>{formatRupiah(subtotal)}</p>
 
             <p className="text-blue-600">
-              Rp {subtotal.toLocaleString("id-ID")}
+              {formatRupiah(subtotal)}
             </p>
           </div>
 
@@ -182,3 +189,4 @@ function Cart() {
 }
 
 export default Cart;
+export {formatRupiah};

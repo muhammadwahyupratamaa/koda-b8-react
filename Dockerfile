@@ -8,7 +8,7 @@ FROM node:alpine AS build-project
 
 WORKDIR /app
 COPY --from=clone-project /source/ .
-RUN npm install
+RUN npm i
 RUN npm run build
 
 FROM nginx:alpine
