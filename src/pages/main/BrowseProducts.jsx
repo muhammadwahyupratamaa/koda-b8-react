@@ -6,10 +6,12 @@ import { useSearchParams } from "react-router-dom";
 function BrowseProducts() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("search") || "";
+  const category = searchParams.get("category") || "";
 
-  const displayedProducts = keyword
-    ? productService.searchProducts(keyword)
-    : productService.getProducts();
+  const displayedProducts = productService.getFilteredProducts({
+    keyword,
+    category,
+  });
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
@@ -22,7 +24,11 @@ function BrowseProducts() {
       </section>
 
       <h1 className="text-3xl font-semibold mb-8">
-        {keyword ? `Hasil Pencarian "${keyword}"` : "Semua Produk"}
+        {keyword
+          ? `Hasil Pencarian "${keyword}"`
+          : category
+            ? `Kategori ${category}`
+            : "Semua Produk"}
       </h1>
 
       <section className="grid grid-cols-[260px_1fr] gap-8">

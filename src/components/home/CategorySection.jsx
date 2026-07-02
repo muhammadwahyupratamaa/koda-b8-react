@@ -14,36 +14,42 @@ const categories = [
   {
     id: 1,
     title: "Elektronik",
+    value: "electronic",
     total: 7,
     image: elektronik,
   },
   {
     id: 2,
     title: "Fashion",
+    value: "fashion",
     total: 5,
     image: fashion,
   },
   {
     id: 3,
     title: "Rumah & Dapur",
+    value: "furniture",
     total: 4,
     image: rumahDapur,
   },
   {
     id: 4,
     title: "Kecantikan",
+    value: "beauty",
     total: 2,
     image: kecantikan,
   },
   {
     id: 5,
     title: "Olahraga",
+    value: "lifestyle",
     total: 3,
     image: olahraga,
   },
   {
     id: 6,
     title: "Buku & ATK",
+    value: "book",
     total: 2,
     image: bukuAlatTulis,
   },
@@ -84,7 +90,7 @@ function CategorySection() {
 
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
           {categories.map((category) => (
-            <Link key={category.id} to="/products">
+            <Link key={category.id} to={`/products?category=${category.value}`}>
               <div
                 className="flex min-h-[220px] cursor-pointer flex-col items-center rounded-3xl border border-slate-100 bg-gradient-to-b from-white to-white p-7 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/40 hover:from-white hover:to-emerald-50/60 hover:shadow-xl
               "

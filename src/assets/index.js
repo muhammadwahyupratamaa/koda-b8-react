@@ -47,6 +47,16 @@ import yogaMat from "./yogaMat.avif";
 import coffeeMug from "./coffeeMug.jpg";
 import travelSuitcase from "./travelSuitcase.webp";
 import portableBlender from "./portableBlender.webp";
+import vitaminCSerum from "./vitaminCSerum.jpg";
+import facialCleanser from "./facialCleanser.png";
+import sunscreen from "./sunscreen.webp";
+import lipTint from "./lipTint.webp";
+import nightMoisturizer from "./nightMoisturizer.png";
+import atomicHabits from "./atomicHabits.jpg";
+import cleanCode from "./cleanCode.jpg";
+import deepWork from "./deepWork.webp";
+import richDadPoorDad from "./richDadPoorDad.webp";
+import javascriptGoodParts from "./javascriptGoodParts.jpeg";
 
 export {
   // Auth
@@ -98,4 +108,14 @@ export {
   coffeeMug,
   travelSuitcase,
   portableBlender,
+  vitaminCSerum,
+  facialCleanser,
+  sunscreen,
+  lipTint,
+  nightMoisturizer,
+  atomicHabits,
+  cleanCode,
+  deepWork,
+  richDadPoorDad,
+  javascriptGoodParts,
 };
