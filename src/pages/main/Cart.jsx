@@ -129,7 +129,7 @@ function Cart() {
             </div>
 
             <p className="text-sm text-gray-400 mt-4">
-              Coba: HEMAT10, BELIMUDAH, atau NEWUSER
+              Coba: HEMAT10, BRilianShop, atau NEWUSER
             </p>
           </div>
         </div>

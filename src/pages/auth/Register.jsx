@@ -185,7 +185,7 @@ function Register() {
               Saya Menyetujui
               <span className="text-blue-600"> Syarat & Ketentuan</span> dan
               <span className="text-blue-600"> Kebijakan privasi </span>
-              Belimudah
+              BRilianShop
             </p>
           </label>
         </div>

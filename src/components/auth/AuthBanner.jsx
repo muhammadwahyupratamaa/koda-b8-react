@@ -58,7 +58,7 @@ function AuthBanner({ bannerType }) {
       <div className="relative z-10 flex h-full w-full flex-col p-8 lg:p-16">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white">
-            BeliMudah
+            BRilianShop
           </h2>
           <div className="mt-2 h-1 w-16 rounded-full bg-white/70" />
         </div>

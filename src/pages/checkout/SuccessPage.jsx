@@ -20,7 +20,7 @@ function SuccessPage() {
         <h1 className="text-4xl font-semibold mt-8">Pesanan Berhasil! 🎉</h1>
 
         <p className="text-gray-400 text-base mt-3">
-          Terima kasih telah berbelanja di BeliMudah. Pesananmu sedang diproses.
+          Terima kasih telah berbelanja di BRilianShop. Pesananmu sedang diproses.
         </p>
       </div>
 

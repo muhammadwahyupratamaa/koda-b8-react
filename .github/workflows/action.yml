@@ -75,5 +75,5 @@ jobs:
           key: ${{secrets.SSH_KEYS}}
           script: |
             docker pull ghcr.io/${{github.repository}}:pra
-            docker rm -f frontend-app
+            docker rm -f BRilianShop
             docker run -d -p 9502:80 --name BRilianShop ghcr.io/${{github.repository}}:pra

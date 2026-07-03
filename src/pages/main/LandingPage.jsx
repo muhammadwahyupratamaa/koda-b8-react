@@ -90,7 +90,7 @@ function LandingPage() {
 
       <section className=" border-2 border-gray-100 rounded-xl  max-w-7xl mx-auto flex mt-10  flex-col gap-4 justify-center items-center">
         <div className="text-xl p-5">
-          <h3> Kenapa Belanja di BeliMudah?</h3>
+          <h3> Kenapa Belanja di BRilianShop?</h3>
         </div>
 
         <section className="w-full grid grid-cols-4 p-5 gap-3 justify-center  items-center text-center">

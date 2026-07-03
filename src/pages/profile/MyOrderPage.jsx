@@ -20,7 +20,7 @@ function MyOrderPage() {
               <h2 className="text-2xl font-semibold">Belum ada pesanan</h2>
 
               <p className="text-gray-500 mt-2">
-                Yuk mulai belanja di BeliMudah.
+                Yuk mulai belanja di BRilianShop.
               </p>
 
               <button

@@ -118,7 +118,7 @@ function Footer() {
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold tracking-tight">BeliMudah</h2>
+                <h2 className="text-2xl font-bold tracking-tight">BRilianShop</h2>
 
                 <p className="text-sm text-gray-400">
                   Belanja Online Indonesia
@@ -129,7 +129,7 @@ function Footer() {
             <p className="mt-6 max-w-md leading-8 text-gray-400">
               Temukan ribuan produk pilihan dengan harga terbaik. Nikmati
               pengalaman belanja online yang cepat, aman, dan nyaman hanya di
-              BeliMudah.
+              BRilianShop.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
@@ -228,7 +228,7 @@ function Footer() {
               <div className="flex items-center gap-3">
                 <FiMail className="text-emerald-400" />
 
-                <p className="text-sm text-gray-400">support@belimudah.id</p>
+                <p className="text-sm text-gray-400">support@BRilianShop.id</p>
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@ function Footer() {
       <section className="relative">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 px-4 py-6 text-sm text-slate-500 md:flex-row">
           <p className="text-center md:text-left">
-            © 2026 <span className="font-semibold text-white">BeliMudah</span>.
+            © 2026 <span className="font-semibold text-white">BRilianShop</span>.
             All Rights Reserved.
           </p>
 
