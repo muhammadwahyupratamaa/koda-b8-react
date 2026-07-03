@@ -7,10 +7,11 @@ function BrowseProducts() {
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
-
+  const promo = searchParams.get("promo") || "";
   const displayedProducts = productService.getFilteredProducts({
     keyword,
     category,
+    promo,
   });
 
   return (

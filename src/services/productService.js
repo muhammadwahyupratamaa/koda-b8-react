@@ -6,7 +6,6 @@ const productService = {
     return products.map((product) => ({
       ...product,
       image: images[product.image],
-
       gallery: product.gallery.map((image) => images[image]),
     }));
   },
@@ -16,10 +15,9 @@ const productService = {
   },
 
   getProductsByCategory(category) {
-    return this.getProducts().filter(
-      (product) => product.category.toLowerCase() === category.toLowerCase(),
-    );
+    return this.getFilteredProducts({ category });
   },
+
   getRelatedProducts(category, currentId) {
     return this.getProducts()
       .filter(
@@ -47,20 +45,17 @@ const productService = {
   },
 
   searchProducts(keyword) {
-    const search = keyword.trim().toLowerCase();
-
-    return this.getProducts().filter((product) => {
-      return (
-        product.name.toLowerCase().includes(search) ||
-        product.brand.toLowerCase().includes(search) ||
-        product.category.toLowerCase().includes(search)
-      );
-    });
+    return this.getFilteredProducts({ keyword });
   },
-  
-  getFilteredProducts({ keyword = "", category = "" }) {
+
+  getFilteredProducts({
+    keyword = "",
+    category = "",
+    promo = "",
+  }) {
     let products = this.getProducts();
 
+    // Search
     if (keyword.trim()) {
       const search = keyword.trim().toLowerCase();
 
@@ -73,9 +68,18 @@ const productService = {
       });
     }
 
+    // Category
     if (category.trim()) {
       products = products.filter(
-        (product) => product.category.toLowerCase() === category.toLowerCase(),
+        (product) =>
+          product.category.toLowerCase() === category.toLowerCase(),
+      );
+    }
+
+    // Promo
+    if (promo === "true") {
+      products = products.filter(
+        (product) => product.discount >= 20,
       );
     }
 

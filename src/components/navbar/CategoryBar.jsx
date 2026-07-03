@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MdOutlineCategory } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
 import {
@@ -14,31 +15,38 @@ import {
 const categories = [
   {
     name: "Elektronik",
+    value: "electronic",
     icon: FaLaptop,
   },
   {
     name: "Fashion",
+    value: "fashion",
     icon: FaTshirt,
   },
   {
     name: "Rumah & Dapur",
+    value: "furniture",
     icon: FaHome,
   },
   {
     name: "Kecantikan",
+    value: "beauty",
     icon: FaSpa,
   },
   {
     name: "Olahraga",
+    value: "lifestyle",
     icon: FaDumbbell,
   },
   {
     name: "Buku & Alat Tulis",
+    value: "book",
     icon: FaBook,
   },
 ];
 
 function CategoryBar() {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("Semua Kategori");
 
@@ -57,8 +65,10 @@ function CategoryBar() {
   }, []);
 
   const handleSelect = (category) => {
-    setSelected(category);
+    setSelected(category.name);
     setOpen(false);
+
+    navigate(`/products?category=${category.value}`);
   };
 
   return (
@@ -91,7 +101,7 @@ function CategoryBar() {
                   return (
                     <button
                       key={item.name}
-                      onClick={() => handleSelect(item.name)}
+                      onClick={() => handleSelect(item)}
                       className={`flex w-full items-center gap-3 px-5 py-3 text-left transition ${
                         selected === item.name
                           ? "bg-emerald-50"
@@ -119,7 +129,7 @@ function CategoryBar() {
               return (
                 <button
                   key={item.name}
-                  onClick={() => setSelected(item.name)}
+                  onClick={() => handleSelect(item)}
                   className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm transition-all ${
                     selected === item.name
                       ? "bg-emerald-600 text-white"
@@ -132,7 +142,10 @@ function CategoryBar() {
               );
             })}
 
-            <button className="flex shrink-0 items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100">
+            <button
+              onClick={() => navigate("/products?promo=true")}
+              className="flex shrink-0 items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100"
+            >
               <FaFire size={14} />
               Promo
             </button>
@@ -164,7 +177,7 @@ function CategoryBar() {
                   return (
                     <button
                       key={item.name}
-                      onClick={() => handleSelect(item.name)}
+                      onClick={() => handleSelect(item)}
                       className={`flex w-full items-center gap-3 px-5 py-3 text-left transition ${
                         selected === item.name
                           ? "bg-emerald-50"
@@ -192,7 +205,7 @@ function CategoryBar() {
               return (
                 <button
                   key={item.name}
-                  onClick={() => setSelected(item.name)}
+                  onClick={() => handleSelect(item)}
                   className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm transition-all ${
                     selected === item.name
                       ? "bg-emerald-600 text-white"
@@ -205,7 +218,10 @@ function CategoryBar() {
               );
             })}
 
-            <button className="flex shrink-0 items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100">
+            <button
+              onClick={() => navigate("/products?promo=true")}
+              className="flex shrink-0 items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-100"
+            >
               <FaFire size={14} />
               Promo
             </button>
