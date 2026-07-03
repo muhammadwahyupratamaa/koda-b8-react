@@ -5,7 +5,7 @@ on:
     tags:
       - v1.*
 jobs:
-  build-app :
+  build-app:
     name: "Build React App into Distributable"
     runs-on: ubuntu-latest
     outputs:
@@ -60,3 +60,19 @@ jobs:
         run: docker build -t ghcr.io/${{github.repository}}:pra .
       - name: Push to ghcr.io
         run: docker push ghcr.io/${{github.repository}}:pra
+  deploy-image:
+    name: "Deploy image into server"
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull image from ghcr
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USER}}
+          port: ${{secrets.SSH_PORT}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+            docker pull ghcr.io/${{github.repository}}:latest
+            docker rm -f frontend-app
+            docker run -d -p 9012:80 --name frontend-app ghcr.io/${{github.repository}}:latest
