@@ -5,6 +5,44 @@ on:
     tags:
       - v1.*
 jobs:
+  build-app :
+    name: "Build React App into Distributable"
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.upload-dist.outputs.artifact-id }}
+    steps:
+      - name: setup nodejs
+        uses: actions/setup-node@v6
+        with:
+          node_version: "26.4.0"
+      - name: get source
+        uses: actions/checkout@v7
+      - name: install nodejs deps
+        run: npm install
+      - name: build app
+        run: npm run build
+      - name: Save artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-result
+          id: upload-dist
+          path: dist/
+  release-app:
+    name: "Release builded app"
+    needs: build-app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v8
+        with:
+          artifact-ids: ${{needs.build-app.outputs.output1}}
+      - name: Compress artifact
+        run: zip -r BRilianShop.zip ./*
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            BRilianShop.zip
   build-image:
     runs-on: ubuntu-latest
     steps:
