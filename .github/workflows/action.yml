@@ -45,6 +45,7 @@ jobs:
             BRilianShop.zip
   build-image:
     runs-on: ubuntu-latest
+    needs: release-app
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
@@ -71,8 +72,8 @@ jobs:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USER}}
           port: ${{secrets.SSH_PORT}}
-          key: ${{secrets.SSH_KEY}}
+          key: ${{secrets.SSH_KEYS}}
           script: |
-            docker pull ghcr.io/${{github.repository}}:latest
+            docker pull ghcr.io/${{github.repository}}:pra
             docker rm -f frontend-app
-            docker run -d -p 9012:80 --name frontend-app ghcr.io/${{github.repository}}:latest
+            docker run -d -p 9502:80 --name BRilianShop ghcr.io/${{github.repository}}:pra
