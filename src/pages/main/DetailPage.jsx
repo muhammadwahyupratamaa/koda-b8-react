@@ -2,7 +2,7 @@ import { FaStar, FaCheck, FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   FiHeart,
@@ -36,7 +36,14 @@ function DetailPage() {
       </main>
     );
   }
+  const [selectedImage, setSelectedImage] = useState(product?.image);
   const [qty, setQty] = useState(1);
+
+  useEffect(() => {
+    if (product) {
+      setSelectedImage(product.image);
+    }
+  }, [product]);
 
   const handleAddToCart = () => {
     cartService.addToCart(product, qty);
@@ -87,19 +94,27 @@ function DetailPage() {
             </span>
 
             <img
-              src={product.image}
+              src={selectedImage}
               alt={product.name}
-              className="w-full object-cover"
+              className="w-full object-cover rounded-xl"
             />
           </div>
 
           <div className="flex gap-3 mt-4">
             {product.gallery.map((image, index) => (
-              <button key={index}>
+              <button
+                key={index}
+                onClick={() => setSelectedImage(image)}
+                className={`rounded-xl overflow-hidden border-2 transition cursor-pointer ${
+                  selectedImage === image
+                    ? "border-blue-600"
+                    : "border-transparent hover:border-gray-300"
+                }`}
+              >
                 <img
                   src={image}
-                  className="rounded-xl"
                   alt={`${product.name}-${index + 1}`}
+                  className="w-24 h-24 object-cover"
                 />
               </button>
             ))}
