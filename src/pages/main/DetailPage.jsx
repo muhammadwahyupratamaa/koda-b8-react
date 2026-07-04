@@ -23,7 +23,7 @@ function DetailPage() {
   const handleBuyNow = () => {
     cartService.clearCart();
 
-    cartService.addToCart(product, qty);
+    cartService.addToCart(product, qty, selectedColor);
 
     navigate("/checkout/shipping");
   };
@@ -38,15 +38,20 @@ function DetailPage() {
   }
   const [selectedImage, setSelectedImage] = useState(product?.image);
   const [qty, setQty] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(
+    product?.colors?.[0] || "",
+  );
 
   useEffect(() => {
     if (product) {
       setSelectedImage(product.image);
+      setSelectedColor(product.colors?.[0] || "");
+      setQty(1);
     }
-  }, [product]);
+  }, [id]);
 
   const handleAddToCart = () => {
-    cartService.addToCart(product, qty);
+    cartService.addToCart(product, qty, selectedColor);
   };
 
   const handleIncreaseQty = () => {
@@ -178,11 +183,24 @@ function DetailPage() {
               {product.colors.map((color) => (
                 <button
                   key={color}
-                  className="rounded-lg border  border-gray-300 px-5 py-2 text-sm transition cursor-pointer  hover:border-emerald-500 hover:text-emerald-600"
+                  onClick={() => setSelectedColor(color)}
+                  className={`rounded-lg border px-5 py-2 text-sm transition cursor-pointer ${
+                    selectedColor === color
+                      ? "border-blue-600 bg-blue-50 text-blue-600"
+                      : "border-gray-300 hover:border-blue-400"
+                  }`}
                 >
                   {color}
                 </button>
               ))}
+
+              <p className="mt-3 text-sm text-gray-500">
+                Warna dipilih:
+                <span className="font-medium text-gray-800">
+                  {" "}
+                  {selectedColor}
+                </span>
+              </p>
             </div>
           </div>
 

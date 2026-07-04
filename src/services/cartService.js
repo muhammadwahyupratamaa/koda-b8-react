@@ -6,10 +6,12 @@ function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function addToCart(product, qty = 1) {
+function addToCart(product, qty = 1, color = "") {
   const cart = getCart();
 
-  const existing = cart.find((item) => item.id === product.id);
+  const existing = cart.find(
+    (item) => item.id === product.id && item.color === color,
+  );
 
   if (existing) {
     existing.qty += qty;
@@ -22,6 +24,7 @@ function addToCart(product, qty = 1) {
       priceDisc: product.priceDisc,
       stock: product.stock,
       qty,
+      color,
     });
   }
 
