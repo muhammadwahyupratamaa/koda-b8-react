@@ -1,8 +1,12 @@
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import cartService from "../../services/cartService";
+import wishlistService from "../../services/wishlistService";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const [liked, setLiked] = useState(wishlistService.isInWishlist(product.id));
 
   const {
     id,
@@ -30,10 +34,23 @@ function ProductCard({ product }) {
         )}
 
         <button
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+
+            if (liked) {
+              wishlistService.removeFromWishlist(product.id);
+            } else {
+              wishlistService.addToWishlist(product);
+            }
+
+            setLiked(!liked);
+          }}
           className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition hover:bg-red-500 hover:text-white"
         >
-          <Heart size={18} />
+          <Heart
+            size={18}
+            className={liked ? "fill-red-500 text-red-500" : ""}
+          />
         </button>
 
         <img
@@ -80,6 +97,8 @@ function ProductCard({ product }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
+
+            cartService.addToCart(product);
           }}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg active:scale-95 "
         >
