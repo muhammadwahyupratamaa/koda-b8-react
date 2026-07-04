@@ -41,14 +41,26 @@ function DetailPage() {
   const [selectedColor, setSelectedColor] = useState(
     product?.colors?.[0] || "",
   );
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   useEffect(() => {
+    setIsWishlisted(wishlistService.isInWishlist(product.id));
     if (product) {
       setSelectedImage(product.image);
       setSelectedColor(product.colors?.[0] || "");
       setQty(1);
     }
   }, [id]);
+
+  const handleWishlist = () => {
+    if (isWishlisted) {
+      wishlistService.removeFromWishlist(product.id);
+      setIsWishlisted(false);
+    } else {
+      wishlistService.addToWishlist(product);
+      setIsWishlisted(true);
+    }
+  };
 
   const handleAddToCart = () => {
     cartService.addToCart(product, qty, selectedColor);
@@ -250,12 +262,18 @@ function DetailPage() {
             </button>
 
             <button
-              onClick={() => {
-                wishlistService.addToWishlist(product);
-              }}
-              className="border-gray-100 border rounded-xl flex justify-center items-center hover:bg-gray-100 cursor-pointer"
+              onClick={handleWishlist}
+              className={`transition-all duration-300 ${
+                isWishlisted
+                  ? "fill-red-500 text-red-500 scale-110"
+                  : "text-gray-600"
+              }`}
             >
-              <FiHeart />
+              <FiHeart
+                className={`transition ${
+                  isWishlisted ? "fill-red-500 text-red-500" : ""
+                }`}
+              />
             </button>
           </div>
 

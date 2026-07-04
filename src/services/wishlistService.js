@@ -1,6 +1,9 @@
 function getWishlist() {
   return JSON.parse(localStorage.getItem("wishlist") || "[]");
 }
+function isInWishlist(id) {
+  return getWishlist().some((item) => item.id === id);
+}
 
 function saveWishlist(wishlist) {
   localStorage.setItem("wishlist", JSON.stringify(wishlist));
@@ -29,4 +32,5 @@ export default {
   saveWishlist,
   addToWishlist,
   removeFromWishlist,
+  isInWishlist,
 };
