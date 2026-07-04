@@ -2,6 +2,7 @@ import { FaStar, FaCheck, FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
+import { useState } from "react";
 
 import {
   FiHeart,
@@ -35,9 +36,22 @@ function DetailPage() {
       </main>
     );
   }
+  const [qty, setQty] = useState(1);
 
   const handleAddToCart = () => {
     cartService.addToCart(product);
+  };
+
+  const handleIncreaseQty = () => {
+    if (qty < product.stock) {
+      setQty((prev) => prev + 1);
+    }
+  };
+
+  const handleDecreaseQty = () => {
+    if (qty > 1) {
+      setQty((prev) => prev - 1);
+    }
   };
 
   const produkTerkait = productService.getRelatedProducts(
@@ -162,13 +176,21 @@ function DetailPage() {
 
             <div className="flex items-center gap-3">
               <div className="flex items-center border border-gray-100 rounded-lg">
-                <button className="px-4 py-2">
+                <button
+                  onClick={handleDecreaseQty}
+                  disabled={qty === 1}
+                  className="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <FiMinus />
                 </button>
 
-                <span className="px-4">1</span>
+                <span className="px-4">{qty}</span>
 
-                <button className="px-4 py-2">
+                <button
+                  onClick={handleIncreaseQty}
+                  disabled={qty === product.stock}
+                  className="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <FiPlus />
                 </button>
               </div>
