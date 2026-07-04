@@ -6,15 +6,23 @@ function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
-function addToCart(product) {
+function addToCart(product, qty = 1) {
   const cart = getCart();
 
   const existing = cart.find((item) => item.id === product.id);
 
   if (existing) {
-    existing.qty += product.qty;
+    existing.qty += qty;
   } else {
-    cart.push(product);
+    cart.push({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      priceDisc: product.priceDisc,
+      stock: product.stock,
+      qty,
+    });
   }
 
   saveCart(cart);

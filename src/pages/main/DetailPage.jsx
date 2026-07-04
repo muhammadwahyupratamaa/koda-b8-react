@@ -23,7 +23,7 @@ function DetailPage() {
   const handleBuyNow = () => {
     cartService.clearCart();
 
-    cartService.addToCart(product);
+    cartService.addToCart(product, qty);
 
     navigate("/checkout/shipping");
   };
@@ -39,7 +39,7 @@ function DetailPage() {
   const [qty, setQty] = useState(1);
 
   const handleAddToCart = () => {
-    cartService.addToCart(product);
+    cartService.addToCart(product, qty);
   };
 
   const handleIncreaseQty = () => {
