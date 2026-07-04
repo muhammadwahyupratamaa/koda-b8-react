@@ -1,30 +1,18 @@
-import { FaMapMarkerAlt, FaPhoneAlt, FaTruck } from "react-icons/fa";
+import { FaTruck } from "react-icons/fa";
 
 function TopBar() {
   return (
-    <header className="w-full bg-slate-900 text-slate-200">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 text-xs sm:px-6 sm:text-sm">
-        <div className="hidden items-center gap-2 md:flex">
-          <FaMapMarkerAlt className="text-emerald-400" size={13} />
-          <span className="font-medium">Dikirim ke Jakarta Selatan</span>
-        </div>
+    <header className="bg-slate-950 border-b border-slate-800">
+      <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-4 py-2 text-xs font-medium text-slate-300 sm:text-sm">
+        <FaTruck className="text-emerald-400" />
 
-        <div className="flex items-center gap-2 md:hidden">
-          <FaTruck className="text-emerald-400" size={13} />
-          <span className="font-medium">Gratis Ongkir</span>
-        </div>
+        <span>
+          Gratis Ongkir <strong className="text-white">Min. Rp100.000</strong>
 
-        <div className="flex items-center gap-4 sm:gap-6">
-          <div className="hidden items-center gap-2 sm:flex">
-            <FaTruck className="text-emerald-400" size={13} />
-            <span>Gratis Ongkir Rp100.000+</span>
-          </div>
+          <span className="mx-2 text-slate-600">•</span>
 
-          <div className="flex items-center gap-2">
-            <FaPhoneAlt className="text-emerald-400" size={12} />
-            <span>0800-1234-5678</span>
-          </div>
-        </div>
+          Pengiriman ke Seluruh Indonesia
+        </span>
       </div>
     </header>
   );
