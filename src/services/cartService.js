@@ -14,6 +14,10 @@ function addToCart(product, qty = 1, color = "") {
   );
 
   if (existing) {
+    if (existing.qty + qty > existing.stock) {
+      return false;
+    }
+
     existing.qty += qty;
   } else {
     cart.push({
@@ -29,6 +33,7 @@ function addToCart(product, qty = 1, color = "") {
   }
 
   saveCart(cart);
+  return true;
 }
 
 function increaseQty(id) {
@@ -36,7 +41,7 @@ function increaseQty(id) {
 
   const item = cart.find((item) => item.id === id);
 
-  if (item) {
+  if (item && item.qty < item.stock) {
     item.qty += 1;
   }
 

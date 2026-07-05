@@ -1,6 +1,6 @@
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
 import formatCurrency from "../../utils/formatCurrency";
@@ -35,13 +35,18 @@ function ProductCard({ product }) {
       wishlistService.addToWishlist(product);
     }
 
-    setLiked(!liked);
+    setLiked((prev) => !prev);
   }
 
   function handleAddCart(e) {
     e.stopPropagation();
 
     cartService.addToCart(product);
+    const success = cartService.addToCart(product);
+
+    if (!success) {
+      alert("Stok produk tidak mencukupi.");
+    }
   }
 
   return (
