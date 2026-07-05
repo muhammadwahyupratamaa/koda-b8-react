@@ -3,10 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
+import formatCurrency from "../../utils/formatCurrency";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
   const [liked, setLiked] = useState(wishlistService.isInWishlist(product.id));
+
+  useEffect(() => {
+    setLiked(wishlistService.isInWishlist(product.id));
+  }, [product.id]);
 
   const {
     id,
@@ -93,11 +98,13 @@ function ProductCard({ product }) {
         </div>
 
         <div className="mt-5">
-          <h4 className="text-2xl font-bold text-emerald-600">{`Rp.${price}`}</h4>
+          <h4 className="text-2xl font-bold text-emerald-600">
+            {formatCurrency(price)}
+          </h4>
 
           {priceDisc && (
             <p className="mt-1 text-sm text-slate-400 line-through">
-              {`Rp.${priceDisc}`}
+              {formatCurrency(priceDisc)}
             </p>
           )}
         </div>
