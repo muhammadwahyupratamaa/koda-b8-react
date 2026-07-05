@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import cartService from "../../services/cartService";
+import wishlistService from "../../services/wishlistService";
+import { useEffect, useState } from "react";
 
 import {
   FaShoppingBag,
@@ -14,6 +17,17 @@ import SearchBar from "../common/SearchBar";
 
 function MainBar() {
   const { user } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    const cart = cartService.getCart();
+    const wishlist = wishlistService.getWishlist();
+
+    setCartCount(cart.reduce((total, item) => total + item.qty, 0));
+
+    setWishlistCount(wishlist.length);
+  }, []);
 
   return (
     <nav className="w-full border-b border-slate-200 bg-white">
@@ -46,9 +60,15 @@ function MainBar() {
 
             <Link
               to="/profile/wishlist"
-              className="rounded-full p-3 transition hover:bg-slate-100 hover:text-emerald-600"
+              className="relative rounded-full p-3 transition hover:bg-slate-100 hover:text-emerald-600"
             >
               <FaHeart />
+
+              {wishlistCount > 0 && (
+                <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
 
             <Link
@@ -57,9 +77,11 @@ function MainBar() {
             >
               <FaShoppingCart />
 
-              <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {user ? (
