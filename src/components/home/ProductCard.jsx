@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
 import formatCurrency from "../../utils/formatCurrency";
+import { useAuth } from "../../context/AuthContext";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [liked, setLiked] = useState(wishlistService.isInWishlist(product.id));
 
   useEffect(() => {
@@ -29,6 +31,12 @@ function ProductCard({ product }) {
   function handleWishlist(e) {
     e.stopPropagation();
 
+    if (!user) {
+      alert("Silakan login terlebih dahulu.");
+      navigate("/login");
+      return;
+    }
+
     if (liked) {
       wishlistService.removeFromWishlist(product.id);
     } else {
@@ -41,7 +49,12 @@ function ProductCard({ product }) {
   function handleAddCart(e) {
     e.stopPropagation();
 
-    cartService.addToCart(product);
+    if (!user) {
+      alert("Silakan login terlebih dahulu.");
+      navigate("/login");
+      return;
+    }
+
     const success = cartService.addToCart(product);
 
     if (!success) {
