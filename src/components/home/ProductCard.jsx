@@ -21,6 +21,24 @@ function ProductCard({ product }) {
     sold,
   } = product;
 
+  function handleWishlist(e) {
+    e.stopPropagation();
+
+    if (liked) {
+      wishlistService.removeFromWishlist(product.id);
+    } else {
+      wishlistService.addToWishlist(product);
+    }
+
+    setLiked(!liked);
+  }
+
+  function handleAddCart(e) {
+    e.stopPropagation();
+
+    cartService.addToCart(product);
+  }
+
   return (
     <div
       onClick={() => navigate(`/detail/${id}`)}
@@ -34,17 +52,7 @@ function ProductCard({ product }) {
         )}
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-
-            if (liked) {
-              wishlistService.removeFromWishlist(product.id);
-            } else {
-              wishlistService.addToWishlist(product);
-            }
-
-            setLiked(!liked);
-          }}
+          onClick={handleWishlist}
           className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition hover:bg-red-500 hover:text-white"
         >
           <Heart
@@ -95,11 +103,7 @@ function ProductCard({ product }) {
         </div>
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-
-            cartService.addToCart(product);
-          }}
+          onClick={handleAddCart}
           className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-emerald-600 hover:shadow-lg active:scale-95 "
         >
           <ShoppingCart size={18} />
