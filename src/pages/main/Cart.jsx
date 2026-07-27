@@ -1,7 +1,12 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
-import cartService from "../../services/cartService";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  increaseQty,
+  decreaseQty,
+  removeItem,
+} from "../../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
 
@@ -10,33 +15,24 @@ const formatRupiah = (number) => {
     style: "currency",
     currency: "IDR",
   }).format(number);
-}
+};
 
 function Cart() {
-  const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    setCart(cartService.getCart());
-  }, []);
-
-  const refreshCart = () => {
-    setCart(cartService.getCart());
-  };
+  const cart = useSelector((state) => state.cart.items);
 
   const handleIncrease = (id) => {
-    cartService.increaseQty(id);
-    refreshCart();
+    dispatch(increaseQty(id));
   };
 
   const handleDecrease = (id) => {
-    cartService.decreaseQty(id);
-    refreshCart();
+    dispatch(decreaseQty(id));
   };
 
   const handleRemove = (id) => {
-    cartService.removeItem(id);
-    refreshCart();
+    dispatch(removeItem(id));
   };
 
   const subtotal = cart.reduce((total, item) => {
@@ -143,9 +139,7 @@ function Cart() {
               <div className="flex w-full justify-between text-gray-500 text-sm font-meidum">
                 <p>Subtotal</p>
 
-                <p className="text-blue-600">
-                  {formatRupiah(subtotal)}
-                </p>
+                <p className="text-blue-600">{formatRupiah(subtotal)}</p>
               </div>
             </div>
 
@@ -161,9 +155,7 @@ function Cart() {
           <div className="flex justify-between text-lg font-semibold">
             <p>{formatRupiah(subtotal)}</p>
 
-            <p className="text-blue-600">
-              {formatRupiah(subtotal)}
-            </p>
+            <p className="text-blue-600">{formatRupiah(subtotal)}</p>
           </div>
 
           <button
@@ -189,4 +181,4 @@ function Cart() {
 }
 
 export default Cart;
-export {formatRupiah};
+export { formatRupiah };

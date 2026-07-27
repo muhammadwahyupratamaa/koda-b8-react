@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 import {
   FaShoppingBag,
@@ -17,17 +17,13 @@ import SearchBar from "../common/SearchBar";
 
 function MainBar() {
   const { user } = useAuth();
-  const [cartCount, setCartCount] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
+  const cart = useSelector((state) => state.cart.items);
 
-  useEffect(() => {
-    const cart = cartService.getCart();
-    const wishlist = wishlistService.getWishlist();
+  const cartCount = useMemo(() => {
+    return cart.reduce((total, item) => total + item.qty, 0);
+  }, [cart]);
 
-    setCartCount(cart.reduce((total, item) => total + item.qty, 0));
-
-    setWishlistCount(wishlist.length);
-  }, []);
+  const wishlistCount = wishlistService.getWishlist().length;
 
   return (
     <nav className="w-full border-b border-slate-200 bg-white">
