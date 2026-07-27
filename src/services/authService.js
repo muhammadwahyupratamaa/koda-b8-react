@@ -1,10 +1,11 @@
+import storageService from "./storageService";
+
 function getUsers() {
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  return users;
+  return storageService.get("users", []);
 }
 
 function saveUsers(users) {
-  localStorage.setItem("users", JSON.stringify(users));
+  storageService.set("users", users);
 }
 
 function register(data) {
