@@ -1,12 +1,15 @@
+import storageService from "./storageService";
+
 function getWishlist() {
-  return JSON.parse(localStorage.getItem("wishlist") || "[]");
+  return storageService.get("wishlist", []);
 }
+
 function isInWishlist(id) {
   return getWishlist().some((item) => item.id === id);
 }
 
 function saveWishlist(wishlist) {
-  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  storageService.set("wishlist", wishlist);
 }
 
 function addToWishlist(product) {
