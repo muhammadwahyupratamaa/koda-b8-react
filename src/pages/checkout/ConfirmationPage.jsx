@@ -3,13 +3,19 @@ import { FiCheck, FiChevronRight, FiLock } from "react-icons/fi";
 import { GiDiceSixFacesFive } from "react-icons/gi";
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../../features/cart/cartSlice";
 import cartService from "../../services/cartService";
 
 function ConfirmationPage() {
   const navigate = useNavigate();
-  const cart = cartService.getCart();
+  const dispatch = useDispatch();
+
+  const cart = useSelector((state) => state.cart.items);
+
   const shipping = JSON.parse(localStorage.getItem("shipping"));
   const payment = localStorage.getItem("payment");
+
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.qty,
     0,
@@ -124,7 +130,11 @@ function ConfirmationPage() {
 
             <button
               onClick={() => {
-                const order = cartService.checkout();
+                const order = cartService.checkout(cart);
+
+                if (!order) return;
+
+                dispatch(clearCart());
 
                 navigate("/checkout/success", {
                   state: order,

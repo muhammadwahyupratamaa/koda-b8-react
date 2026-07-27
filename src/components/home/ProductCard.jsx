@@ -1,12 +1,14 @@
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import cartService from "../../services/cartService";
 import wishlistService from "../../services/wishlistService";
 import formatCurrency from "../../utils/formatCurrency";
 import { useAuth } from "../../context/AuthContext";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../features/cart/cartSlice";
 
 function ProductCard({ product }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [liked, setLiked] = useState(wishlistService.isInWishlist(product.id));
@@ -55,11 +57,13 @@ function ProductCard({ product }) {
       return;
     }
 
-    const success = cartService.addToCart(product);
-
-    if (!success) {
-      alert("Stok produk tidak mencukupi.");
-    }
+    dispatch(
+      addToCart({
+        product,
+        qty: 1,
+        color: "",
+      }),
+    );
   }
 
   return (

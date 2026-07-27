@@ -1,11 +1,11 @@
 import { FiTruck, FiLock, FiChevronRight } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
-import cartService from "../../services/cartService";
+import { useSelector } from "react-redux";
 
 function ShippingPage() {
   const navigate = useNavigate();
-  const cart = cartService.getCart();
+  const cart = useSelector((state) => state.cart.items);
 
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.qty,

@@ -1,17 +1,13 @@
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
-import cartService from "../../services/cartService";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../features/cart/cartSlice";
 import wishlistService from "../../services/wishlistService";
 
 function WishlistCard({ product, onRemove }) {
+  const dispatch = useDispatch();
   const { id, image, brand, name, rating, review, price, priceDisc, discount } =
     product;
-
-  console.log({
-    price: product.price,
-    priceDisc: product.priceDisc,
-    product,
-  });
   return (
     <article className="w-full max-w-[320px] border border-gray-200 rounded-xl overflow-hidden bg-white">
       <div className="relative">
@@ -36,18 +32,13 @@ function WishlistCard({ product, onRemove }) {
       <button
         type="button"
         onClick={() => {
-          cartService.addToCart({
-            id,
-            image,
-            brand,
-            name,
-            rating,
-            review,
-            price,
-            priceDisc,
-            discount,
-            qty: 1,
-          });
+          dispatch(
+            addToCart({
+              product,
+              qty: 1,
+              color: "",
+            }),
+          );
 
           wishlistService.removeFromWishlist(id);
           onRemove();

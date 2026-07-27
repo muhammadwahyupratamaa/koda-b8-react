@@ -84,10 +84,8 @@ function saveOrders(orders) {
   localStorage.setItem("orders", JSON.stringify(orders));
 }
 
-function checkout() {
-  const cart = getCart();
-
-  if (cart.length === 0) return null;
+function checkout(cart) {
+  if (!cart || cart.length === 0) return null;
 
   const shipping = JSON.parse(localStorage.getItem("shipping"));
   const payment = localStorage.getItem("payment");
@@ -109,7 +107,7 @@ function checkout() {
 
   saveOrders(orders);
 
-  clearCart();
+  // Bersihkan data checkout sementara
   localStorage.removeItem("shipping");
   localStorage.removeItem("payment");
 
@@ -117,13 +115,6 @@ function checkout() {
 }
 
 export default {
-  getCart,
-  saveCart,
-  addToCart,
-  increaseQty,
-  decreaseQty,
-  removeItem,
-  clearCart,
   getOrders,
   saveOrders,
   checkout,

@@ -4,7 +4,7 @@ import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../features/cart/cartSlice";
+import { addToCart, clearCart } from "../../features/cart/cartSlice";
 
 import {
   FiHeart,
@@ -14,7 +14,6 @@ import {
   FiMinus,
   FiPlus,
 } from "react-icons/fi";
-import cartService from "../../services/cartService";
 import { useNavigate, useParams } from "react-router-dom";
 import productService from "../../services/productService";
 
@@ -24,11 +23,18 @@ function DetailPage() {
   const dispatch = useDispatch();
 
   const handleBuyNow = () => {
-  cartService.clearCart();
-  cartService.addToCart(product, qty, selectedColor);
+    dispatch(clearCart());
 
-  navigate("/checkout/shipping");
-};
+    dispatch(
+      addToCart({
+        product,
+        qty,
+        color: selectedColor,
+      }),
+    );
+
+    navigate("/checkout/shipping");
+  };
 
   const product = productService.getProductById(id);
   if (!product) {

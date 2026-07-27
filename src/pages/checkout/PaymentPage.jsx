@@ -2,12 +2,13 @@ import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
 
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
-import cartService from "../../services/cartService";
+import { useSelector } from "react-redux";
 
 function PaymentPage() {
   const navigate = useNavigate();
   const paymentMethod = "Virtual Account BCA";
-  const cart = cartService.getCart();
+
+  const cart = useSelector((state) => state.cart.items);
 
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.qty,
@@ -155,7 +156,9 @@ function PaymentPage() {
 
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">Rp {subtotal.toLocaleString("id-ID")}</p>
+              <p className="text-gray-500">
+                Rp {subtotal.toLocaleString("id-ID")}
+              </p>
 
               <p>Rp {subtotal.toLocaleString("id-ID")}</p>
             </div>
@@ -170,9 +173,13 @@ function PaymentPage() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between items-center">
-            <p className="text-lg font-medium">Rp {subtotal.toLocaleString("id-ID")}</p>
+            <p className="text-lg font-medium">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
 
-            <p className="text-2xl font-semibold text-blue-600">Rp {subtotal.toLocaleString("id-ID")}</p>
+            <p className="text-2xl font-semibold text-blue-600">
+              Rp {subtotal.toLocaleString("id-ID")}
+            </p>
           </div>
 
           <div className="flex justify-center items-center gap-2 mt-6">
