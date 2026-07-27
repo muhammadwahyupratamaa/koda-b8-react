@@ -3,6 +3,8 @@ import { GoChevronRight } from "react-icons/go";
 import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../features/cart/cartSlice";
 
 import {
   FiHeart,
@@ -19,14 +21,14 @@ import productService from "../../services/productService";
 function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleBuyNow = () => {
-    cartService.clearCart();
+  cartService.clearCart();
+  cartService.addToCart(product, qty, selectedColor);
 
-    cartService.addToCart(product, qty, selectedColor);
-
-    navigate("/checkout/shipping");
-  };
+  navigate("/checkout/shipping");
+};
 
   const product = productService.getProductById(id);
   if (!product) {
@@ -63,7 +65,13 @@ function DetailPage() {
   };
 
   const handleAddToCart = () => {
-    cartService.addToCart(product, qty, selectedColor);
+    dispatch(
+      addToCart({
+        product,
+        qty,
+        color: selectedColor,
+      }),
+    );
   };
 
   const handleIncreaseQty = () => {
