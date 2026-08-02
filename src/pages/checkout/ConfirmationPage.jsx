@@ -1,6 +1,4 @@
 import { FiCheck, FiChevronRight, FiLock } from "react-icons/fi";
-
-import { GiDiceSixFacesFive } from "react-icons/gi";
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,8 +12,6 @@ function ConfirmationPage() {
   const cart = useSelector((state) => state.cart.items);
 
   const shipping = JSON.parse(localStorage.getItem("shipping"));
-  const payment = localStorage.getItem("payment");
-
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.qty,
     0,
@@ -25,27 +21,27 @@ function ConfirmationPage() {
       <section className="flex justify-center items-center mb-10">
         <div className="flex items-center">
           <div className="flex flex-col items-center">
-            <div className="w-10 h-10 rounded-full bg-green-500 text-white flex justify-center items-center">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-500 text-white flex justify-center items-center">
               <FiCheck className="w-5 h-5" />
             </div>
 
             <p className="text-sm text-gray-500 mt-2">Pengiriman</p>
           </div>
 
-          <div className="w-32 h-1 bg-green-500 mx-5"></div>
+          <div className="mx-2 h-1 w-12 bg-green-500 sm:mx-5 sm:w-32"></div>
 
           <div className="flex flex-col items-center">
-            <div className="w-10 h-10 rounded-full bg-green-500 text-white flex justify-center items-center">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-500 text-white flex justify-center items-center">
               <FiCheck className="w-5 h-5" />
             </div>
 
             <p className="text-sm text-gray-500 mt-2">Pembayaran</p>
           </div>
 
-          <div className="w-32 h-1 bg-green-500 mx-5"></div>
+          <div className="mx-2 h-1 w-12 bg-green-500 sm:mx-5 sm:w-32"></div>
 
           <div className="flex flex-col items-center">
-            <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex justify-center items-center">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-600 text-white flex justify-center items-center">
               3
             </div>
 
@@ -54,11 +50,13 @@ function ConfirmationPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-[2fr_1fr] gap-6">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         {/* LEFT */}
 
         <section className="border border-gray-200 rounded-xl p-6">
-          <h2 className="text-2xl font-medium mb-8">Konfirmasi Pesanan</h2>
+          <h2 className="mb-8 text-xl font-medium sm:text-2xl">
+            Konfirmasi Pesanan
+          </h2>
 
           <div className="bg-gray-50 rounded-xl p-5 mb-5">
             <h3 className="font-medium mb-3">Alamat Pengiriman</h3>
@@ -87,13 +85,13 @@ function ConfirmationPage() {
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-center mb-4"
+                className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div className="flex gap-3">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-14 h-14 rounded-lg"
+                    className="h-12 w-12 rounded-lg object-cover sm:h-14 sm:w-14"
                   />
 
                   <div>
@@ -110,7 +108,7 @@ function ConfirmationPage() {
             ))}
           </div>
 
-          <div className="bg-slate-100 rounded-xl p-5 flex gap-3 mt-6">
+          <div className="mt-6 flex items-start gap-3 rounded-xl bg-slate-100 p-5">
             <FiLock className="w-5 h-5 text-blue-600 mt-1" />
 
             <p className="text-sm text-gray-500">
@@ -120,10 +118,10 @@ function ConfirmationPage() {
             </p>
           </div>
 
-          <div className="flex justify-between gap-2 mt-8">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <button
               onClick={() => navigate("/checkout/payment")}
-              className="border border-gray-200 rounded-xl px-8 py-3 hover:bg-gray-100 cursor-pointer"
+              className="w-full rounded-xl border border-gray-200 px-8 py-3 sm:w-auto hover:bg-gray-100 cursor-pointer"
             >
               Kembali
             </button>
@@ -150,7 +148,9 @@ function ConfirmationPage() {
 
         {/* RIGHT */}
         <section className="border border-gray-200 rounded-xl p-5 h-fit">
-          <h2 className="text-2xl font-medium mb-6">Ringkasan Pesanan</h2>
+          <h2 className="mb-6 text-xl font-medium sm:text-2xl">
+            Ringkasan Pesanan
+          </h2>
 
           {cart.map((item) => (
             <div
