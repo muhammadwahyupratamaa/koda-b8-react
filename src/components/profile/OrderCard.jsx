@@ -17,9 +17,9 @@ function OrderCard({
 
   return (
     <article className="border border-gray-200 rounded-xl p-6">
-      <div className="flex justify-between items-start mb-5">
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h3 className="text-2xl font-semibold">#{orderId}</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold">#{orderId}</h3>
 
           <p className="text-sm text-gray-400 mt-1">{date}</p>
         </div>
@@ -35,11 +35,14 @@ function OrderCard({
 
       <div className="border-b border-gray-200 pb-5 flex flex-col gap-5">
         {products.map((product) => (
-          <div key={product.id} className="flex items-center gap-4">
+          <div
+            key={product.id}
+            className="flex flex-col gap-3 sm:flex-row sm:items-center"
+          >
             <img
               src={product.image}
               alt={product.name}
-              className="w-16 h-16 rounded-lg object-cover"
+              className="h-14 w-14 sm:h-16 sm:w-16 rounded-lg object-cover"
             />
 
             <div className="flex flex-col gap-1">
@@ -53,16 +56,16 @@ function OrderCard({
         ))}
       </div>
 
-      <div className="flex justify-between items-center mt-6">
-        <p className="text-lg">
+      <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-base sm:text-lg">
           Total :
           <span className="text-blue-600 font-semibold ml-2">{total}</span>
         </p>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
-            className="border border-blue-600 text-blue-600 rounded-lg px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer"
+            className="border border-blue-600 text-blue-600 rounded-lg px-4 py-2 w-full sm:w-auto text-sm hover:bg-blue-50 cursor-pointer"
           >
             Lacak
           </button>
@@ -70,7 +73,7 @@ function OrderCard({
           {showReview && (
             <button
               type="button"
-              className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 text-sm flex items-center gap-2 cursor-pointer"
+              className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg px-4 py-2 w-full sm:w-auto text-sm flex items-center gap-2 cursor-pointer"
             >
               <FiStar className="w-4 h-4" />
               Beri Ulasan
@@ -79,7 +82,7 @@ function OrderCard({
 
           <button
             type="button"
-            className="border border-gray-300 text-gray-500 rounded-lg px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+            className="border border-gray-300 text-gray-500 rounded-lg px-4 py-2 w-full sm:w-auto text-sm hover:bg-gray-100 cursor-pointer"
           >
             Beli Lagi
           </button>

@@ -8,15 +8,15 @@ function MyOrderPage() {
 
   const orders = cartService.getOrders();
   return (
-    <main className="max-w-7xl mx-auto py-8">
-      <section className="grid grid-cols-[280px_1fr] gap-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
         <ProfileSidebar active="orders" />
 
         <section className="flex flex-col gap-6">
-          <h1 className="text-3xl font-semibold">Pesanan Saya</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold">Pesanan Saya</h1>
 
           {orders.length === 0 ? (
-            <div className="border border-gray-200 rounded-xl p-10 text-center">
+            <div className="border border-gray-200 rounded-xl p-6 sm:p-10 text-center">
               <h2 className="text-2xl font-semibold">Belum ada pesanan</h2>
 
               <p className="text-gray-500 mt-2">
