@@ -15,7 +15,7 @@ function BrowseProducts() {
   });
 
   return (
-    <main className="max-w-7xl mx-auto px-4 py-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
       <section className="flex items-center gap-2 text-sm text-gray-400 mb-6">
         <span>Beranda</span>
 
@@ -158,7 +158,7 @@ function BrowseProducts() {
               <p className="text-slate-500">Produk tidak ditemukan.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {displayedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -166,7 +166,7 @@ function BrowseProducts() {
           )}
 
           <div className="flex justify-center mt-10">
-            <button className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">
+            <button className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">
               Muat Lebih Banyak (6 produk lagi)
             </button>
           </div>
