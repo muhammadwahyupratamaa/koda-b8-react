@@ -3,27 +3,27 @@ import ProfileSidebar from "../../components/profile/ProfileSidebar";
 
 function EditProfilePage() {
   return (
-    <main className="max-w-7xl mx-auto py-8">
-      <section className="grid grid-cols-[300px_1fr] gap-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-[300px_1fr]">
         <ProfileSidebar active="profile" />
 
         <section>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold">Pengaturan Profil</h1>
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl sm:text-3xl font-semibold">Pengaturan Profil</h1>
 
             <button
               type="button"
-              className="border border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl px-5 py-3 flex items-center gap-2 text-sm transition cursor-pointer"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-blue-600 px-5 py-3 text-sm text-blue-600 transition hover:bg-blue-50 sm:w-auto cursor-pointer"
             >
               <FiEdit2 className="w-5 h-5" />
               Simpan
             </button>
           </div>
 
-          <div className="border border-gray-200 rounded-xl p-6">
-            <div className="flex items-center gap-6 mb-8">
-              <div className="w-24 h-24 rounded-full bg-blue-100 flex justify-center items-center">
-                <span className="text-4xl font-semibold text-blue-600">B</span>
+          <div className="border border-gray-200 rounded-xl p-5 sm:p-6">
+            <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-blue-100 flex justify-center items-center">
+                <span className="text-3xl sm:text-4xl font-semibold text-blue-600">B</span>
               </div>
 
               <button
@@ -91,7 +91,7 @@ function EditProfilePage() {
             </div>
           </div>
 
-          <div className="border border-gray-200 rounded-xl p-6 mt-6">
+          <div className="border border-gray-200 rounded-xl p-5 sm:p-6 mt-6">
             <h2 className="text-xl font-semibold mb-5">Keamanan Akun</h2>
 
             <div className="flex flex-col gap-4">
