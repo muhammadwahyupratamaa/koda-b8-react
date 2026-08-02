@@ -5,11 +5,13 @@ import { hero3 } from "../../assets";
 function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-white via-slate-50 to-emerald-50">
-      <div className="absolute -left-32 top-10 h-72 w-72 rounded-full bg-emerald-100 blur-[120px] opacity-70" />
-
-      <div className="absolute right-0 top-1/2 h-[520px] w-128 -translate-y-1/2 rounded-full bg-emerald-100/80 blur-3xl" />
-
-      <div className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-14 px-4 py-16 sm:px-6 lg:flex-row lg:gap-10 lg:py-24">
+      <div className="absolute -left-32 top-10 h-52 w-52 sm:h-72 sm:w-72 rounded-full bg-emerald-100 blur-[120px] opacity-70" />
+      <div
+        className=" absolute right-0 top-1/2 h-72 w-72 sm:h-96 sm:w-96
+      lg:h-[520px] lg:w-[520px] -translate-y-1/2 rounded-full bg-emerald-100/80
+      blur-3xl "
+      ></div>
+      <div className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-8 lg:gap-10 px-4 py-10 sm:py-14 lg:py-24 sm:px-6 lg:flex-row">
         {/* LEFT */}
         <div className="z-10 flex-1 text-center lg:text-left">
           <div className="mb-6 inline-flex rounded-full bg-emerald-100 px-4 py-2">
@@ -18,7 +20,7 @@ function Hero() {
             </span>
           </div>
 
-          <h1 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-3xl font-extrabold leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Belanja Mudah
             <span className="mt-2 block text-emerald-600">
               Untuk Semua Kebutuhan
@@ -43,11 +45,10 @@ function Hero() {
           <img
             src={hero3}
             alt="Hero"
-            className="relativ rounded-2xl z-10 w-full max-w-sm transition-all duration-300 hover:-translate-y-1 sm:max-w-md md:max-w-xl lg:max-w-2xl "
+            className="relative rounded-2xl z-10 w-full max-w-sm h-auto transition-all duration-300 hover:-translate-y-1 sm:max-w-md md:max-w-xl lg:max-w-2xl "
           />
         </div>
       </div>
-
       <div className="absolute bottom-0 left-0 h-24 w-full bg-gradient-to-t from-white to-transparent" />
     </section>
   );
