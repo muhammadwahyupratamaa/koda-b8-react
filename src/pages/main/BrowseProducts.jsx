@@ -24,7 +24,7 @@ function BrowseProducts() {
         <span>Toko</span>
       </section>
 
-      <h1 className="text-3xl font-semibold mb-8">
+      <h1 className="text-2xl sm:text-3xl font-semibold mb-8">
         {keyword
           ? `Hasil Pencarian "${keyword}"`
           : category
@@ -32,8 +32,8 @@ function BrowseProducts() {
             : "Semua Produk"}
       </h1>
 
-      <section className="grid grid-cols-[260px_1fr] gap-8">
-        <aside className="border border-gray-200 rounded-xl p-5 h-fit">
+      <section className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
+        <aside className="hidden lg:block border border-gray-200 rounded-xl p-5 h-fit">
           <div className="mb-8">
             <h2 className="text-base font-semibold mb-5">Harga</h2>
 
@@ -136,15 +136,15 @@ function BrowseProducts() {
         </aside>
 
         <section>
-          <div className="flex justify-between items-center mb-6">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-gray-400">
               {displayedProducts.length} produk ditemukan
             </p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span className="text-sm text-gray-400">Urutkan:</span>
 
-              <select className="border rounded-lg px-3 cursor-pointer py-2 text-sm outline-none">
+              <select className="w-full sm:w-auto border rounded-lg px-3 py-2 text-sm outline-none cursor-pointer">
                 <option>Paling Populer</option>
                 <option>Harga Terendah</option>
                 <option>Harga Tertinggi</option>
@@ -158,7 +158,7 @@ function BrowseProducts() {
               <p className="text-slate-500">Produk tidak ditemukan.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
               {displayedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -166,7 +166,7 @@ function BrowseProducts() {
           )}
 
           <div className="flex justify-center mt-10">
-            <button className="border border-blue-600 text-blue-600 rounded-lg px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">
+            <button className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">
               Muat Lebih Banyak (6 produk lagi)
             </button>
           </div>
