@@ -100,7 +100,7 @@ function DetailPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
-      <section className="flex items-center gap-2 text-sm text-gray-400 mb-6">
+      <section className="mb-6 flex items-center gap-2 overflow-x-auto whitespace-nowrap text-sm text-gray-400">
         <span>Beranda</span>
 
         <GoChevronRight className="w-4 h-4" />
@@ -115,7 +115,7 @@ function DetailPage() {
         <span className="text-sm text-black">{product.name}</span>
       </section>
 
-      <section className="grid grid-cols-2 gap-10">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
         {/*  LEFT  */}
 
         <div>
@@ -127,11 +127,11 @@ function DetailPage() {
             <img
               src={selectedImage}
               alt={product.name}
-              className="w-full object-cover rounded-xl"
+              className="aspect-square w-full rounded-xl object-cover"
             />
           </div>
 
-          <div className="flex gap-3 mt-4">
+          <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
             {product.gallery.map((image, index) => (
               <button
                 key={index}
@@ -145,7 +145,7 @@ function DetailPage() {
                 <img
                   src={image}
                   alt={`${product.name}-${index + 1}`}
-                  className="w-24 h-24 object-cover"
+                  className="sm:w-24 sm:h-24 w-20 h-20 object-cover"
                 />
               </button>
             ))}
@@ -160,8 +160,10 @@ function DetailPage() {
           </p>
 
           <div className="flex flex-col justify-start items-start gap-2 ">
-            <h1 className="text-2xl font-semibold ">{product.name}</h1>
-            <div className="flex gap-2 mb-2">
+            <h1 className="text-xl sm:text-2xl font-semibold ">
+              {product.name}
+            </h1>
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               <div className="flex text-yellow-400">
                 <FaStar />
                 <FaStar />
@@ -183,7 +185,7 @@ function DetailPage() {
           </div>
 
           <div className="bg-slate-100 rounded-xl p-5">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
               <h2 className="text-2xl font-bold text-blue-600">
                 Rp {product.price.toLocaleString("id-ID")}
               </h2>
@@ -205,7 +207,7 @@ function DetailPage() {
           <div>
             <p className="text-sm font-medium mb-3">Pilih Warna :</p>
 
-            <div className="flex gap-5 mt-5 ">
+            <div className="mt-5 flex flex-wrap gap-3">
               {product.colors.map((color) => (
                 <button
                   key={color}
@@ -233,7 +235,7 @@ function DetailPage() {
           <div>
             <p className="text-sm font-medium mb-3">Jumlah</p>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center border border-gray-100 rounded-lg">
                 <button
                   onClick={handleDecreaseQty}
@@ -260,7 +262,7 @@ function DetailPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-[1fr_1fr_60px] gap-3 ">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_60px] gap-3 ">
             <button
               onClick={handleAddToCart}
               className="border-2 text-base border-orange-500 text-orange-500 rounded-xl py-3 flex justify-center items-center gap-2 font-medium cursor-pointer hover:bg-orange-50"
@@ -291,7 +293,7 @@ function DetailPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 ">
+          <div className="grid sm:grid-cols-3 grid-cols-1 gap-3 ">
             <div className="bg-slate-100 rounded-lg p-4 text-center">
               <FiTruck className="mx-auto text-blue-600 w-5 h-5 mb-2" />
 
