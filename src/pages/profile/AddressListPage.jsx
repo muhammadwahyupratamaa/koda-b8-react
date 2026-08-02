@@ -25,17 +25,17 @@ function AddressListPage() {
   ];
 
   return (
-    <main className="max-w-7xl mx-auto py-8">
-      <section className="grid grid-cols-[300px_1fr] gap-8">
+    <main className="mx-auto max-w-7xl px-4 py-8">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-[300px_1fr]">
         <ProfileSidebar active="address" />
 
         <section>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-semibold">Alamat Saya</h1>
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl sm:text-3xl font-semibold">Alamat Saya</h1>
 
             <button
               type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl flex items-center gap-2 text-sm cursor-pointer"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm text-white hover:bg-blue-700 sm:w-auto cursor-pointer"
             >
               <FiPlus className="w-5 h-5" />
               Tambah Alamat

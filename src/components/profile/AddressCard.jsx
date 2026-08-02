@@ -3,8 +3,8 @@ import { FiEdit2, FiTrash2 } from "react-icons/fi";
 function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
   return (
     <article className="border border-gray-200 rounded-xl p-6">
-      <div className="flex justify-between items-start">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           <h3 className="text-lg font-semibold">{title}</h3>
 
           {isPrimary && (
@@ -32,7 +32,7 @@ function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
       </div>
 
       <div className="mt-5 flex flex-col gap-2">
-        <p className="text-base">
+        <p className="text-base break-words">
           {name} • {phone}
         </p>
 
@@ -44,7 +44,7 @@ function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
       {!isPrimary && (
         <button
           type="button"
-          className="mt-5 text-blue-600 text-sm hover:underline cursor-pointer"
+          className="mt-5 w-full rounded-lg border border-blue-600 py-2 text-sm text-blue-600 hover:bg-blue-50 sm:w-auto sm:border-0 sm:p-0"
         >
           Jadikan Alamat Utama
         </button>
