@@ -73,14 +73,14 @@ function ProductCard({ product }) {
     >
       <div className="relative overflow-hidden bg-slate-100">
         {discount > 0 && (
-          <span className="absolute left-4 top-4 z-20 rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">
+          <span className="absolute left-2 top-2 sm:left-4 sm:top-4 z-20 rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">
             -{discount}%
           </span>
         )}
 
         <button
           onClick={handleWishlist}
-          className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition hover:bg-red-500 hover:text-white"
+          className="absolute right-4 top-4 z-20 flex h-9 w-9 sm:w-10 sm:h-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition hover:bg-red-500 hover:text-white"
         >
           <Heart
             size={18}
@@ -95,13 +95,13 @@ function ProductCard({ product }) {
         />
       </div>
 
-      <div className="flex flex-col p-5">
+      <div className="flex flex-col p-4 sm:p-5">
         <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600">
           {category}
         </span>
 
         <h3
-          className=" mt-2 line-clamp-2 min-h-[56px] text-lg font-semibold leading-7 text-slate-900 transition-colors 
+          className=" mt-2 line-clamp-2 min-h-[48px] sm:min-h-[56px] text-base sm:text-lg font-semibold leading-7 text-slate-900 transition-colors 
           "
         >
           {name}
@@ -120,7 +120,7 @@ function ProductCard({ product }) {
         </div>
 
         <div className="mt-5">
-          <h4 className="text-2xl font-bold text-emerald-600">
+          <h4 className="text-xl sm:text-2xl font-bold text-emerald-600">
             {formatCurrency(price)}
           </h4>
 
