@@ -38,26 +38,26 @@ function ProfileSidebar({ active }) {
 
   return (
     <aside className="flex flex-col gap-6">
-      <section className="border border-gray-200 rounded-xl p-8">
+      <section className="rounded-xl border border-gray-200 p-6 sm:p-8">
         <div className="flex flex-col items-center">
-          <div className="w-20 h-20 rounded-full bg-blue-100 flex justify-center items-center">
+          <div className="sm:w-20 sm:h-20 h-16 w-16 rounded-full bg-blue-100 flex justify-center items-center">
             <span className="text-3xl font-semibold text-blue-600">B</span>
           </div>
 
-          <h2 className="text-2xl font-semibold mt-5">Budi Santoso</h2>
+          <h2 className="sm:text-2xl text-xl font-semibold mt-5">Budi Santoso</h2>
 
           <p className="text-sm text-gray-400 mt-1">budi@email.com</p>
         </div>
 
-        <div className="flex justify-center gap-12 mt-8 pt-5 border-t border-gray-200">
+        <div className="flex justify-center gap-8 sm:gap-12 mt-8 pt-5 border-t border-gray-200">
           <div className="text-center">
-            <p className="text-2xl font-semibold">2</p>
+            <p className="sm:text-2xl text-xl font-semibold">2</p>
 
-            <p className="text-sm text-gray-400">Pesanan</p>
+            <p className="text-xs sm:text-sm text-gray-400">Pesanan</p>
           </div>
 
           <div className="text-center">
-            <p className="text-2xl font-semibold">0</p>
+            <p className="sm:text-2xl text-xl font-semibold">0</p>
 
             <p className="text-sm text-gray-400">Wishlist</p>
           </div>

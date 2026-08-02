@@ -9,9 +9,9 @@ function WishlistCard({ product, onRemove }) {
   const { id, image, brand, name, rating, review, price, priceDisc, discount } =
     product;
   return (
-    <article className="w-full max-w-[320px] border border-gray-200 rounded-xl overflow-hidden bg-white">
+    <article className="w-full rounded-xl border border-gray-200 overflow-hidden bg-white">
       <div className="relative">
-        <img src={image} alt={name} className="w-full h-72 object-cover" />
+        <img src={image} alt={name} className="w-full aspect-square object-cover" />
 
         <div className="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
           {discount}
@@ -52,9 +52,9 @@ function WishlistCard({ product, onRemove }) {
       <div className="p-4">
         <p className="text-sm text-gray-400">{brand}</p>
 
-        <h3 className="text-base font-medium mt-1">{name}</h3>
+        <h3 className="text-base font-medium mt-1 line-clamp-2">{name}</h3>
 
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex flex-wrap  items-center gap-2 mt-2">
           <div className="flex text-yellow-400">
             {[...Array(5)].map((_, index) => (
               <FaStar key={index} className="w-4 h-4" />
@@ -66,7 +66,7 @@ function WishlistCard({ product, onRemove }) {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 mt-3">
+        <div className="flex flex-wrap  items-center gap-2 mt-3">
           <p className="text-xl font-semibold text-blue-600">
             Rp {price.toLocaleString("id-ID")}
           </p>
