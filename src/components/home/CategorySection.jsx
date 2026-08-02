@@ -56,19 +56,19 @@ const categories = [
 ];
 function CategorySection() {
   return (
-    <section className="relative overflow-hidden bg-slate-50 py-20">
+    <section className="relative overflow-hidden bg-slate-50 py-12 sm:py-16 lg:py-20">
       <div className="relative mx-auto max-w-7xl px-4">
-        <div className="mb-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 lg:mb-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="inline-flex rounded-full bg-emerald-100 px-4 py-2 text-sm font-medium text-emerald-600">
               ✨ Kategori Pilihan
             </span>
 
-            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
+            <h2 className="mt-5 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 lg:text-4xl">
               Temukan Produk Favoritmu
             </h2>
 
-            <div className="mt-5 h-1 w-full rounded-full bg-emerald-500"></div>
+            <div className="mt-5 h-1 w-32 rounded-full bg-emerald-500"></div>
 
             <p className="mt-6 max-w-xl leading-7 text-slate-500">
               Jelajahi berbagai kategori pilihan untuk memenuhi kebutuhan
@@ -78,7 +78,7 @@ function CategorySection() {
 
           <Link
             to="/products"
-            className="group inline-flex items-center gap-2 rounded-full border border-emerald-500 px-5 py-3 font-medium text-emerald-600 transition-all duration-300 hover:bg-emerald-500 hover:text-white"
+            className="group w-full justify-center md:w-auto inline-flex items-center gap-2 rounded-full border border-emerald-500 px-5 py-3 font-medium text-emerald-600 transition-all duration-300 hover:bg-emerald-500 hover:text-white"
           >
             Lihat Semua
             <ArrowRight
@@ -92,11 +92,11 @@ function CategorySection() {
           {categories.map((category) => (
             <Link key={category.id} to={`/products?category=${category.value}`}>
               <div
-                className="flex min-h-[220px] cursor-pointer flex-col items-center rounded-3xl border border-slate-100 bg-gradient-to-b from-white to-white p-7 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/40 hover:from-white hover:to-emerald-50/60 hover:shadow-xl
+                className="flex min-h-[180px] sm:min-h-[200px] lg:min-h-[220px] cursor-pointer flex-col items-center rounded-3xl border border-slate-100 bg-gradient-to-b from-white to-white p-5 sm:p-6 lg:p-7 text-center shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-emerald-500/40 hover:from-white hover:to-emerald-50/60 hover:shadow-xl
               "
               >
                 <div
-                  className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-50 shadow-sm transition-all duration-300 
+                  className="mb-6 flex sm:h-20 sm:w-20 h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 shadow-sm transition-all duration-300 
                 "
                 >
                   <img
