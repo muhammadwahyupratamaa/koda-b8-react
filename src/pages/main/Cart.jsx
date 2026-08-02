@@ -40,7 +40,7 @@ function Cart() {
   }, 0);
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
-      <div className="grid grid-cols-[2fr_1fr] gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         {/* LEFT */}
         <div className="flex flex-col gap-6">
           {cart.map((item) => (
@@ -48,12 +48,12 @@ function Cart() {
               key={item.id}
               className="border border-gray-200 rounded-xl p-5"
             >
-              <div className="flex justify-between">
-                <div className="flex gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-24 h-24 rounded-xl object-cover"
+                    className="sm:w-24 sm:h-24 w-20 h-20 rounded-xl object-cover"
                   />
 
                   <div>
@@ -89,7 +89,7 @@ function Cart() {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between items-end">
+                <div className="flex items-center justify-between sm:flex-col sm:items-end">
                   <button>
                     <FiTrash2
                       onClick={() => handleRemove(item.id)}
@@ -112,14 +112,14 @@ function Cart() {
               <h2 className="text-2xl font-medium">Kode Promo</h2>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <input
                 type="text"
                 placeholder="Masukkan kode promo"
                 className="flex-1 border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
 
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-lg cursor-pointer">
+              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-lg cursor-pointer">
                 Terapkan
               </button>
             </div>

@@ -34,10 +34,10 @@ function ShippingPage() {
             <p className="text-sm text-blue-600 mt-2">Pengiriman</p>
           </div>
 
-          <div className="w-32 h-1 bg-gray-300 mx-5"></div>
+          <div className="mx-2 h-1 w-12 bg-gray-300 sm:mx-5 sm:w-32"></div>
 
           <div className="flex flex-col items-center">
-            <div className="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-medium">
+            <div className="sm:w-10 sm:h-10 h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-medium">
               2
             </div>
 
@@ -56,7 +56,7 @@ function ShippingPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-[2fr_1fr] gap-6">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         {/* Left */}
 
         <section className="border border-gray-200 rounded-xl p-6">
@@ -66,7 +66,7 @@ function ShippingPage() {
             <h2 className="text-2xl font-medium">Alamat Pengiriman</h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid sm:grid-cols-2 grid-cols-1 gap-5">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-500">
                 Nama Penerima *
@@ -91,7 +91,7 @@ function ShippingPage() {
               />
             </div>
 
-            <div className="col-span-2 flex flex-col gap-2">
+            <div className="md:col-span-2 flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-500">
                 Email *
               </label>
@@ -103,7 +103,7 @@ function ShippingPage() {
               />
             </div>
 
-            <div className="col-span-2 flex flex-col gap-2">
+            <div className="md:col-span-2 flex flex-col gap-2">
               <label className="text-sm font-medium text-gray-500">
                 Alamat Lengkap *
               </label>
@@ -168,7 +168,7 @@ function ShippingPage() {
             <h2 className="text-2xl font-medium mb-5">Metode Pengiriman</h2>
 
             <div className="flex flex-col gap-4">
-              <label className="border-2 border-blue-600 rounded-xl p-5 flex justify-between items-center cursor-pointer">
+              <label className="border-2 border-blue-600 rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer">
                 <div className="flex items-center gap-4">
                   <input type="radio" name="shipping" defaultChecked />
 
@@ -236,7 +236,7 @@ function ShippingPage() {
               key={item.id}
               className="flex justify-between items-start border-b border-gray-200 pb-5 mb-5"
             >
-              <div className="flex gap-3 justify-center items-center">
+              <div className="flex items-center gap-3">
                 <img
                   src={item.image}
                   alt={item.name}
