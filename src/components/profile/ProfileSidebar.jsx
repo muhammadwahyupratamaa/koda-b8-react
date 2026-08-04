@@ -6,9 +6,21 @@ import {
   FiLogOut,
   FiChevronRight,
 } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
+import profileService from "../../services/profileService";
+import wishlistService from "../../services/wishlistService";
+import cartService from "../../services/cartService";
 
 function ProfileSidebar({ active }) {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const profile = profileService.getProfile();
+  const orders = cartService.getOrders();
+  const wishlist = wishlistService.getWishlist();
+
   const menus = [
     {
       key: "orders",
@@ -40,31 +52,37 @@ function ProfileSidebar({ active }) {
     <aside className="flex flex-col gap-6">
       <section className="rounded-xl border border-gray-200 p-6 sm:p-8">
         <div className="flex flex-col items-center">
-          <div className="sm:w-20 sm:h-20 h-16 w-16 rounded-full bg-blue-100 flex justify-center items-center">
-            <span className="text-3xl font-semibold text-blue-600">B</span>
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-100 flex justify-center items-center">
+            <span className="text-3xl font-semibold text-blue-600">
+              {profile.name?.charAt(0).toUpperCase() || "U"}
+            </span>
           </div>
 
-          <h2 className="sm:text-2xl text-xl font-semibold mt-5">Budi Santoso</h2>
+          <h2 className="mt-5 text-xl sm:text-2xl font-semibold">
+            {profile.name || "User"}
+          </h2>
 
-          <p className="text-sm text-gray-400 mt-1">budi@email.com</p>
+          <p className="mt-1 text-sm text-gray-400">{profile.email || "-"}</p>
         </div>
 
-        <div className="flex justify-center gap-8 sm:gap-12 mt-8 pt-5 border-t border-gray-200">
+        <div className="mt-8 flex justify-center gap-8 sm:gap-12 border-t border-gray-200 pt-5">
           <div className="text-center">
-            <p className="sm:text-2xl text-xl font-semibold">2</p>
+            <p className="text-xl sm:text-2xl font-semibold">{orders.length}</p>
 
             <p className="text-xs sm:text-sm text-gray-400">Pesanan</p>
           </div>
 
           <div className="text-center">
-            <p className="sm:text-2xl text-xl font-semibold">0</p>
+            <p className="text-xl sm:text-2xl font-semibold">
+              {wishlist.length}
+            </p>
 
-            <p className="text-sm text-gray-400">Wishlist</p>
+            <p className="text-xs sm:text-sm text-gray-400">Wishlist</p>
           </div>
         </div>
       </section>
 
-      <section className="border border-gray-200 rounded-xl overflow-hidden">
+      <section className="overflow-hidden rounded-xl border border-gray-200">
         <div className="py-2">
           {menus.map((menu) => {
             const Icon = menu.icon;
@@ -73,10 +91,10 @@ function ProfileSidebar({ active }) {
               <Link
                 key={menu.key}
                 to={menu.path}
-                className={`flex justify-between items-center px-6 py-4 transition ${
+                className={`flex items-center justify-between px-6 py-4 transition ${
                   active === menu.key
                     ? "bg-blue-50 text-blue-600"
-                    : "hover:bg-gray-50 text-gray-700"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -94,13 +112,14 @@ function ProfileSidebar({ active }) {
         <div className="border-t border-gray-200">
           <button
             type="button"
-            className="w-full flex items-center gap-3 px-6 py-5 text-red-500 hover:bg-red-50 transition cursor-pointer"
+            onClick={() => {
+              logout();
+              navigate("/login");
+            }}
+            className="flex w-full items-center gap-3 px-6 py-5 text-red-500 hover:bg-red-50 cursor-pointer"
           >
             <FiLogOut className="w-5 h-5" />
-
-            <Link to="/login" className="text-sm font-medium">
-              Keluar
-            </Link>
+            <span className="text-sm font-medium">Keluar</span>
           </button>
         </div>
       </section>
