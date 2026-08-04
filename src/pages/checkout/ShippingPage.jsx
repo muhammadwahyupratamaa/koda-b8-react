@@ -2,6 +2,10 @@ import { FiTruck, FiLock, FiChevronRight } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import addressService from "../../services/addressService";
+import profileService from "../../services/profileService";
+import storageService from "../../services/storageService";
+import { useState } from "react";
 
 function ShippingPage() {
   const navigate = useNavigate();
@@ -12,16 +16,27 @@ function ShippingPage() {
     0,
   );
 
-  const shippingData = {
-    name: "Budi Santoso",
-    phone: "0812-3456-7890",
-    email: "budi@email.com",
-    address: "Jl. Kebon Jeruk No.15",
-    city: "Jakarta Barat",
-    province: "DKI Jakarta",
-    postalCode: "11530",
+  const profile = profileService.getProfile();
+  const primaryAddress = addressService.getPrimaryAddress();
+
+  const [shipping, setShipping] = useState({
+    name: primaryAddress?.name || profile.name || "",
+    phone: primaryAddress?.phone || profile.phone || "",
+    email: profile.email || "",
+    address: primaryAddress?.address || "",
+    city: primaryAddress?.city || "",
+    province: primaryAddress?.province || "",
+    postalCode: primaryAddress?.postalCode || "",
     shippingMethod: "JNE Reguler",
-  };
+  });
+
+  function handleChange(e) {
+    setShipping({
+      ...shipping,
+      [e.target.name]: e.target.value,
+    });
+  }
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -74,7 +89,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="Budi Santoso"
+                name="name"
+                value={shipping.name}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -86,7 +103,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="0812-3456-7890"
+                name="phone"
+                value={shipping.phone}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -98,7 +117,9 @@ function ShippingPage() {
 
               <input
                 type="email"
-                defaultValue="budi@email.com"
+                name="phone"
+                value={shipping.phone}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -110,7 +131,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="Jl. Kebon Jeruk No.15"
+                name="phone"
+                value={shipping.phone}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -122,7 +145,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="Jakarta Barat"
+                name="city"
+                value={shipping.city}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -134,7 +159,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="DKI Jakarta"
+                name="province"
+                value={shipping.province}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -146,7 +173,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                defaultValue="11530"
+                name="postalCode"
+                value={shipping.postalCode}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -158,7 +187,9 @@ function ShippingPage() {
 
               <input
                 type="text"
-                placeholder="Warna pagar, dll."
+                name="note"
+                value={shipping.note || ""}
+                onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
             </div>
@@ -170,7 +201,16 @@ function ShippingPage() {
             <div className="flex flex-col gap-4">
               <label className="border-2 border-blue-600 rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer">
                 <div className="flex items-center gap-4">
-                  <input type="radio" name="shipping" defaultChecked />
+                  <input
+                    type="radio"
+                    checked={shipping.shippingMethod === "JNE Reguler"}
+                    onChange={() =>
+                      setShipping({
+                        ...shipping,
+                        shippingMethod: "JNE Reguler",
+                      })
+                    }
+                  />
 
                   <div>
                     <p className="font-medium">JNE Reguler</p>
@@ -184,7 +224,16 @@ function ShippingPage() {
 
               <label className="border border-gray-200 rounded-xl p-5 flex justify-between items-center cursor-pointer">
                 <div className="flex items-center gap-4">
-                  <input type="radio" name="shipping" />
+                  <input
+                    type="radio"
+                    checked={shipping.shippingMethod === "JNE Express"}
+                    onChange={() =>
+                      setShipping({
+                        ...shipping,
+                        shippingMethod: "JNE Express",
+                      })
+                    }
+                  />
 
                   <div>
                     <p className="font-medium">JNE Express</p>
@@ -198,7 +247,16 @@ function ShippingPage() {
 
               <label className="border border-gray-200 rounded-xl p-5 flex justify-between items-center cursor-pointer">
                 <div className="flex items-center gap-4">
-                  <input type="radio" name="shipping" />
+                  <input
+                    type="radio"
+                    checked={shipping.shippingMethod === "Same Day Delivery"}
+                    onChange={() =>
+                      setShipping({
+                        ...shipping,
+                        shippingMethod: "Same Day Delivery",
+                      })
+                    }
+                  />
 
                   <div>
                     <p className="font-medium">Same Day Delivery</p>
@@ -216,7 +274,22 @@ function ShippingPage() {
 
           <button
             onClick={() => {
-              localStorage.setItem("shipping", JSON.stringify(shippingData));
+              if (
+                !shipping.name ||
+                !shipping.phone ||
+                !shipping.email ||
+                !shipping.address ||
+                !shipping.city ||
+                !shipping.province ||
+                !shipping.postalCode
+              ) {
+                alert("Lengkapi alamat pengiriman.");
+                return;
+              }
+
+              storageService.set("shipping", shipping);
+
+              navigate("/checkout/payment");
 
               navigate("/checkout/payment");
             }}
