@@ -1,6 +1,16 @@
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
-function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
+function AddressCard({
+  id,
+  title,
+  isPrimary,
+  name,
+  phone,
+  address,
+  city,
+  onDelete,
+  onPrimary,
+}) {
   return (
     <article className="border border-gray-200 rounded-xl p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -24,6 +34,8 @@ function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
 
           <button
             type="button"
+            onClick={onDelete}
+            type="button"
             className="text-gray-500 hover:text-red-500 transition cursor-pointer"
           >
             <FiTrash2 className="w-5 h-5" />
@@ -43,6 +55,8 @@ function AddressCard({ title, isPrimary = false, name, phone, address, city }) {
 
       {!isPrimary && (
         <button
+          type="button"
+          onClick={onPrimary}
           type="button"
           className="mt-5 w-full rounded-lg border border-blue-600 py-2 text-sm text-blue-600 hover:bg-blue-50 sm:w-auto sm:border-0 sm:p-0"
         >
