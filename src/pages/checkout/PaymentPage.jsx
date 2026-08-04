@@ -1,6 +1,4 @@
 import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
-
-import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -23,7 +21,7 @@ function PaymentPage() {
       <section className="flex justify-center items-center mb-10">
         <div className="flex items-center">
           <div className="flex flex-col items-center">
-            <div className="h-8 w-8 sm:h-10 sm:w-10rounded-full bg-green-500 text-white flex justify-center items-center">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-500 text-white flex justify-center items-center">
               <FiCheck className="w-5 h-5" />
             </div>
 
@@ -72,6 +70,8 @@ function PaymentPage() {
             >
               <input
                 type="radio"
+                name="payment"
+                value="Virtual Account BCA"
                 checked={paymentMethod === "Virtual Account BCA"}
                 onChange={() => setPaymentMethod("Virtual Account BCA")}
               />
@@ -88,6 +88,8 @@ function PaymentPage() {
             >
               <input
                 type="radio"
+                name="payment"
+                value="Virtual Account BNI"
                 checked={paymentMethod === "Virtual Account BNI"}
                 onChange={() => setPaymentMethod("Virtual Account BNI")}
               />
@@ -104,6 +106,8 @@ function PaymentPage() {
             >
               <input
                 type="radio"
+                name="payment"
+                value="Kartu Kredit / Debit"
                 checked={paymentMethod === "Kartu Kredit / Debit"}
                 onChange={() => setPaymentMethod("Kartu Kredit / Debit")}
               />
@@ -113,15 +117,17 @@ function PaymentPage() {
 
             <label
               className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
-                paymentMethod === "Gopay"
+                paymentMethod === "GoPay"
                   ? "border-2 border-blue-600"
                   : "border-gray-200"
               }`}
             >
               <input
                 type="radio"
-                checked={paymentMethod === "Gopay"}
-                onChange={() => setPaymentMethod("Gopay")}
+                name="payment"
+                value="GoPay"
+                checked={paymentMethod === "GoPay"}
+                onChange={() => setPaymentMethod("GoPay")}
               />
 
               <span>📱 GoPay</span>
@@ -129,34 +135,38 @@ function PaymentPage() {
 
             <label
               className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
-                paymentMethod === "Ovo"
+                paymentMethod === "OVO"
                   ? "border-2 border-blue-600"
                   : "border-gray-200"
               }`}
             >
               <input
                 type="radio"
-                checked={paymentMethod === "Ovo"}
-                onChange={() => setPaymentMethod("Ovo")}
+                name="payment"
+                value="OVO"
+                checked={paymentMethod === "OVO"}
+                onChange={() => setPaymentMethod("OVO")}
               />
 
-              <span>📱 Ovo</span>
+              <span>📱 OVO</span>
             </label>
 
             <label
               className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
-                paymentMethod === "Dana"
+                paymentMethod === "DANA"
                   ? "border-2 border-blue-600"
                   : "border-gray-200"
               }`}
             >
               <input
                 type="radio"
-                checked={paymentMethod === "Dana"}
-                onChange={() => setPaymentMethod("Dana")}
+                name="payment"
+                value="DANA"
+                checked={paymentMethod === "DANA"}
+                onChange={() => setPaymentMethod("DANA")}
               />
 
-              <span>📱 Dana</span>
+              <span>📱 DANA</span>
             </label>
           </div>
 
@@ -180,10 +190,13 @@ function PaymentPage() {
 
             <button
               onClick={() => {
-                storageService.set("payment", paymentMethod);
                 if (!paymentMethod) {
-                  return alert("Pilih metode pembayaran.");
+                  alert("Pilih metode pembayaran.");
+                  return;
                 }
+
+                storageService.set("payment", paymentMethod);
+
                 navigate("/checkout/confirmation");
               }}
               className="bg-blue-600 hover:bg-blue-700 justify-center rounded-xl w-full px-12 py-3 text-white flex items-center gap-2 cursor-pointer"
