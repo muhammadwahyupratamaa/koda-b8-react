@@ -3,8 +3,11 @@ import ProfileSidebar from "../../components/profile/ProfileSidebar";
 import AddressCard from "../../components/profile/AddressCard";
 import { useState } from "react";
 import addressService from "../../services/addressService";
+import profileService from "../../services/profileService";
 
 function AddressListPage() {
+  const profile = profileService.getProfile();
+
   const [addresses, setAddresses] = useState(addressService.getAddresses());
   function refreshAddresses() {
     setAddresses(addressService.getAddresses());
@@ -23,11 +26,11 @@ function AddressListPage() {
               type="button"
               onClick={() => {
                 addressService.addAddress({
-                  title: "Alamat Baru",
-                  name: "Budi Santoso",
-                  phone: "081234567890",
-                  address: "Masukkan alamat",
-                  city: "Kota",
+                  title: "Rumah",
+                  name: profile.name,
+                  phone: profile.phone,
+                  address: "",
+                  city: "",
                 });
 
                 refreshAddresses();
