@@ -3,10 +3,14 @@ import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import storageService from "../../services/storageService";
 
 function PaymentPage() {
   const navigate = useNavigate();
-  const paymentMethod = "Virtual Account BCA";
+  const [paymentMethod, setPaymentMethod] = useState(
+    storageService.get("payment", "Virtual Account BCA"),
+  );
 
   const cart = useSelector((state) => state.cart.items);
 
@@ -59,40 +63,100 @@ function PaymentPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            <label className="border-2 border-blue-600 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" defaultChecked />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Virtual Account BCA"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Virtual Account BCA"}
+                onChange={() => setPaymentMethod("Virtual Account BCA")}
+              />
 
-              <span className="text-xs sm:text-sm">🏦 Virtual Account BCA</span>
+              <span>🏦 Virtual Account BCA</span>
             </label>
 
-            <label className="border border-gray-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Virtual Account BNI"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Virtual Account BNI"}
+                onChange={() => setPaymentMethod("Virtual Account BNI")}
+              />
 
-              <span className="text-xs sm:text-sm">🏦 Virtual Account BNI</span>
+              <span>🏦 Virtual Account BNI</span>
             </label>
 
-            <label className="border border-gray-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Kartu Kredit / Debit"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Kartu Kredit / Debit"}
+                onChange={() => setPaymentMethod("Kartu Kredit / Debit")}
+              />
 
-              <span className="text-xs sm:text-sm">💳 Kartu Kredit / Debit</span>
+              <span>💳 Kartu Kredit / Debit</span>
             </label>
 
-            <label className="border border-gray-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Gopay"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Gopay"}
+                onChange={() => setPaymentMethod("Gopay")}
+              />
 
-              <span className="text-xs sm:text-sm">📱 GoPay</span>
+              <span>📱 GoPay</span>
             </label>
 
-            <label className="border border-gray-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Ovo"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Ovo"}
+                onChange={() => setPaymentMethod("Ovo")}
+              />
 
-              <span className="text-xs sm:text-sm">📱 OVO</span>
+              <span>📱 Ovo</span>
             </label>
 
-            <label className="border border-gray-200 rounded-xl p-4 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment" />
+            <label
+              className={`border rounded-xl p-4 flex items-center gap-3 cursor-pointer ${
+                paymentMethod === "Dana"
+                  ? "border-2 border-blue-600"
+                  : "border-gray-200"
+              }`}
+            >
+              <input
+                type="radio"
+                checked={paymentMethod === "Dana"}
+                onChange={() => setPaymentMethod("Dana")}
+              />
 
-              <span className="text-xs sm:text-sm">📱 DANA</span>
+              <span>📱 Dana</span>
             </label>
           </div>
 
@@ -116,7 +180,10 @@ function PaymentPage() {
 
             <button
               onClick={() => {
-                localStorage.setItem("payment", paymentMethod);
+                storageService.set("payment", paymentMethod);
+                if (!paymentMethod) {
+                  return alert("Pilih metode pembayaran.");
+                }
                 navigate("/checkout/confirmation");
               }}
               className="bg-blue-600 hover:bg-blue-700 justify-center rounded-xl w-full px-12 py-3 text-white flex items-center gap-2 cursor-pointer"
