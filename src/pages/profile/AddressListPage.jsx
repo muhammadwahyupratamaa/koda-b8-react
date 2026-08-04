@@ -1,28 +1,14 @@
 import { FiPlus } from "react-icons/fi";
 import ProfileSidebar from "../../components/profile/ProfileSidebar";
 import AddressCard from "../../components/profile/AddressCard";
+import { useState } from "react";
+import addressService from "../../services/addressService";
 
 function AddressListPage() {
-  const addresses = [
-    {
-      id: 1,
-      title: "Rumah",
-      isPrimary: true,
-      name: "Budi Santoso",
-      phone: "0812-3456-7890",
-      address: "Jl. Kebon Jeruk No.15, RT.003/RW.002",
-      city: "Jakarta Barat, DKI Jakarta 11530",
-    },
-    {
-      id: 2,
-      title: "Kantor",
-      isPrimary: false,
-      name: "Budi Santoso",
-      phone: "0812-3456-7890",
-      address: "Jl. Sudirman Kav.52-53",
-      city: "Jakarta Selatan, DKI Jakarta 12190",
-    },
-  ];
+  const [addresses, setAddresses] = useState(addressService.getAddresses());
+  function refreshAddresses() {
+    setAddresses(addressService.getAddresses());
+  }
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -35,6 +21,18 @@ function AddressListPage() {
 
             <button
               type="button"
+              onClick={() => {
+                addressService.addAddress({
+                  title: "Alamat Baru",
+                  name: "Budi Santoso",
+                  phone: "081234567890",
+                  address: "Masukkan alamat",
+                  city: "Kota",
+                });
+
+                refreshAddresses();
+              }}
+              type="button"
               className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm text-white hover:bg-blue-700 sm:w-auto cursor-pointer"
             >
               <FiPlus className="w-5 h-5" />
@@ -44,7 +42,18 @@ function AddressListPage() {
 
           <div className="flex flex-col gap-5">
             {addresses.map((address) => (
-              <AddressCard key={address.id} {...address} />
+              <AddressCard
+                key={address.id}
+                {...address}
+                onDelete={() => {
+                  addressService.deleteAddress(address.id);
+                  refreshAddresses();
+                }}
+                onPrimary={() => {
+                  addressService.setPrimaryAddress(address.id);
+                  refreshAddresses();
+                }}
+              />
             ))}
           </div>
         </section>
