@@ -1,9 +1,10 @@
 import { FiCheck, FiChevronRight, FiLock } from "react-icons/fi";
-import { headphoneWirelessPremium } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../features/cart/cartSlice";
 import cartService from "../../services/cartService";
+import storageService from "../../services/storageService";
+import { useEffect } from "react";
 
 function ConfirmationPage() {
   const navigate = useNavigate();
@@ -11,7 +12,27 @@ function ConfirmationPage() {
 
   const cart = useSelector((state) => state.cart.items);
 
-  const shipping = JSON.parse(localStorage.getItem("shipping"));
+  const shipping = storageService.get("shipping");
+  const payment = storageService.get("payment");
+  useEffect(() => {
+    if (!shipping) {
+      navigate("/checkout/shipping", { replace: true });
+      return;
+    }
+
+    if (!payment) {
+      navigate("/checkout/payment", { replace: true });
+      return;
+    }
+
+    if (cart.length === 0) {
+      navigate("/cart", { replace: true });
+    }
+  }, [shipping, payment, cart, navigate]);
+
+  if (!shipping || !payment || cart.length === 0) {
+    return null;
+  }
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.qty,
     0,
@@ -75,8 +96,14 @@ function ConfirmationPage() {
             <h3 className="font-medium mb-3">Metode Pengiriman</h3>
 
             <p className="text-sm text-gray-500">
-              JNE Reguler • 3-5 hari kerja
+              {shipping.shippingMethod} • 3-5 Hari
             </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-5 mb-5">
+            <h3 className="font-medium mb-3">Metode Pembayaran</h3>
+
+            <p className="text-sm text-gray-500">{payment}</p>
           </div>
 
           <div className="bg-gray-50 rounded-xl p-5">
@@ -102,7 +129,7 @@ function ConfirmationPage() {
                 </div>
 
                 <p className="text-blue-600 font-medium">
-                  Rp {item.price.toLocaleString("id-ID")}
+                  Rp {(item.price * item.qty).toLocaleString("id-ID")}
                 </p>
               </div>
             ))}
@@ -130,11 +157,14 @@ function ConfirmationPage() {
               onClick={() => {
                 const order = cartService.checkout(cart);
 
-                if (!order) return;
-
+                if (!order) {
+                  alert("Checkout gagal.");
+                  return;
+                }
                 dispatch(clearCart());
 
                 navigate("/checkout/success", {
+                  replace: true,
                   state: order,
                 });
               }}
@@ -177,9 +207,7 @@ function ConfirmationPage() {
 
           <div className="mt-5 flex flex-col gap-4">
             <div className="flex justify-between items-center text-sm">
-              <p className="text-gray-500">
-                Rp {subtotal.toLocaleString("id-ID")}
-              </p>
+              <p className="text-gray-500">Subtotal</p>
 
               <p>Rp {subtotal.toLocaleString("id-ID")}</p>
             </div>
@@ -194,9 +222,7 @@ function ConfirmationPage() {
           <div className="border-t border-gray-200 my-5"></div>
 
           <div className="flex justify-between items-center">
-            <p className="text-lg font-medium">
-              Rp {subtotal.toLocaleString("id-ID")}
-            </p>
+            <p className="text-lg font-medium">Total</p>
 
             <p className="text-2xl font-semibold text-blue-600">
               Rp {subtotal.toLocaleString("id-ID")}
