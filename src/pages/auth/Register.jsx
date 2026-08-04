@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Mail, Lock, User, Eye, ArrowRight } from "lucide-react";
 import registerSchema from "../../validation/registerSchema";
 import authService from "../../services/authService";
+import profileService from "../../services/profileService";
 
 function Register() {
   const {
@@ -20,9 +21,23 @@ function Register() {
 
   const onSubmit = (data) => {
     try {
-      const { confirmPassword, ...userData } = data;
+      const { confirmPassword, fullName, ...rest } = data;
+
+      const userData = {
+        ...rest,
+        fullName,
+      };
 
       authService.register(userData);
+
+      profileService.saveProfile({
+        name: fullName,
+        email: userData.email,
+        phone: "",
+        birthDate: "",
+        gender: "Laki-laki",
+        avatar: "",
+      });
 
       window.alert("Registrasi berhasil!");
       navigate("/login");
@@ -33,7 +48,10 @@ function Register() {
 
   return (
     <AuthLayout bannerType="register">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex text-sm flex-col gap-3 ">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex text-sm flex-col gap-3 "
+      >
         <section className="flex flex-col gap-3  ">
           <h1 className="text-3xl font-bold">Buat Akun Baru</h1>
           <p className="text-base">
@@ -107,9 +125,7 @@ function Register() {
               />
             </div>
             {errors.email && (
-              <p className="text-sm text-red-500 ">
-                {errors.email?.message}
-              </p>
+              <p className="text-sm text-red-500 ">{errors.email?.message}</p>
             )}
           </div>
 
