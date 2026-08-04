@@ -15,6 +15,7 @@ function addAddress(address) {
 
   addresses.push({
     id: Date.now(),
+    isPrimary: addresses.length === 0,
     ...address,
   });
 
@@ -35,7 +36,11 @@ function updateAddress(id, data) {
 }
 
 function deleteAddress(id) {
-  const addresses = getAddresses().filter((address) => address.id !== id);
+  let addresses = getAddresses().filter((address) => address.id !== id);
+
+  if (addresses.length > 0 && !addresses.some((address) => address.isPrimary)) {
+    addresses[0].isPrimary = true;
+  }
 
   saveAddresses(addresses);
 }
