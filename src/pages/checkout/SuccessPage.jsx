@@ -3,6 +3,11 @@ import { BsBoxSeam } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function SuccessPage() {
+
+const location = useLocation();
+
+console.log(location);
+console.log(location.state);
   const navigate = useNavigate();
   const { state: order } = useLocation();
 

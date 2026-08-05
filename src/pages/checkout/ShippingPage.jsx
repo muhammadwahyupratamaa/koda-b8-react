@@ -117,8 +117,8 @@ function ShippingPage() {
 
               <input
                 type="email"
-                name="phone"
-                value={shipping.phone}
+                name="email"
+                value={shipping.email}
                 onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
@@ -131,8 +131,8 @@ function ShippingPage() {
 
               <input
                 type="text"
-                name="phone"
-                value={shipping.phone}
+                name="address"
+                value={shipping.address}
                 onChange={handleChange}
                 className="border border-gray-200 rounded-lg px-4 py-3 text-sm outline-none"
               />
@@ -199,7 +199,13 @@ function ShippingPage() {
             <h2 className="text-2xl font-medium mb-5">Metode Pengiriman</h2>
 
             <div className="flex flex-col gap-4">
-              <label className="border-2 border-blue-600 rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer">
+              <label
+                className={`rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer ${
+                  shipping.shippingMethod === "JNE Reguler"
+                    ? "border-2 border-blue-600"
+                    : "border border-gray-200"
+                }`}
+              >
                 <div className="flex items-center gap-4">
                   <input
                     type="radio"
@@ -222,7 +228,13 @@ function ShippingPage() {
                 <p className="text-green-600 font-medium">GRATIS</p>
               </label>
 
-              <label className="border border-gray-200 rounded-xl p-5 flex justify-between items-center cursor-pointer">
+              <label
+                className={`rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer ${
+                  shipping.shippingMethod === "JNE Express"
+                    ? "border-2 border-blue-600"
+                    : "border border-gray-200"
+                }`}
+              >
                 <div className="flex items-center gap-4">
                   <input
                     type="radio"
@@ -245,7 +257,13 @@ function ShippingPage() {
                 <p className="text-green-600 font-medium">GRATIS</p>
               </label>
 
-              <label className="border border-gray-200 rounded-xl p-5 flex justify-between items-center cursor-pointer">
+              <label
+                className={`rounded-xl p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between cursor-pointer ${
+                  shipping.shippingMethod === "Same Day Delivery"
+                    ? "border-2 border-blue-600"
+                    : "border border-gray-200"
+                }`}
+              >
                 <div className="flex items-center gap-4">
                   <input
                     type="radio"
@@ -288,9 +306,6 @@ function ShippingPage() {
               }
 
               storageService.set("shipping", shipping);
-
-              navigate("/checkout/payment");
-
               navigate("/checkout/payment");
             }}
             className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 flex justify-center items-center gap-2 font-medium cursor-pointer"

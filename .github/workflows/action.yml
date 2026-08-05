@@ -1,79 +1,97 @@
 name: Automation build images
 run-name: Running build images
+
 on:
   push:
     tags:
-      - v1.*
+      - "v*"
+
 jobs:
   build-app:
-    name: "Build React App into Distributable"
+    name: Build React App into Distributable
     runs-on: ubuntu-latest
+
     outputs:
       output1: ${{ steps.upload-dist.outputs.artifact-id }}
+
     steps:
-      - name: setup nodejs
+      - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node_version: "26.4.0"
-      - name: get source
-        uses: actions/checkout@v7
-      - name: install nodejs deps
+          node-version: "22"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
         run: npm install
-      - name: build app
+
+      - name: Build app
         run: npm run build
+
       - name: Save artifact
-        uses: actions/upload-artifact@v7
+        id: upload-dist
+        uses: actions/upload-artifact@v4
         with:
           name: build-result
-          id: upload-dist
           path: dist/
+
   release-app:
-    name: "Release builded app"
+    name: Release Build
     needs: build-app
     runs-on: ubuntu-latest
+
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v5
         with:
-          artifact-ids: ${{needs.build-app.outputs.output1}}
+          artifact-ids: ${{ needs.build-app.outputs.output1 }}
+
       - name: Compress artifact
         run: zip -r BRilianShop.zip ./*
+
       - name: Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            BRilianShop.zip
+          files: BRilianShop.zip
+
   build-image:
-    runs-on: ubuntu-latest
+    name: Build Docker Image
     needs: release-app
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Check out repository code
+      - name: Checkout repository
         uses: actions/checkout@v6
-      - name: Setup nodejs version
-        uses: actions/setup-node@v6
-        with:
-          node-version: 26.3.0
-      - name: installing node dependecies
-        run: npm install
-      - name: Login to docker
-        run: echo -n ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io --username ${{github.actor}} --password-stdin
-      - name: Build images
-        run: docker build -t ghcr.io/${{github.repository}}:pra .
-      - name: Push to ghcr.io
-        run: docker push ghcr.io/${{github.repository}}:pra
+
+      - name: Login to GHCR
+        run: |
+          echo -n ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io \
+            --username ${{ github.actor }} \
+            --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}:pra .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository }}:pra
+
   deploy-image:
-    name: "Deploy image into server"
+    name: Deploy to Server
     needs: build-image
     runs-on: ubuntu-latest
+
     steps:
-      - name: Pull image from ghcr
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{secrets.SSH_HOST}}
-          username: ${{secrets.SSH_USER}}
-          port: ${{secrets.SSH_PORT}}
-          key: ${{secrets.SSH_KEYS}}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_KEYS }}
           script: |
-            docker pull ghcr.io/${{github.repository}}:pra
-            docker rm -f BRilianShop
-            docker run -d -p 9502:80 --name BRilianShop ghcr.io/${{github.repository}}:pra
+            cd ~/brilianserver
+            docker compose pull frontend
+            docker compose up -d frontend
