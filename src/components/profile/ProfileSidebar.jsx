@@ -11,14 +11,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import profileService from "../../services/profileService";
 import wishlistService from "../../services/wishlistService";
-import cartService from "../../services/cartService";
+import checkoutService from "../../services/checkoutService";
+import { useEffect, useState } from "react";
 
 function ProfileSidebar({ active }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
   const profile = profileService.getProfile();
-  const orders = cartService.getOrders();
+  const [orders, setOrders] = useState([]);
   const wishlist = wishlistService.getWishlist();
 
   const menus = [
@@ -47,6 +48,19 @@ function ProfileSidebar({ active }) {
       path: "/profile/edit",
     },
   ];
+
+  useEffect(() => {
+    async function loadOrders() {
+      try {
+        const result = await checkoutService.getOrders();
+        setOrders(result.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadOrders();
+  }, []);
 
   return (
     <aside className="flex flex-col gap-6">
