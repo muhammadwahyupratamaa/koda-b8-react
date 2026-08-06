@@ -1,8 +1,9 @@
 import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
 import storageService from "../../services/storageService";
+import { useEffect, useState } from "react";
+import cartService from "../../services/cartService";
 
 function PaymentPage() {
   const navigate = useNavigate();
@@ -10,12 +11,21 @@ function PaymentPage() {
     storageService.get("payment", "Virtual Account BCA"),
   );
 
-  const cart = useSelector((state) => state.cart.items);
+  const [cart, setCart] = useState([]);
 
   const subtotal = cart.reduce(
-    (total, item) => total + item.price * item.qty,
+    (total, item) => total + item.price * item.quantity,
     0,
   );
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  async function loadCart() {
+    const result = await cartService.getCart();
+    setCart(result.data);
+  }
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -218,7 +228,7 @@ function PaymentPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={item.image}
+                  src={item.image_url}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
@@ -230,7 +240,7 @@ function PaymentPage() {
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-gray-500">x{item.qty}</p>
+              <p className="text-xs sm:text-sm text-gray-500">x{item.quantity}</p>
             </div>
           ))}
 
