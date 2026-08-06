@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileSidebar from "../../components/profile/ProfileSidebar";
 import WishlistCard from "../../components/profile/WishListCard";
 import wishlistService from "../../services/wishlistService";
 
 function WishListPage() {
-  const [wishlist, setWishlist] = useState(wishlistService.getWishlist());
+  const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    loadWishlist();
+  }, []);
+
+  async function loadWishlist() {
+    try {
+      const result = await wishlistService.getWishlist();
+
+      setWishlist(result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-[300px_1fr]">
@@ -29,7 +43,7 @@ function WishListPage() {
                 <WishlistCard
                   key={product.id}
                   product={product}
-                  onRemove={() => setWishlist(wishlistService.getWishlist())}
+                  onRemove={loadWishlist}
                 />
               ))}
             </div>
