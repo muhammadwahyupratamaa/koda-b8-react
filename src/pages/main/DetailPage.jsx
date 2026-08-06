@@ -3,8 +3,7 @@ import { GoChevronRight } from "react-icons/go";
 import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addToCart, clearCart } from "../../features/cart/cartSlice";
+import cartService from "../../services/cartService";
 
 import {
   FiHeart,
@@ -20,20 +19,17 @@ import productService from "../../services/productService";
 function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const handleBuyNow = () => {
-    dispatch(clearCart());
+  const handleBuyNow = async () => {
+    try {
+      for (let i = 0; i < qty; i++) {
+        await cartService.addToCart(product.id, selectedColor);
+      }
 
-    dispatch(
-      addToCart({
-        product,
-        qty,
-        color: selectedColor,
-      }),
-    );
-
-    navigate("/checkout/shipping");
+      navigate("/checkout/shipping");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const product = productService.getProductById(id);
@@ -52,32 +48,43 @@ function DetailPage() {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   useEffect(() => {
-    setIsWishlisted(wishlistService.isInWishlist(product.id));
     if (product) {
       setSelectedImage(product.image);
       setSelectedColor(product.colors?.[0] || "");
       setQty(1);
+
+      loadWishlist();
     }
   }, [id]);
 
-  const handleWishlist = () => {
-    if (isWishlisted) {
-      wishlistService.removeFromWishlist(product.id);
-      setIsWishlisted(false);
-    } else {
-      wishlistService.addToWishlist(product);
+  const handleWishlist = async () => {
+    console.log("CLICK");
+
+    try {
+      console.log("BEFORE API");
+
+      const result = await wishlistService.addToWishlist(product.id);
+
+      console.log("AFTER API");
+      console.log(result);
+
       setIsWishlisted(true);
+    } catch (error) {
+      console.error("ERROR:");
+      console.error(error);
     }
   };
 
-  const handleAddToCart = () => {
-    dispatch(
-      addToCart({
-        product,
-        qty,
-        color: selectedColor,
-      }),
-    );
+  const handleAddToCart = async () => {
+    try {
+      for (let i = 0; i < qty; i++) {
+        await cartService.addToCart(product.id, selectedColor);
+      }
+
+      alert("Produk berhasil ditambahkan ke keranjang.");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleIncreaseQty = () => {
@@ -91,6 +98,20 @@ function DetailPage() {
       setQty((prev) => prev - 1);
     }
   };
+
+  async function loadWishlist() {
+    try {
+      const result = await wishlistService.getWishlist();
+
+      const exists = result.data.some(
+        (item) => item.product_id === Number(product.id),
+      );
+
+      setIsWishlisted(exists);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const produkTerkait = productService.getRelatedProducts(
     product.category,
