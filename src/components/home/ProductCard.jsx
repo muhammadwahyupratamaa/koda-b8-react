@@ -4,19 +4,12 @@ import { useState, useEffect } from "react";
 import wishlistService from "../../services/wishlistService";
 import formatCurrency from "../../utils/formatCurrency";
 import { useAuth } from "../../context/AuthContext";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../features/cart/cartSlice";
+import cartService from "../../services/cartService";
 
 function ProductCard({ product }) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [liked, setLiked] = useState(wishlistService.isInWishlist(product.id));
-
-  useEffect(() => {
-    setLiked(wishlistService.isInWishlist(product.id));
-  }, [product.id]);
-
+  const [liked, setLiked] = useState(false);
   const {
     id,
     category,
@@ -30,7 +23,7 @@ function ProductCard({ product }) {
     sold,
   } = product;
 
-  function handleWishlist(e) {
+  async function handleWishlist(e) {
     e.stopPropagation();
 
     if (!user) {
@@ -39,16 +32,21 @@ function ProductCard({ product }) {
       return;
     }
 
-    if (liked) {
-      wishlistService.removeFromWishlist(product.id);
-    } else {
-      wishlistService.addToWishlist(product);
-    }
+    try {
+      if (liked) {
+        await wishlistService.removeFromWishlist(product.id);
+      } else {
+        console.log(product);
+        await wishlistService.addToWishlist(product.id);
+      }
 
-    setLiked((prev) => !prev);
+      setLiked(!liked);
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
-  function handleAddCart(e) {
+  async function handleAddCart(e) {
     e.stopPropagation();
 
     if (!user) {
@@ -57,13 +55,13 @@ function ProductCard({ product }) {
       return;
     }
 
-    dispatch(
-      addToCart({
-        product,
-        qty: 1,
-        color: "",
-      }),
-    );
+    try {
+      await cartService.addToCart(product.id);
+
+      alert("Produk berhasil ditambahkan ke keranjang");
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   return (
