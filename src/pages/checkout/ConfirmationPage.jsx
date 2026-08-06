@@ -1,20 +1,35 @@
 import { FiCheck, FiChevronRight, FiLock } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { clearCart } from "../../features/cart/cartSlice";
+import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
+import checkoutService from "../../services/checkoutService";
 import storageService from "../../services/storageService";
-import { useEffect } from "react";
 
 function ConfirmationPage() {
+  console.log("CONFIRMATION RENDER");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const cart = useSelector((state) => state.cart.items);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const shipping = storageService.get("shipping");
   const payment = storageService.get("payment");
+
+  async function loadCart() {
+    try {
+      const result = await cartService.getCart();
+      setCart(result.data);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
+    loadCart();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+
     if (!shipping) {
       navigate("/checkout/shipping", { replace: true });
       return;
@@ -28,15 +43,19 @@ function ConfirmationPage() {
     if (cart.length === 0) {
       navigate("/cart", { replace: true });
     }
-  }, [shipping, payment, cart, navigate]);
+  }, [loading, shipping, payment, cart, navigate]);
 
   if (!shipping || !payment || cart.length === 0) {
     return null;
   }
   const subtotal = cart.reduce(
-    (total, item) => total + item.price * item.qty,
+    (total, item) => total + item.price * item.quantity,
     0,
   );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -116,7 +135,7 @@ function ConfirmationPage() {
               >
                 <div className="flex gap-3">
                   <img
-                    src={item.image}
+                    src={item.image_url}
                     alt={item.name}
                     className="h-12 w-12 rounded-lg object-cover sm:h-14 sm:w-14"
                   />
@@ -124,12 +143,12 @@ function ConfirmationPage() {
                   <div>
                     <p className="text-sm font-medium">{item.name}</p>
 
-                    <p className="text-xs text-gray-400">x{item.qty}</p>
+                    <p className="text-xs text-gray-400">x{item.quantity}</p>
                   </div>
                 </div>
 
                 <p className="text-blue-600 font-medium">
-                  Rp {(item.price * item.qty).toLocaleString("id-ID")}
+                  Rp {(item.price * item.quantity).toLocaleString("id-ID")}
                 </p>
               </div>
             ))}
@@ -154,19 +173,25 @@ function ConfirmationPage() {
             </button>
 
             <button
-              onClick={() => {
-                const order = cartService.checkout(cart);
+              onClick={async () => {
+                console.log("=== BUTTON CLICKED ===");
 
-                if (!order) {
-                  alert("Checkout gagal.");
-                  return;
+                try {
+                  console.log("1. sebelum checkout");
+
+                  const result = await checkoutService.checkout();
+
+                  console.log("2. hasil checkout:", result);
+
+                  navigate("/checkout/success", {
+                    replace: true,
+                    state: result.data,
+                  });
+
+                  console.log("3. navigate success");
+                } catch (error) {
+                  console.error("CHECKOUT ERROR:", error);
                 }
-                dispatch(clearCart());
-
-                navigate("/checkout/success", {
-                  replace: true,
-                  state: order,
-                });
               }}
               className="bg-orange-500 w-full justify-center  hover:bg-orange-600 rounded-xl px-10 py-3 text-white flex items-center gap-2 cursor-pointer"
             >
@@ -189,7 +214,7 @@ function ConfirmationPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={item.image}
+                  src={item.image_url}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
@@ -201,7 +226,7 @@ function ConfirmationPage() {
                 </div>
               </div>
 
-              <p className="text-sm text-gray-500">x{item.qty}</p>
+              <p className="text-sm text-gray-500">x{item.quantity}</p>
             </div>
           ))}
 
