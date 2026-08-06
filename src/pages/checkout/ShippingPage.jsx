@@ -5,14 +5,15 @@ import { useSelector } from "react-redux";
 import addressService from "../../services/addressService";
 import profileService from "../../services/profileService";
 import storageService from "../../services/storageService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import cartService from "../../services/cartService";
 
 function ShippingPage() {
   const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart.items);
+  const [cart, setCart] = useState([]);
 
   const subtotal = cart.reduce(
-    (total, item) => total + item.price * item.qty,
+    (total, item) => total + item.price * item.quantity,
     0,
   );
 
@@ -35,6 +36,15 @@ function ShippingPage() {
       ...shipping,
       [e.target.name]: e.target.value,
     });
+  }
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  async function loadCart() {
+    const result = await cartService.getCart();
+    setCart(result.data);
   }
 
   return (
@@ -326,7 +336,7 @@ function ShippingPage() {
             >
               <div className="flex items-center gap-3">
                 <img
-                  src={item.image}
+                  src={item.image_url}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
@@ -339,7 +349,7 @@ function ShippingPage() {
               </div>
 
               <div>
-                <p className="text-sm text-gray-500">x{item.qty}</p>
+                <p className="text-sm text-gray-500">x{item.quantity}</p>
               </div>
             </div>
           ))}
