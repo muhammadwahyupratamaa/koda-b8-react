@@ -1,39 +1,26 @@
-import storageService from "./storageService";
+import { api } from "./api";
 
-function getWishlist() {
-  return storageService.get("wishlist", []);
+async function getWishlist() {
+  return await api("/wishlist");
 }
 
-function isInWishlist(id) {
-  return getWishlist().some((item) => item.id === id);
+async function addToWishlist(productId) {
+  return await api("/wishlist", {
+    method: "POST",
+    body: JSON.stringify({
+      productId,
+    }),
+  });
 }
 
-function saveWishlist(wishlist) {
-  storageService.set("wishlist", wishlist);
-}
-
-function addToWishlist(product) {
-  const wishlist = getWishlist();
-
-  const existing = wishlist.find((item) => item.id === product.id);
-
-  if (existing) return;
-
-  wishlist.push(product);
-
-  saveWishlist(wishlist);
-}
-
-function removeFromWishlist(id) {
-  const wishlist = getWishlist().filter((item) => item.id !== id);
-
-  saveWishlist(wishlist);
+async function removeFromWishlist(productId) {
+  return await api(`/wishlist/${productId}`, {
+    method: "DELETE",
+  });
 }
 
 export default {
   getWishlist,
-  saveWishlist,
   addToWishlist,
   removeFromWishlist,
-  isInWishlist,
 };

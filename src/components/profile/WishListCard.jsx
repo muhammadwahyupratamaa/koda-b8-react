@@ -11,7 +11,11 @@ function WishlistCard({ product, onRemove }) {
   return (
     <article className="w-full rounded-xl border border-gray-200 overflow-hidden bg-white">
       <div className="relative">
-        <img src={image} alt={name} className="w-full aspect-square object-cover" />
+        <img
+          src={image}
+          alt={name}
+          className="w-full aspect-square object-cover"
+        />
 
         <div className="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
           {discount}
@@ -19,8 +23,9 @@ function WishlistCard({ product, onRemove }) {
 
         <button
           type="button"
-          onClick={() => {
-            wishlistService.removeFromWishlist(id);
+          onClick={async () => {
+            await wishlistService.removeFromWishlist(product.product_id);
+
             onRemove();
           }}
           className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white flex justify-center items-center shadow cursor-pointer hover:bg-gray-100"
@@ -31,7 +36,7 @@ function WishlistCard({ product, onRemove }) {
 
       <button
         type="button"
-        onClick={() => {
+        onClick={async () => {
           dispatch(
             addToCart({
               product,
@@ -40,7 +45,8 @@ function WishlistCard({ product, onRemove }) {
             }),
           );
 
-          wishlistService.removeFromWishlist(id);
+          await wishlistService.removeFromWishlist(product.product_id);
+
           onRemove();
         }}
         className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 text-sm font-medium flex justify-center items-center gap-2 cursor-pointer"
