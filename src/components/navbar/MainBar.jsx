@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import wishlistService from "../../services/wishlistService";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -23,7 +23,20 @@ function MainBar() {
     return cart.reduce((total, item) => total + item.qty, 0);
   }, [cart]);
 
-  const wishlistCount = wishlistService.getWishlist().length;
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  useEffect(() => {
+    loadWishlist();
+  }, []);
+
+  async function loadWishlist() {
+    try {
+      const result = await wishlistService.getWishlist();
+      setWishlistCount(result.data.length);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <nav className="w-full border-b border-slate-200 bg-white">
@@ -93,7 +106,7 @@ function MainBar() {
                   <p className="text-xs text-slate-500">Selamat Datang</p>
 
                   <p className="max-w-[140px] truncate text-sm font-semibold">
-                    {user.fullName}
+                    {user.name}
                   </p>
                 </div>
               </Link>

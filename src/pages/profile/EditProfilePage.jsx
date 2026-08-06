@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import ProfileSidebar from "../../components/profile/ProfileSidebar";
 import profileService from "../../services/profileService";
 
 function EditProfilePage() {
-  const [form, setForm] = useState(profileService.getProfile());
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    birthDate: "",
+    gender: "Laki-laki",
+    avatarUrl: "",
+  });
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -15,7 +22,28 @@ function EditProfilePage() {
     }));
   }
 
-  function handleSave() {
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  async function loadProfile() {
+    try {
+      const result = await profileService.getProfile();
+
+      setForm({
+        name: result.data.name || "",
+        email: result.data.email || "",
+        phone: result.data.phone || "",
+        birthDate: result.data.birth_date || "",
+        gender: result.data.gender || "Laki-laki",
+        avatarUrl: result.data.avatar_url || "",
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function handleSave() {
     if (!form.name.trim()) {
       return alert("Nama wajib diisi");
     }
@@ -28,9 +56,15 @@ function EditProfilePage() {
       return alert("Nomor telepon wajib diisi");
     }
 
-    profileService.updateProfile(form);
+    try {
+      await profileService.updateProfile(form);
 
-    alert("Profil berhasil disimpan");
+      alert("Profil berhasil disimpan");
+
+      loadProfile();
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   return (
@@ -63,6 +97,9 @@ function EditProfilePage() {
               </div>
 
               <button
+                type="submit"
+                value={form.avatarUrl}
+                onChange={handleChange}
                 type="button"
                 className="cursor-pointer text-sm text-blue-600 hover:underline"
               >
