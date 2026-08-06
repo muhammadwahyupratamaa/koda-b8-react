@@ -1,12 +1,8 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
 import { headphoneWirelessPremium } from "../../assets";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import cartService from "../../services/cartService";
 
-import {
-  increaseQty,
-  decreaseQty,
-  removeItem,
-} from "../../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
 
@@ -19,25 +15,61 @@ const formatRupiah = (number) => {
 
 function Cart() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart.items);
+  const [cart, setCart] = useState([]);
 
-  const handleIncrease = (id) => {
-    dispatch(increaseQty(id));
-  };
+  async function handleIncrease(item) {
+    try {
+      await cartService.updateQuantity(item.product_id, item.quantity + 1);
 
-  const handleDecrease = (id) => {
-    dispatch(decreaseQty(id));
-  };
+      loadCart();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
-  const handleRemove = (id) => {
-    dispatch(removeItem(id));
-  };
+  async function handleDecrease(item) {
+    try {
+      if (item.quantity === 1) {
+        await cartService.removeProduct(item.product_id);
+      } else {
+        await cartService.updateQuantity(item.product_id, item.quantity - 1);
+      }
+
+      loadCart();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function handleRemove(item) {
+    try {
+      await cartService.removeProduct(item.product_id);
+
+      loadCart();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
 
   const subtotal = cart.reduce((total, item) => {
-    return total + item.price * item.qty;
+    return total + item.price * item.quantity;
   }, 0);
+
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  async function loadCart() {
+    try {
+      const result = await cartService.getCart();
+
+      setCart(result.data);
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  }
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
@@ -51,7 +83,7 @@ function Cart() {
               <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <img
-                    src={item.image}
+                    src={item.image_url}
                     alt={item.name}
                     className="sm:w-24 sm:h-24 w-20 h-20 rounded-xl object-cover"
                   />
@@ -63,24 +95,28 @@ function Cart() {
 
                     <div className="flex items-center border border-gray-200 rounded-lg w-fit mt-3">
                       <button className="px-3 py-2 cursor-pointer">
-                        <FiMinus onClick={() => handleDecrease(item.id)} />
+                        <FiMinus onClick={() => handleDecrease(item)} />
                       </button>
 
-                      <span className="px-5">{item.qty}</span>
+                      <span className="px-5">{item.quantity}</span>
 
                       <button className="px-3 py-2 cursor-pointer">
-                        <FiPlus onClick={() => handleIncrease(item.id)} />
+                        <FiPlus onClick={() => handleIncrease(item)} />
                       </button>
                     </div>
 
                     <button
                       className="flex gap-2 mt-4 justify-center items-center cursor-pointer"
-                      onClick={() => {
-                        wishlistService.addToWishlist(item);
+                      onClick={async () => {
+                        try {
+                          await wishlistService.addToWishlist(item.product_id);
 
-                        cartService.removeItem(item.id);
+                          await cartService.removeProduct(item.product_id);
 
-                        setCart(cartService.getCart());
+                          loadCart();
+                        } catch (error) {
+                          alert(error.message);
+                        }
                       }}
                     >
                       <FiHeart />
@@ -92,13 +128,13 @@ function Cart() {
                 <div className="flex items-center justify-between sm:flex-col sm:items-end">
                   <button>
                     <FiTrash2
-                      onClick={() => handleRemove(item.id)}
+                      onClick={() => handleRemove(item)}
                       className="text-gray-400"
                     />
                   </button>
 
                   <p className="text-2xl font-semibold text-blue-600">
-                    Rp {(item.price * item.qty).toLocaleString("id-ID")}
+                    Rp {(item.price * item.quantity).toLocaleString("id-ID")}
                   </p>
                 </div>
               </div>
