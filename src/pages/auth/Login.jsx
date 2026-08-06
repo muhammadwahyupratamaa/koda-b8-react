@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-  const {login} = useAuth()
+  const { login } = useAuth();
 
   const {
     register,
@@ -20,19 +20,20 @@ function Login() {
     mode: "onBlur",
   });
 
-  const onSubmit = (data) => {
-  try {
-    const user = authService.login(data);
+  const onSubmit = async (data) => {
+    try {
+      const result = await authService.login(data);
 
-    login(user);
+      console.log(result);
+      login(result.token, result.user);
 
-    window.alert("Login berhasil!");
+      window.alert("Login berhasil!");
 
-    navigate("/");
-  } catch (error) {
-    window.alert(error.message);
-  }
-};
+      navigate("/");
+    } catch (error) {
+      window.alert(error.message);
+    }
+  };
   return (
     <AuthLayout bannerType="login">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
@@ -95,7 +96,7 @@ function Login() {
           <div className="flex flex-col gap-2">
             <div className="flex justify-between">
               <div>
-                <p >Kata Sandi</p>
+                <p>Kata Sandi</p>
               </div>
 
               <div>
@@ -135,7 +136,9 @@ function Login() {
 
         <div className="flex gap-2 text-gray-700">
           <input type="checkbox" name="remember" id="remember" />
-          <label htmlFor="remember" className="text-sm">Ingat saya selama 30 hari</label>
+          <label htmlFor="remember" className="text-sm">
+            Ingat saya selama 30 hari
+          </label>
         </div>
 
         <div className="bg-emerald-600 rounded-xl flex justify-center items-center ">

@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Mail, Lock, User, Eye, ArrowRight } from "lucide-react";
 import registerSchema from "../../validation/registerSchema";
 import authService from "../../services/authService";
-import profileService from "../../services/profileService";
 
 function Register() {
   const {
@@ -19,25 +18,16 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     try {
       const { confirmPassword, fullName, ...rest } = data;
 
       const userData = {
+        name: fullName,
         ...rest,
-        fullName,
       };
 
-      authService.register(userData);
-
-      profileService.saveProfile({
-        name: fullName,
-        email: userData.email,
-        phone: "",
-        birthDate: "",
-        gender: "Laki-laki",
-        avatar: "",
-      });
+      await authService.register(userData);
 
       window.alert("Registrasi berhasil!");
       navigate("/login");
