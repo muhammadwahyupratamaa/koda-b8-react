@@ -1,44 +1,37 @@
-import storageService from "./storageService";
+import { api } from "./api";
 
-function getOrders() {
-  return storageService.get("orders", []);
+async function getCart() {
+  return await api("/cart");
 }
 
-function saveOrders(orders) {
-  storageService.set("orders", orders);
+async function addToCart(productId, color) {
+  return await api("/cart", {
+    method: "POST",
+    body: JSON.stringify({
+      productId,
+      color,
+    }),
+  });
 }
 
-function checkout(cart) {
-  if (!cart || cart.length === 0) return null;
+async function updateQuantity(productId, quantity) {
+  return await api(`/cart/${productId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      quantity,
+    }),
+  });
+}
 
-  const shipping = storageService.get("shipping");
-  const payment = storageService.get("payment");
-
-  const orders = getOrders();
-
-  const order = {
-    id: Date.now(),
-    orderNumber: `BM${Date.now()}`,
-    items: cart,
-    shipping,
-    payment,
-    total: cart.reduce((total, item) => total + item.price * item.qty, 0),
-    createdAt: new Date().toISOString(),
-    status: "Diproses",
-  };
-
-  orders.unshift(order);
-
-  saveOrders(orders);
-
-  storageService.remove("shipping");
-  storageService.remove("payment");
-
-  return order;
+async function removeProduct(productId) {
+  return await api(`/cart/${productId}`, {
+    method: "DELETE",
+  });
 }
 
 export default {
-  getOrders,
-  saveOrders,
-  checkout,
+  getCart,
+  addToCart,
+  updateQuantity,
+  removeProduct,
 };
