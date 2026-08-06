@@ -1,56 +1,28 @@
-import storageService from "./storageService";
+import { api } from "./api";
 
-function getUsers() {
-  return storageService.get("users", []);
+async function register(data) {
+  return await api("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
-function saveUsers(users) {
-  storageService.set("users", users);
+async function login(data) {
+  return await api("/auth/login", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
-function register(data) {
-  const users = getUsers();
-  const existingUser = users.find((user) => user.email === data.email);
-
-  if (existingUser) {
-    throw new Error("Email sudah terdaftar");
-  }
-  users.push(data);
-  saveUsers(users);
-}
-
-function login(data) {
-  const users = getUsers();
-
-  const existingUser = users.find((user) => user.email === data.email);
-
-  if (!existingUser) {
-    throw new Error("Email tidak ditemukan");
-  }
-
-  if (existingUser.password !== data.password) {
-    throw new Error("Password salah");
-  }
-
-  return existingUser;
-}
-
-function forgotPassword(email) {
-  const users = getUsers();
-
-  const existingUser = users.find((user) => user.email === email);
-
-  if (!existingUser) {
-    throw new Error("Email tidak terdaftar");
-  }
-
-  return true;
+async function forgotPassword(data) {
+  return await api("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 }
 
 export default {
-  getUsers,
-  saveUsers,
   register,
   login,
-  forgotPassword
+  forgotPassword,
 };
