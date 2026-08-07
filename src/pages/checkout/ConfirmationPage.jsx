@@ -4,15 +4,19 @@ import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
 import checkoutService from "../../services/checkoutService";
 import storageService from "../../services/storageService";
+import { productImages } from "../../assets";
 
 function ConfirmationPage() {
-  console.log("CONFIRMATION RENDER");
   const navigate = useNavigate();
+
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const shipping = storageService.get("shipping");
   const payment = storageService.get("payment");
+
+  console.log("shipping =", shipping);
+  console.log("payment =", payment);
 
   async function loadCart() {
     try {
@@ -45,17 +49,19 @@ function ConfirmationPage() {
     }
   }, [loading, shipping, payment, cart, navigate]);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   if (!shipping || !payment || cart.length === 0) {
     return null;
   }
+
   const subtotal = cart.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
   return (
     <main className="max-w-7xl mx-auto px-4 py-8">
       <section className="flex justify-center items-center mb-10">
@@ -135,7 +141,7 @@ function ConfirmationPage() {
               >
                 <div className="flex gap-3">
                   <img
-                    src={item.image_url}
+                    src={productImages[item.image_url]}
                     alt={item.name}
                     className="h-12 w-12 rounded-lg object-cover sm:h-14 sm:w-14"
                   />
@@ -181,12 +187,17 @@ function ConfirmationPage() {
 
                   const result = await checkoutService.checkout();
 
-                  console.log("2. hasil checkout:", result);
-
                   navigate("/checkout/success", {
                     replace: true,
-                    state: result.data,
+                    state: {
+                      order: result.data,
+                      shipping,
+                      payment,
+                    },
                   });
+
+                  // storageService.remove("shipping");
+                  // storageService.remove("payment");
 
                   console.log("3. navigate success");
                 } catch (error) {
@@ -214,7 +225,7 @@ function ConfirmationPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={item.image_url}
+                  src={productImages[item.image_url]}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
