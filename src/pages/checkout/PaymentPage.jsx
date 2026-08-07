@@ -1,9 +1,9 @@
 import { FiCheck, FiChevronRight, FiCreditCard, FiLock } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import storageService from "../../services/storageService";
 import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
+import { productImages } from "../../assets";
 
 function PaymentPage() {
   const navigate = useNavigate();
@@ -207,7 +207,12 @@ function PaymentPage() {
 
                 storageService.set("payment", paymentMethod);
 
-                navigate("/checkout/confirmation");
+                navigate("/checkout/confirmation", {
+                  state: {
+                    shipping: storageService.get("shipping"),
+                    payment: paymentMethod,
+                  },
+                });
               }}
               className="bg-blue-600 hover:bg-blue-700 justify-center rounded-xl w-full px-12 py-3 text-white flex items-center gap-2 cursor-pointer"
             >
@@ -228,7 +233,7 @@ function PaymentPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={item.image_url}
+                  src={productImages[item.image_url]}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
@@ -240,7 +245,9 @@ function PaymentPage() {
                 </div>
               </div>
 
-              <p className="text-xs sm:text-sm text-gray-500">x{item.quantity}</p>
+              <p className="text-xs sm:text-sm text-gray-500">
+                x{item.quantity}
+              </p>
             </div>
           ))}
 
