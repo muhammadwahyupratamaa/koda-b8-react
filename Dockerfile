@@ -9,7 +9,7 @@ FROM node:alpine AS build-project
 WORKDIR /app
 COPY --from=clone-project /source/ .
 RUN npm i
-ARG VITE_API_PORT=http://localhost:8080
+ARG VITE_API_URL=http://localhost:8081
 ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
