@@ -1,5 +1,5 @@
 import { FiTruck, FiLock, FiChevronRight } from "react-icons/fi";
-import { headphoneWirelessPremium } from "../../assets";
+import { productImages } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import addressService from "../../services/addressService";
@@ -336,7 +336,7 @@ function ShippingPage() {
             >
               <div className="flex items-center gap-3">
                 <img
-                  src={item.image_url}
+                  src={productImages[item.image_url]}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
