@@ -18,7 +18,7 @@ function ProfileSidebar({ active }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
 
-  const profile = profileService.getProfile();
+  const [profile, setProfile] = useState({});
   const [orders, setOrders] = useState([]);
   const wishlist = wishlistService.getWishlist();
 
@@ -50,16 +50,16 @@ function ProfileSidebar({ active }) {
   ];
 
   useEffect(() => {
-    async function loadOrders() {
+    async function loadProfile() {
       try {
-        const result = await checkoutService.getOrders();
-        setOrders(result.data);
+        const result = await profileService.getProfile();
+        setProfile(result.data);
       } catch (err) {
         console.error(err);
       }
     }
 
-    loadOrders();
+    loadProfile();
   }, []);
 
   return (
