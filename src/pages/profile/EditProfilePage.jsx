@@ -97,9 +97,6 @@ function EditProfilePage() {
               </div>
 
               <button
-                type="submit"
-                value={form.avatarUrl}
-                onChange={handleChange}
                 type="button"
                 className="cursor-pointer text-sm text-blue-600 hover:underline"
               >

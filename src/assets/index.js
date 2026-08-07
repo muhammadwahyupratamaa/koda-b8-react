@@ -58,6 +58,68 @@ import deepWork from "./deepWork.webp";
 import richDadPoorDad from "./richDadPoorDad.webp";
 import javascriptGoodParts from "./javascriptGoodParts.jpeg";
 
+export const productImages = {
+  // Auth
+  authBanner,
+  authForgotPassword,
+  authRegister,
+  login,
+
+  // Hero
+  hero,
+  hero2,
+  hero3,
+
+  // Categories
+  bukuAlatTulis,
+  elektronik,
+  fashion,
+  headphoneWirelessPremium,
+  kecantikan,
+  olahraga,
+  rumahDapur,
+
+  // Others
+  star,
+  reactLogo,
+  viteLogo,
+
+  // Landing page
+  bgLandingPage,
+  bgLandingPage1,
+
+  // Data
+  keyboardMechanical,
+  gamingMouse,
+  smartWatch,
+  bluetoothSpeaker,
+  hoodieOversized,
+  basicTshirt,
+  runningShoes,
+  denimJacket,
+  backpack,
+  officeChair,
+  studyTable,
+  bookshelf,
+  coffeeTable,
+  deskLamp,
+  waterBottle,
+  yogaMat,
+  coffeeMug,
+  travelSuitcase,
+  portableBlender,
+  vitaminCSerum,
+  facialCleanser,
+  sunscreen,
+  lipTint,
+  nightMoisturizer,
+  atomicHabits,
+  cleanCode,
+  deepWork,
+  richDadPoorDad,
+  javascriptGoodParts,
+};
+
 export {
   // Auth
   authBanner,

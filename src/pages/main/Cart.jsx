@@ -1,5 +1,5 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
-import { headphoneWirelessPremium } from "../../assets";
+import { headphoneWirelessPremium, productImages } from "../../assets";
 import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
 
@@ -83,7 +83,7 @@ function Cart() {
               <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <img
-                    src={item.image_url}
+                    src={productImages[item.image_url]}
                     alt={item.name}
                     className="sm:w-24 sm:h-24 w-20 h-20 rounded-xl object-cover"
                   />
