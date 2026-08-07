@@ -1,20 +1,23 @@
 import { FiCheck, FiPackage, FiTruck, FiMapPin, FiBox } from "react-icons/fi";
 import { BsBoxSeam } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
+import storageService from "../../services/storageService";
+import { useEffect } from "react";
 
 function SuccessPage() {
-
-const location = useLocation();
-
-console.log(location);
-console.log(location.state);
   const navigate = useNavigate();
-  const { state: order } = useLocation();
+  const { state } = useLocation();
+  const order = state?.order;
+  const shipping = storageService.get("shipping");
+  const payment = storageService.get("payment");
 
-  if (!order) {
-    navigate("/");
-    return null;
-  }
+  useEffect(() => {
+    if (!order) {
+      navigate("/", { replace: true });
+    }
+  }, [order, navigate]);
+
+  if (!order) return null;
   return (
     <main className="max-w-7xl mx-auto px-4 py-10">
       <div className="flex flex-col items-center">
@@ -22,10 +25,13 @@ console.log(location.state);
           <FiCheck className="h-10 w-10 sm:h-12 sm:w-12 text-green-500" />
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-semibold mt-8">Pesanan Berhasil! 🎉</h1>
+        <h1 className="text-2xl sm:text-4xl font-semibold mt-8">
+          Pesanan Berhasil! 🎉
+        </h1>
 
         <p className="text-gray-400 text-base text-center px-2 mt-3">
-          Terima kasih telah berbelanja di BRilianShop. Pesananmu sedang diproses.
+          Terima kasih telah berbelanja di BRilianShop. Pesananmu sedang
+          diproses.
         </p>
       </div>
 
@@ -35,7 +41,7 @@ console.log(location.state);
             <p className="text-sm text-gray-400">Nomor Pesanan</p>
 
             <p className="text-blue-600 text-xl font-semibold mt-1">
-              #{order?.orderNumber}
+              {`#ORD-${order?.id}`}
             </p>
           </div>
 
@@ -43,7 +49,7 @@ console.log(location.state);
             <p className="text-sm text-gray-400">Total Pembayaran</p>
 
             <p className="text-2xl font-semibold mt-1">
-              Rp {order?.total?.toLocaleString("id-ID")}
+              Rp {Number(order?.total).toLocaleString("id-ID")}
             </p>
           </div>
         </div>
@@ -53,7 +59,7 @@ console.log(location.state);
             <FiTruck className="w-5 h-5 text-blue-600 mt-1" />
 
             <div>
-              <p className="font-medium">{order.shipping?.shippingMethod}</p>
+              <p className="font-medium">{shipping?.shippingMethod}</p>
 
               <p className="text-sm text-gray-400">
                 Estimasi tiba: 2-3 Juni 2026
@@ -68,9 +74,19 @@ console.log(location.state);
               <p className="font-medium">Alamat Pengiriman</p>
 
               <p className="text-sm text-gray-400">
-                {order.shipping?.address}, {order.shipping?.city},
-                {order.shipping?.province} {order.shipping?.postalCode}
+                {shipping?.address},{shipping?.city},{shipping?.province}{" "}
+                {shipping?.postalCode}
               </p>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <FiCheck className="w-5 h-5 text-blue-600 mt-1" />
+
+            <div>
+              <p className="font-medium">Metode Pembayaran</p>
+
+              <p className="text-sm text-gray-400">{payment}</p>
             </div>
           </div>
         </div>
