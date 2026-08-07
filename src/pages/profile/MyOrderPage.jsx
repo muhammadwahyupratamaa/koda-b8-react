@@ -1,12 +1,27 @@
 import OrderCard from "../../components/profile/OrderCard";
 import ProfileSidebar from "../../components/profile/ProfileSidebar";
 import { useNavigate } from "react-router-dom";
-import cartService from "../../services/cartService";
+import checkoutService from "../../services/checkoutService";
+import { useEffect, useState } from "react";
 
 function MyOrderPage() {
   const navigate = useNavigate();
 
-  const orders = cartService.getOrders();
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  async function loadOrders() {
+    try {
+      const result = await checkoutService.getOrders();
+
+      setOrders(result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
@@ -34,12 +49,12 @@ function MyOrderPage() {
             orders.map((order) => (
               <OrderCard
                 key={order.id}
-                orderId={order.orderNumber}
-                date={new Date(order.createdAt).toLocaleDateString("id-ID")}
+                orderId={`ORD-${order.id}`}
+                date={new Date(order.created_at).toLocaleDateString("id-ID")}
                 status={order.status}
-                total={`Rp ${order.total.toLocaleString("id-ID")}`}
+                total={`Rp ${Number(order.total).toLocaleString("id-ID")}`}
+                products={[]}
                 showReview={false}
-                products={order.items}
               />
             ))
           )}
