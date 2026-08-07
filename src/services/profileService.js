@@ -1,39 +1,28 @@
-import storageService from "./storageService";
+import { api } from "./api";
 
-const KEY = "profile";
-
-const defaultProfile = {
-  name: "",
-  email: "",
-  phone: "",
-  birthDate: "",
-  gender: "Laki-laki",
-  avatar: "",
-};
-
-function getProfile() {
-  return storageService.get(KEY, defaultProfile);
+async function getProfile() {
+  return await api("/profile");
 }
 
-function saveProfile(profile) {
-  storageService.set(KEY, profile);
+async function updateProfile(data) {
+  return await api("/profile", {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
 }
 
-function updateProfile(data) {
-  const current = getProfile();
-
-  const updated = {
-    ...current,
-    ...data,
-  };
-
-  saveProfile(updated);
-
-  return updated;
+async function updatePassword(oldPassword, newPassword) {
+  return await api("/profile/password", {
+    method: "PATCH",
+    body: JSON.stringify({
+      oldPassword,
+      newPassword,
+    }),
+  });
 }
 
 export default {
   getProfile,
-  saveProfile,
   updateProfile,
+  updatePassword,
 };
