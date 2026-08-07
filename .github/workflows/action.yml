@@ -71,8 +71,7 @@ jobs:
             --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}:pra .
+        run: docker build --build-arg VITE_API_URL="${{ vars.VITE_API_URL }}" . -t ghcr.io/${{ github.repository }}:pra
 
       - name: Push Docker image
         run: |
