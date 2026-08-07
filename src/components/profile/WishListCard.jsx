@@ -1,32 +1,46 @@
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { addToCart } from "../../features/cart/cartSlice";
 import wishlistService from "../../services/wishlistService";
+import cartService from "../../services/cartService";
+import { productImages } from "../../assets";
 
 function WishlistCard({ product, onRemove }) {
-  const dispatch = useDispatch();
-  const { id, image, brand, name, rating, review, price, priceDisc, discount } =
-    product;
+  const {
+    id,
+    image_url,
+    brand,
+    name,
+    rating,
+    review,
+    price,
+    priceDisc,
+    discount,
+  } = product;
   return (
     <article className="w-full rounded-xl border border-gray-200 overflow-hidden bg-white">
       <div className="relative">
         <img
-          src={image}
+          src={productImages[image_url]}
           alt={name}
           className="w-full aspect-square object-cover"
         />
 
         <div className="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
-          {discount}
+          -{discount}%
         </div>
 
         <button
           type="button"
           onClick={async () => {
-            await wishlistService.removeFromWishlist(product.product_id);
+            try {
+              await cartService.addToCart(product.product_id);
 
-            onRemove();
+              await wishlistService.removeFromWishlist(product.product_id);
+
+              onRemove();
+            } catch (error) {
+              alert(error.message);
+            }
           }}
           className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white flex justify-center items-center shadow cursor-pointer hover:bg-gray-100"
         >
@@ -37,17 +51,15 @@ function WishlistCard({ product, onRemove }) {
       <button
         type="button"
         onClick={async () => {
-          dispatch(
-            addToCart({
-              product,
-              qty: 1,
-              color: "",
-            }),
-          );
+          try {
+            await cartService.addToCart(product.product_id);
 
-          await wishlistService.removeFromWishlist(product.product_id);
+            await wishlistService.removeFromWishlist(product.product_id);
 
-          onRemove();
+            onRemove();
+          } catch (error) {
+            alert(error.message);
+          }
         }}
         className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 text-sm font-medium flex justify-center items-center gap-2 cursor-pointer"
       >
@@ -74,11 +86,11 @@ function WishlistCard({ product, onRemove }) {
 
         <div className="flex flex-wrap  items-center gap-2 mt-3">
           <p className="text-xl font-semibold text-blue-600">
-            Rp {price.toLocaleString("id-ID")}
+            Rp {Number(price).toLocaleString("id-ID")}
           </p>
 
           <p className="text-sm text-gray-400 line-through">
-            Rp {priceDisc.toLocaleString("id-ID")}
+            Rp {Number(priceDisc).toLocaleString("id-ID")}
           </p>
         </div>
       </div>
