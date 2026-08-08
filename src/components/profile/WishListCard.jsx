@@ -33,10 +33,7 @@ function WishlistCard({ product, onRemove }) {
           type="button"
           onClick={async () => {
             try {
-              await cartService.addToCart(product.product_id);
-
               await wishlistService.removeFromWishlist(product.product_id);
-
               onRemove();
             } catch (error) {
               alert(error.message);

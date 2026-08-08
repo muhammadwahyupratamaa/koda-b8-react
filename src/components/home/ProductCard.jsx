@@ -10,6 +10,32 @@ function ProductCard({ product }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [liked, setLiked] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(true);
+  useEffect(() => {
+    if (!user || !product?.id) {
+      setLiked(false);
+      setWishlistLoading(false);
+      return;
+    }
+
+    async function loadWishlist() {
+      try {
+        const result = await wishlistService.getWishlist();
+
+        const exists = result.data.some(
+          (item) => Number(item.product_id) === Number(product.id),
+        );
+
+        setLiked(exists);
+      } catch (error) {
+        console.error("LOAD WISHLIST ERROR:", error);
+      } finally {
+        setWishlistLoading(false);
+      }
+    }
+
+    loadWishlist();
+  }, [user, product?.id]);
   const {
     id,
     category,
@@ -32,15 +58,18 @@ function ProductCard({ product }) {
       return;
     }
 
+    if (wishlistLoading) {
+      return;
+    }
+
     try {
       if (liked) {
         await wishlistService.removeFromWishlist(product.id);
+        setLiked(false);
       } else {
-        console.log(product);
         await wishlistService.addToWishlist(product.id);
+        setLiked(true);
       }
-
-      setLiked(!liked);
     } catch (error) {
       alert(error.message);
     }
@@ -78,6 +107,7 @@ function ProductCard({ product }) {
 
         <button
           onClick={handleWishlist}
+          disabled={wishlistLoading}
           className="absolute right-4 top-4 z-20 flex h-9 w-9 sm:w-10 sm:h-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition hover:bg-red-500 hover:text-white"
         >
           <Heart

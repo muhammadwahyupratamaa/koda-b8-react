@@ -46,6 +46,7 @@ function DetailPage() {
     product?.colors?.[0] || "",
   );
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(true);
 
   useEffect(() => {
     if (product) {
@@ -58,20 +59,21 @@ function DetailPage() {
   }, [id]);
 
   const handleWishlist = async () => {
-    console.log("CLICK");
+    if (wishlistLoading) {
+      return;
+    }
 
     try {
-      console.log("BEFORE API");
-
-      const result = await wishlistService.addToWishlist(product.id);
-
-      console.log("AFTER API");
-      console.log(result);
-
-      setIsWishlisted(true);
+      if (isWishlisted) {
+        await wishlistService.removeFromWishlist(product.id);
+        setIsWishlisted(false);
+      } else {
+        await wishlistService.addToWishlist(product.id);
+        setIsWishlisted(true);
+      }
     } catch (error) {
-      console.error("ERROR:");
-      console.error(error);
+      console.error("Wishlist error:", error);
+      alert(error.message);
     }
   };
 
@@ -104,15 +106,16 @@ function DetailPage() {
       const result = await wishlistService.getWishlist();
 
       const exists = result.data.some(
-        (item) => item.product_id === Number(product.id),
+        (item) => Number(item.product_id) === Number(product.id),
       );
 
       setIsWishlisted(exists);
     } catch (error) {
-      console.error(error);
+      console.error("LOAD WISHLIST ERROR:", error);
+    } finally {
+      setWishlistLoading(false);
     }
   }
-
   const produkTerkait = productService.getRelatedProducts(
     product.category,
     product.id,
@@ -300,6 +303,7 @@ function DetailPage() {
 
             <button
               onClick={handleWishlist}
+              disabled={wishlistLoading}
               className={`transition-all duration-300 ${
                 isWishlisted
                   ? "fill-red-500 text-red-500 scale-110"
