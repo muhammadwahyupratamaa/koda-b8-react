@@ -17,17 +17,14 @@ function ShippingPage() {
     0,
   );
 
-  const profile = profileService.getProfile();
-  const primaryAddress = addressService.getPrimaryAddress();
-
   const [shipping, setShipping] = useState({
-    name: primaryAddress?.name || profile.name || "",
-    phone: primaryAddress?.phone || profile.phone || "",
-    email: profile.email || "",
-    address: primaryAddress?.address || "",
-    city: primaryAddress?.city || "",
-    province: primaryAddress?.province || "",
-    postalCode: primaryAddress?.postalCode || "",
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    city: "",
+    province: "",
+    postalCode: "",
     shippingMethod: "JNE Reguler",
   });
 
@@ -37,6 +34,32 @@ function ShippingPage() {
       [e.target.name]: e.target.value,
     });
   }
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const profileResult = await profileService.getProfile();
+        const profile = profileResult.data;
+
+        const primaryAddress = addressService.getPrimaryAddress();
+
+        setShipping((prev) => ({
+          ...prev,
+          name: primaryAddress?.name || profile?.name || "",
+          phone: primaryAddress?.phone || profile?.phone || "",
+          email: profile?.email || "",
+          address: primaryAddress?.address || "",
+          city: primaryAddress?.city || "",
+          province: primaryAddress?.province || "",
+          postalCode: primaryAddress?.postalCode || "",
+        }));
+      } catch (error) {
+        console.error("Failed to load profile:", error);
+      }
+    }
+
+    loadProfile();
+  }, []);
 
   useEffect(() => {
     loadCart();
