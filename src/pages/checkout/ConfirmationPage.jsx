@@ -185,7 +185,10 @@ function ConfirmationPage() {
                 try {
                   console.log("1. sebelum checkout");
 
-                  const result = await checkoutService.checkout();
+                  const result = await checkoutService.checkout(
+                    shipping,
+                    payment,
+                  );
 
                   navigate("/checkout/success", {
                     replace: true,
