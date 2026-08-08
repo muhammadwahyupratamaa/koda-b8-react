@@ -20,26 +20,8 @@ function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleBuyNow = async () => {
-    try {
-      for (let i = 0; i < qty; i++) {
-        await cartService.addToCart(product.id, selectedColor);
-      }
-
-      navigate("/checkout/shipping");
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
   const product = productService.getProductById(id);
-  if (!product) {
-    return (
-      <main className="max-w-7xl mx-auto py-20 text-center">
-        <h1 className="text-2xl font-semibold">Produk tidak ditemukan</h1>
-      </main>
-    );
-  }
+
   const [selectedImage, setSelectedImage] = useState(product?.image);
   const [qty, setQty] = useState(1);
   const [selectedColor, setSelectedColor] = useState(
@@ -57,6 +39,26 @@ function DetailPage() {
       loadWishlist();
     }
   }, [id]);
+
+  if (!product) {
+    return (
+      <main className="max-w-7xl mx-auto py-20 text-center">
+        <h1 className="text-2xl font-semibold">Produk tidak ditemukan</h1>
+      </main>
+    );
+  }
+
+  const handleBuyNow = async () => {
+    try {
+      for (let i = 0; i < qty; i++) {
+        await cartService.addToCart(product.id, selectedColor);
+      }
+
+      navigate("/checkout/shipping");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const handleWishlist = async () => {
     if (wishlistLoading) {
@@ -116,10 +118,12 @@ function DetailPage() {
       setWishlistLoading(false);
     }
   }
+
   const produkTerkait = productService.getRelatedProducts(
     product.category,
     product.id,
   );
+
   const saving = product.priceDisc - product.price;
 
   return (
