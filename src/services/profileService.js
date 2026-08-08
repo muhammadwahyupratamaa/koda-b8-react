@@ -6,14 +6,14 @@ async function getProfile() {
 
 async function updateProfile(data) {
   return await api("/profile", {
-    method: "PATCH",
+    method: "PUT",
     body: JSON.stringify(data),
   });
 }
 
 async function updatePassword(oldPassword, newPassword) {
   return await api("/profile/password", {
-    method: "PATCH",
+    method: "PUT",
     body: JSON.stringify({
       oldPassword,
       newPassword,
