@@ -1,8 +1,12 @@
 import { api } from "./api";
 
-async function checkout() {
+async function checkout(shippingAddress, paymentMethod) {
   return await api("/checkout", {
     method: "POST",
+    body: JSON.stringify({
+      shippingAddress,
+      paymentMethod,
+    }),
   });
 }
 
