@@ -2,7 +2,7 @@ import { GoChevronRight } from "react-icons/go";
 import ProductCard from "../../components/home/ProductCard";
 import productService from "../../services/productService";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 function BrowseProducts() {
   const [searchParams] = useSearchParams();
@@ -15,6 +15,12 @@ function BrowseProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [minRating, setMinRating] = useState(0);
+  const [stockOnly, setStockOnly] = useState(false);
+  const [priceRange, setPriceRange] = useState(20000000);
+  const [sortBy, setSortBy] = useState("popular");
+
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -23,34 +29,7 @@ function BrowseProducts() {
 
         const products = await productService.getProductsFromApi();
 
-        let filteredProducts = products;
-
-        if (keyword.trim()) {
-          const search = keyword.trim().toLowerCase();
-
-          filteredProducts = filteredProducts.filter((product) => {
-            return (
-              product.name.toLowerCase().includes(search) ||
-              product.brand.toLowerCase().includes(search) ||
-              product.category.toLowerCase().includes(search)
-            );
-          });
-        }
-
-        if (category.trim()) {
-          filteredProducts = filteredProducts.filter(
-            (product) =>
-              product.category.toLowerCase() === category.toLowerCase(),
-          );
-        }
-
-        if (promo === "true") {
-          filteredProducts = filteredProducts.filter(
-            (product) => product.discount >= 20,
-          );
-        }
-
-        setDisplayedProducts(filteredProducts);
+        setDisplayedProducts(products);
       } catch (error) {
         console.error("LOAD PRODUCTS ERROR:", error);
         setError("Gagal memuat produk.");
@@ -60,8 +39,99 @@ function BrowseProducts() {
     }
 
     loadProducts();
-  }, [keyword, category, promo]);
+  }, []);
 
+  const filteredProducts = useMemo(() => {
+    let products = [...displayedProducts];
+
+    // Search
+    if (keyword.trim()) {
+      const search = keyword.trim().toLowerCase();
+
+      products = products.filter((product) => {
+        return (
+          product.name.toLowerCase().includes(search) ||
+          product.brand.toLowerCase().includes(search) ||
+          product.category.toLowerCase().includes(search)
+        );
+      });
+    }
+
+    // Category
+    if (category.trim()) {
+      products = products.filter(
+        (product) => product.category.toLowerCase() === category.toLowerCase(),
+      );
+    }
+
+    // Promo
+    if (promo === "true") {
+      products = products.filter((product) => Number(product.discount) >= 20);
+    }
+
+    // Brand
+    if (selectedBrands.length > 0) {
+      products = products.filter((product) =>
+        selectedBrands.includes(product.brand),
+      );
+    }
+
+    // Rating
+    if (minRating > 0) {
+      products = products.filter(
+        (product) => Number(product.rating) >= minRating,
+      );
+    }
+
+    // Stock
+    if (stockOnly) {
+      products = products.filter((product) => Number(product.stock) > 0);
+    }
+
+    // Price
+    products = products.filter(
+      (product) => Number(product.price) <= priceRange,
+    );
+
+    // Sort
+    if (sortBy === "popular") {
+      products.sort((a, b) => Number(b.sold) - Number(a.sold));
+    }
+
+    if (sortBy === "price-low") {
+      products.sort((a, b) => Number(a.price) - Number(b.price));
+    }
+
+    if (sortBy === "price-high") {
+      products.sort((a, b) => Number(b.price) - Number(a.price));
+    }
+
+    if (sortBy === "newest") {
+      products.sort((a, b) => Number(b.id) - Number(a.id));
+    }
+
+    return products;
+  }, [
+    displayedProducts,
+    keyword,
+    category,
+    promo,
+    selectedBrands,
+    minRating,
+    stockOnly,
+    priceRange,
+    sortBy,
+  ]);
+
+  const handleBrandChange = (brand) => {
+    setSelectedBrands((current) => {
+      if (current.includes(brand)) {
+        return current.filter((item) => item !== brand);
+      }
+
+      return [...current, brand];
+    });
+  };
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <section className="flex items-center gap-2 text-sm text-gray-400 mb-6">
@@ -89,66 +159,49 @@ function BrowseProducts() {
               <span>Rp 0</span>
               <span>Rp 20.000.000</span>
             </div>
+
+            <input
+              type="range"
+              min="0"
+              max="20000000"
+              step="100000"
+              value={priceRange}
+              onChange={(e) => setPriceRange(Number(e.target.value))}
+              className="mt-4 w-full cursor-pointer"
+            />
+
+            <p className="mt-2 text-sm font-medium text-slate-700">
+              Maks. Rp {priceRange.toLocaleString("id-ID")}
+            </p>
           </div>
 
           <div className="mb-8">
             <h2 className="text-base font-semibold mb-5">Brand : </h2>
 
             <div className="flex flex-col gap-3 text-sm text-gray-500">
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                KeyForce
-              </label>
+              {[
+                "KeyForce",
+                "SoundWave",
+                "ClickPro",
+                "TimeFit",
+                "BoomSound",
+                "UrbanWear",
+                "DailyWear",
+                "RunMax",
+                "BlueWear",
+                "ComfortSeat",
+                "HydroGo",
+              ].map((brand) => (
+                <label key={brand} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedBrands.includes(brand)}
+                    onChange={() => handleBrandChange(brand)}
+                  />
 
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                SoundWave
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                ClickPro
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                TimeFit
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                BoomSound
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                UrbanWear
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                DailyWear
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                RunMax
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                BlueWear
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                ComfortSeat
-              </label>
-
-              <label className="flex items-center gap-2">
-                <input type="checkbox" />
-                HydroGo
-              </label>
+                  {brand}
+                </label>
+              ))}
             </div>
           </div>
 
@@ -157,19 +210,42 @@ function BrowseProducts() {
 
             <div className="flex flex-col gap-3 text-sm text-gray-500">
               <label className="flex items-center gap-2">
-                <input type="radio" name="rating" />
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 4}
+                  onChange={() => setMinRating(4)}
+                />
                 ★★★★☆ ke atas
               </label>
 
               <label className="flex items-center gap-2">
-                <input type="radio" name="rating" />
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 3}
+                  onChange={() => setMinRating(3)}
+                />
                 ★★★☆☆ ke atas
               </label>
 
               <label className="flex items-center gap-2">
-                <input type="radio" name="rating" />
+                <input
+                  type="radio"
+                  name="rating"
+                  checked={minRating === 2}
+                  onChange={() => setMinRating(2)}
+                />
                 ★★☆☆☆ ke atas
               </label>
+
+              <button
+                type="button"
+                onClick={() => setMinRating(0)}
+                className="text-left text-xs text-blue-600"
+              >
+                Reset rating
+              </button>
             </div>
           </div>
 
@@ -177,7 +253,11 @@ function BrowseProducts() {
             <h2 className="text-base font-semibold mb-5">Ketersediaan</h2>
 
             <label className="flex items-center gap-2 text-sm text-gray-500">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={stockOnly}
+                onChange={(e) => setStockOnly(e.target.checked)}
+              />
               Stok tersedia
             </label>
           </div>
@@ -186,17 +266,21 @@ function BrowseProducts() {
         <section>
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-gray-400">
-              {displayedProducts.length} produk ditemukan
+              {filteredProducts.length} produk ditemukan
             </p>
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <span className="text-sm text-gray-400">Urutkan:</span>
 
-              <select className="w-full sm:w-auto border rounded-lg px-3 py-2 text-sm outline-none cursor-pointer">
-                <option>Paling Populer</option>
-                <option>Harga Terendah</option>
-                <option>Harga Tertinggi</option>
-                <option>Terbaru</option>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="w-full sm:w-auto border rounded-lg px-3 py-2 text-sm outline-none cursor-pointer"
+              >
+                <option value="popular">Paling Populer</option>
+                <option value="price-low">Harga Terendah</option>
+                <option value="price-high">Harga Tertinggi</option>
+                <option value="newest">Terbaru</option>
               </select>
             </div>
           </div>
@@ -209,13 +293,13 @@ function BrowseProducts() {
             <div className="flex h-72 items-center justify-center">
               <p className="text-red-500">{error}</p>
             </div>
-          ) : displayedProducts.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300">
               <p className="text-slate-500">Produk tidak ditemukan.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {displayedProducts.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
