@@ -233,7 +233,10 @@ function PaymentPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={productImages[item.image_url]}
+                  src={
+                    productImages[item.image_url] ||
+                    productImages.productPlaceholder
+                  }
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
