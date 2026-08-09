@@ -11,6 +11,7 @@ function ConfirmationPage() {
 
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const shipping = storageService.get("shipping");
   const payment = storageService.get("payment");
@@ -141,7 +142,10 @@ function ConfirmationPage() {
               >
                 <div className="flex gap-3">
                   <img
-                    src={productImages[item.image_url]}
+                    src={
+                      productImages[item.image_url] ||
+                      productImages.productPlaceholder
+                    }
                     alt={item.name}
                     className="h-12 w-12 rounded-lg object-cover sm:h-14 sm:w-14"
                   />
@@ -179,16 +183,20 @@ function ConfirmationPage() {
             </button>
 
             <button
+              disabled={checkoutLoading}
               onClick={async () => {
-                console.log("=== BUTTON CLICKED ===");
+                if (checkoutLoading) return;
 
                 try {
-                  console.log("1. sebelum checkout");
+                  setCheckoutLoading(true);
 
                   const result = await checkoutService.checkout(
                     shipping,
                     payment,
                   );
+
+                  storageService.remove("shipping");
+                  storageService.remove("payment");
 
                   navigate("/checkout/success", {
                     replace: true,
@@ -198,19 +206,19 @@ function ConfirmationPage() {
                       payment,
                     },
                   });
-
-                  // storageService.remove("shipping");
-                  // storageService.remove("payment");
-
-                  console.log("3. navigate success");
                 } catch (error) {
                   console.error("CHECKOUT ERROR:", error);
+                  alert(error.message);
+                  setCheckoutLoading(false);
                 }
               }}
-              className="bg-orange-500 w-full justify-center  hover:bg-orange-600 rounded-xl px-10 py-3 text-white flex items-center gap-2 cursor-pointer"
+              className="bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed w-full justify-center rounded-xl px-10 py-3 text-white flex items-center gap-2 cursor-pointer"
             >
               <FiLock className="w-4 h-4" />
-              Bayar Rp {subtotal.toLocaleString("id-ID")} Sekarang
+
+              {checkoutLoading
+                ? "Memproses Pesanan..."
+                : `Bayar Rp ${subtotal.toLocaleString("id-ID")} Sekarang`}
             </button>
           </div>
         </section>
@@ -228,7 +236,10 @@ function ConfirmationPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={productImages[item.image_url]}
+                  src={
+                    productImages[item.image_url] ||
+                    productImages.productPlaceholder
+                  }
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />
