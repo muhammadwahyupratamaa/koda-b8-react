@@ -15,36 +15,35 @@ import {
 const categories = [
   {
     name: "Elektronik",
-    value: "electronic",
+    value: "Elektronic",
     icon: FaLaptop,
   },
   {
     name: "Fashion",
-    value: "fashion",
+    value: "Fashion",
     icon: FaTshirt,
   },
   {
     name: "Rumah & Dapur",
-    value: "furniture",
+    value: "Rumah & Dapur",
     icon: FaHome,
   },
   {
     name: "Kecantikan",
-    value: "beauty",
+    value: "Kecantikan",
     icon: FaSpa,
   },
   {
     name: "Olahraga",
-    value: "lifestyle",
+    value: "Olahraga",
     icon: FaDumbbell,
   },
   {
     name: "Buku & Alat Tulis",
-    value: "book",
+    value: "Buku & Alat tulis",
     icon: FaBook,
   },
 ];
-
 function CategoryBar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -68,7 +67,7 @@ function CategoryBar() {
     setSelected(category.name);
     setOpen(false);
 
-    navigate(`/products?category=${category.value}`);
+    navigate(`/products?category=${encodeURIComponent(category.value)}`);
   };
 
   return (
