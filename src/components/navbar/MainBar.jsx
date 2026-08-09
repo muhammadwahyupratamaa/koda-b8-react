@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import wishlistService from "../../services/wishlistService";
-import { useMemo, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import cartService from "../../services/cartService";
+import { useMemo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { setCart } from "../../features/cart/cartSlice";
+import { setWishlist } from "../../features/wishlist/wishlistSlice";
 
 import {
   FaShoppingBag,
@@ -13,30 +17,59 @@ import {
   FaUserCircle,
   FaBars,
 } from "react-icons/fa";
+
 import SearchBar from "../common/SearchBar";
 
 function MainBar() {
   const { user } = useAuth();
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart.items);
+  const wishlist = useSelector((state) => state.wishlist.items);
 
   const cartCount = useMemo(() => {
-    return cart.reduce((total, item) => total + item.qty, 0);
+    return cart.reduce((total, item) => total + item.quantity, 0);
   }, [cart]);
 
-  const [wishlistCount, setWishlistCount] = useState(0);
+  const wishlistCount = wishlist.length;
 
   useEffect(() => {
-    loadWishlist();
-  }, []);
+    async function loadCart() {
+      if (!user) {
+        dispatch(setCart([]));
+        return;
+      }
 
-  async function loadWishlist() {
-    try {
-      const result = await wishlistService.getWishlist();
-      setWishlistCount(result.data.length);
-    } catch (error) {
-      console.error(error);
+      try {
+        const result = await cartService.getCart();
+
+        dispatch(setCart(result.data || []));
+      } catch (error) {
+        console.error("LOAD CART ERROR:", error);
+      }
     }
-  }
+
+    loadCart();
+  }, [user, dispatch]);
+
+  useEffect(() => {
+    async function loadWishlist() {
+      if (!user) {
+        dispatch(setWishlist([]));
+        return;
+      }
+
+      try {
+        const result = await wishlistService.getWishlist();
+
+        dispatch(setWishlist(result.data || []));
+      } catch (error) {
+        console.error("LOAD WISHLIST ERROR:", error);
+      }
+    }
+
+    loadWishlist();
+  }, [user, dispatch]);
 
   return (
     <nav className="w-full border-b border-slate-200 bg-white">
@@ -127,9 +160,11 @@ function MainBar() {
             >
               <FaShoppingCart />
 
-              <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             <button className="rounded-full p-3 transition hover:bg-slate-100">

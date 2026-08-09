@@ -3,8 +3,12 @@ import { FaStar } from "react-icons/fa";
 import wishlistService from "../../services/wishlistService";
 import cartService from "../../services/cartService";
 import { productImages } from "../../assets";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../features/cart/cartSlice";
+import { setWishlist } from "../../features/wishlist/wishlistSlice";
 
 function WishlistCard({ product, onRemove }) {
+  const dispatch = useDispatch();
   const {
     id,
     image_url,
@@ -34,6 +38,10 @@ function WishlistCard({ product, onRemove }) {
           onClick={async () => {
             try {
               await wishlistService.removeFromWishlist(product.product_id);
+
+              const result = await wishlistService.getWishlist();
+              dispatch(setWishlist(result.data || []));
+
               onRemove();
             } catch (error) {
               alert(error.message);
@@ -50,8 +58,11 @@ function WishlistCard({ product, onRemove }) {
         onClick={async () => {
           try {
             await cartService.addToCart(product.product_id);
-
+            const cartResult = await cartService.getCart();
+            dispatch(setCart(cartResult.data || []));
             await wishlistService.removeFromWishlist(product.product_id);
+            const wishlistResult = await wishlistService.getWishlist();
+            dispatch(setWishlist(wishlistResult.data || []));
 
             onRemove();
           } catch (error) {

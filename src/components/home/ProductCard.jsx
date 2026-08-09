@@ -5,8 +5,12 @@ import wishlistService from "../../services/wishlistService";
 import formatCurrency from "../../utils/formatCurrency";
 import { useAuth } from "../../context/AuthContext";
 import cartService from "../../services/cartService";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../features/cart/cartSlice";
+import { setWishlist } from "../../features/wishlist/wishlistSlice";
 
 function ProductCard({ product }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [liked, setLiked] = useState(false);
@@ -52,16 +56,6 @@ function ProductCard({ product }) {
   async function handleWishlist(e) {
     e.stopPropagation();
 
-    if (!user) {
-      alert("Silakan login terlebih dahulu.");
-      navigate("/login");
-      return;
-    }
-
-    if (wishlistLoading) {
-      return;
-    }
-
     try {
       if (liked) {
         await wishlistService.removeFromWishlist(product.id);
@@ -70,6 +64,10 @@ function ProductCard({ product }) {
         await wishlistService.addToWishlist(product.id);
         setLiked(true);
       }
+
+      const result = await wishlistService.getWishlist();
+
+      dispatch(setWishlist(result.data || []));
     } catch (error) {
       alert(error.message);
     }
@@ -86,6 +84,10 @@ function ProductCard({ product }) {
 
     try {
       await cartService.addToCart(product.id);
+
+      const result = await cartService.getCart();
+
+      dispatch(setCart(result.data || []));
 
       alert("Produk berhasil ditambahkan ke keranjang");
     } catch (error) {
