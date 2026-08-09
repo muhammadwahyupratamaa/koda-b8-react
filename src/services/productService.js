@@ -1,5 +1,6 @@
 import products from "../data/product.json";
 import * as images from "../assets";
+import { api } from "./api";
 
 const productService = {
   getProducts() {
@@ -12,6 +13,19 @@ const productService = {
 
   getProductById(id) {
     return this.getProducts().find((product) => product.id === Number(id));
+  },
+
+  async getProductDetail(id) {
+    const result = await api(`/products/${id}`);
+
+    const staticProduct = this.getProductById(id);
+
+    return {
+      ...staticProduct,
+      ...result.data,
+      image: staticProduct?.image,
+      gallery: staticProduct?.gallery || [],
+    };
   },
 
   getProductsByCategory(category) {
@@ -55,7 +69,6 @@ const productService = {
   }) {
     let products = this.getProducts();
 
-    // Search
     if (keyword.trim()) {
       const search = keyword.trim().toLowerCase();
 
@@ -68,7 +81,6 @@ const productService = {
       });
     }
 
-    // Category
     if (category.trim()) {
       products = products.filter(
         (product) =>
@@ -76,7 +88,6 @@ const productService = {
       );
     }
 
-    // Promo
     if (promo === "true") {
       products = products.filter(
         (product) => product.discount >= 20,
