@@ -8,6 +8,7 @@ import login from "./login1.png";
 import hero from "./hero.png";
 import hero2 from "./hero2.png";
 import hero3 from "./hero3.png";
+import productPlaceholder from "./product-placeholder.png";
 
 // Categories
 import bukuAlatTulis from "./Buku & Alat Tulis.svg";
@@ -69,6 +70,7 @@ export const productImages = {
   hero,
   hero2,
   hero3,
+  productPlaceholder,
 
   // Categories
   bukuAlatTulis,
@@ -131,6 +133,7 @@ export {
   hero,
   hero2,
   hero3,
+  productPlaceholder,
 
   // Categories
   bukuAlatTulis,
