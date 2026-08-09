@@ -5,9 +5,12 @@ import cartService from "../../services/cartService";
 import checkoutService from "../../services/checkoutService";
 import storageService from "../../services/storageService";
 import { productImages } from "../../assets";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../../features/cart/cartSlice";
 
 function ConfirmationPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -194,6 +197,8 @@ function ConfirmationPage() {
                     shipping,
                     payment,
                   );
+
+                  dispatch(clearCart());
 
                   storageService.remove("shipping");
                   storageService.remove("payment");
