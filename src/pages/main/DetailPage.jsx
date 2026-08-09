@@ -20,25 +20,50 @@ function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const product = productService.getProductById(id);
+  const initialProduct = productService.getProductById(id);
 
-  const [selectedImage, setSelectedImage] = useState(product?.image);
+  const [product, setProduct] = useState(initialProduct);
+  const [selectedImage, setSelectedImage] = useState(initialProduct?.image);
   const [qty, setQty] = useState(1);
   const [selectedColor, setSelectedColor] = useState(
-    product?.colors?.[0] || "",
+    initialProduct?.colors?.[0] || "",
   );
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(true);
+  const [productLoading, setProductLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProduct() {
+      try {
+        const latestProduct = await productService.getProductDetail(id);
+
+        setProduct(latestProduct);
+        setSelectedImage(latestProduct.image);
+        setSelectedColor(latestProduct.colors?.[0] || "");
+        setQty(1);
+      } catch (error) {
+        console.error("LOAD PRODUCT ERROR:", error);
+      } finally {
+        setProductLoading(false);
+      }
+    }
+
+    loadProduct();
+  }, [id]);
 
   useEffect(() => {
     if (product) {
-      setSelectedImage(product.image);
-      setSelectedColor(product.colors?.[0] || "");
-      setQty(1);
-
       loadWishlist();
     }
-  }, [id]);
+  }, [product]);
+
+  if (productLoading) {
+    return (
+      <main className="max-w-7xl mx-auto py-20 text-center">
+        <p className="text-gray-500">Memuat produk...</p>
+      </main>
+    );
+  }
 
   if (!product) {
     return (
@@ -204,10 +229,18 @@ function DetailPage() {
                 {product.rating} ({product.review} ulasan)
               </p>
 
-              <div className="flex items-center gap-1 text-green-600 text-sm">
+              <div
+                className={`flex items-center gap-1 text-sm ${
+                  product.stock > 0 ? "text-green-600" : "text-red-500"
+                }`}
+              >
                 <FaCheck />
 
-                <p>Stok tersedia {product.stock}</p>
+                <p>
+                  {product.stock > 0
+                    ? `Stok tersedia ${product.stock}`
+                    : "Stok habis"}
+                </p>
               </div>
             </div>
           </div>
@@ -267,7 +300,7 @@ function DetailPage() {
               <div className="flex items-center border border-gray-100 rounded-lg">
                 <button
                   onClick={handleDecreaseQty}
-                  disabled={qty === 1}
+                  disabled={qty === 1 || product.stock <= 0}
                   className="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <FiMinus />
@@ -277,7 +310,7 @@ function DetailPage() {
 
                 <button
                   onClick={handleIncreaseQty}
-                  disabled={qty === product.stock}
+                  disabled={product.stock <= 0 || qty >= product.stock}
                   className="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <FiPlus />
@@ -293,16 +326,26 @@ function DetailPage() {
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_60px] gap-3 ">
             <button
               onClick={handleAddToCart}
-              className="border-2 text-base border-orange-500 text-orange-500 rounded-xl py-3 flex justify-center items-center gap-2 font-medium cursor-pointer hover:bg-orange-50"
+              disabled={product.stock <= 0}
+              className={`border-2 text-base rounded-xl py-3 flex justify-center items-center gap-2 font-medium ${
+                product.stock <= 0
+                  ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                  : "border-orange-500 text-orange-500 cursor-pointer hover:bg-orange-50"
+              }`}
             >
               <FaShoppingCart />
-              Tambah ke Keranjang
+              {product.stock <= 0 ? "Stok Habis" : "Tambah ke Keranjang"}
             </button>
             <button
               onClick={handleBuyNow}
-              className="bg-orange-500 text-base rounded-xl py-3 text-white font-medium hover:bg-orange-600 cursor-pointer"
+              disabled={product.stock <= 0}
+              className={`text-base rounded-xl py-3 text-white font-medium ${
+                product.stock <= 0
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-orange-500 hover:bg-orange-600 cursor-pointer"
+              }`}
             >
-              Beli Sekarang
+              {product.stock <= 0 ? "Stok Habis" : "Beli Sekarang"}
             </button>
 
             <button
