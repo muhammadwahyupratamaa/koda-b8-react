@@ -1,9 +1,11 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { productImages } from "../../assets";
 import cartService from "../../services/cartService";
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
+import { useDispatch, useSelector } from "react-redux";
+import { setCart } from "../../features/cart/cartSlice";
 
 const formatRupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -14,9 +16,9 @@ const formatRupiah = (number) => {
 
 function Cart() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [cart, setCart] = useState([]);
-
+  const cart = useSelector((state) => state.cart.items);
   async function handleIncrease(item) {
     try {
       await cartService.updateQuantity(item.id, item.quantity + 1);
@@ -63,7 +65,7 @@ function Cart() {
     try {
       const result = await cartService.getCart();
 
-      setCart(result.data);
+      dispatch(setCart(result.data || []));
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -93,14 +95,20 @@ function Cart() {
                     <p className="text-sm text-gray-400 mt-1">{item.color}</p>
 
                     <div className="flex items-center border border-gray-200 rounded-lg w-fit mt-3">
-                      <button className="px-3 py-2 cursor-pointer">
-                        <FiMinus onClick={() => handleDecrease(item)} />
+                      <button
+                        onClick={() => handleDecrease(item)}
+                        className="px-3 py-2 cursor-pointer"
+                      >
+                        <FiMinus />
                       </button>
 
                       <span className="px-5">{item.quantity}</span>
 
-                      <button className="px-3 py-2 cursor-pointer">
-                        <FiPlus onClick={() => handleIncrease(item)} />
+                      <button
+                        onClick={() => handleIncrease(item)}
+                        className="px-3 py-2 cursor-pointer"
+                      >
+                        <FiPlus />
                       </button>
                     </div>
 
@@ -125,11 +133,11 @@ function Cart() {
                 </div>
 
                 <div className="flex items-center justify-between sm:flex-col sm:items-end">
-                  <button>
-                    <FiTrash2
-                      onClick={() => handleRemove(item)}
-                      className="text-gray-400"
-                    />
+                  <button
+                    onClick={() => handleRemove(item)}
+                    className="cursor-pointer"
+                  >
+                    <FiTrash2 className="text-gray-400" />
                   </button>
 
                   <p className="text-2xl font-semibold text-blue-600">

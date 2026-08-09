@@ -4,6 +4,9 @@ import ProductSection from "../../components/home/ProductSection";
 import wishlistService from "../../services/wishlistService";
 import { useState, useEffect } from "react";
 import cartService from "../../services/cartService";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../features/cart/cartSlice";
+import { setWishlist } from "../../features/wishlist/wishlistSlice";
 
 import {
   FiHeart,
@@ -19,6 +22,7 @@ import productService from "../../services/productService";
 function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [product, setProduct] = useState(null);
   const [produkTerkait, setProdukTerkait] = useState([]);
@@ -86,6 +90,10 @@ function DetailPage() {
         await cartService.addToCart(product.id, selectedColor);
       }
 
+      const result = await cartService.getCart();
+
+      dispatch(setCart(result.data || []));
+
       navigate("/checkout/shipping");
     } catch (error) {
       alert(error.message);
@@ -105,6 +113,10 @@ function DetailPage() {
         await wishlistService.addToWishlist(product.id);
         setIsWishlisted(true);
       }
+
+      const result = await wishlistService.getWishlist();
+
+      dispatch(setWishlist(result.data || []));
     } catch (error) {
       console.error("Wishlist error:", error);
       alert(error.message);
@@ -116,6 +128,10 @@ function DetailPage() {
       for (let i = 0; i < qty; i++) {
         await cartService.addToCart(product.id, selectedColor);
       }
+
+      const result = await cartService.getCart();
+
+      dispatch(setCart(result.data || []));
 
       alert("Produk berhasil ditambahkan ke keranjang.");
     } catch (error) {
