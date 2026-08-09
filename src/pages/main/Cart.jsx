@@ -1,8 +1,7 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
-import { headphoneWirelessPremium, productImages } from "../../assets";
 import { useEffect, useState } from "react";
+import { productImages } from "../../assets";
 import cartService from "../../services/cartService";
-
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
 
@@ -111,7 +110,7 @@ function Cart() {
                         try {
                           await wishlistService.addToWishlist(item.product_id);
 
-                          await cartService.removeProduct(item.product_id);
+                          await cartService.removeProduct(item.id);
 
                           loadCart();
                         } catch (error) {
@@ -195,8 +194,9 @@ function Cart() {
           </div>
 
           <button
+            disabled={cart.length === 0}
             onClick={() => navigate("/checkout/shipping")}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl mt-6 cursor-pointer"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-xl mt-6 cursor-pointer"
           >
             Checkout Aman
           </button>
