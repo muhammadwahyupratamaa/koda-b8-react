@@ -1,8 +1,14 @@
 import * as images from "../assets";
 import { api } from "./api";
 
-const productService = {
+function getProductImage(imageKey) {
+  if (imageKey === "headphoneWirelessPremium") {
+    return images.productPlaceholder;
+  }
 
+  return images[imageKey] || images.productPlaceholder;
+}
+const productService = {
   async getProductsFromApi() {
     const result = await api("/products");
 
@@ -20,7 +26,7 @@ const productService = {
       sold: Number(product.sold),
       stock: Number(product.stock),
       isFeatured: product.is_featured,
-      image: images[product.image_url],
+      image: getProductImage(product.image_url),
       imageKey: product.image_url,
       description: product.description,
     }));
@@ -44,7 +50,7 @@ const productService = {
       sold: Number(product.sold),
       stock: Number(product.stock),
       isFeatured: product.is_featured,
-      image: images[product.image_url],
+      image: getProductImage(product.image_url),
       imageKey: product.image_url,
       gallery: images[product.image_url] ? [images[product.image_url]] : [],
       description: product.description,
@@ -71,7 +77,7 @@ const productService = {
         sold: Number(product.sold),
         stock: Number(product.stock),
         isFeatured: product.is_featured,
-        image: images[product.image_url],
+        image: getProductImage(product.image_url),
         imageKey: product.image_url,
         description: product.description,
       }))
