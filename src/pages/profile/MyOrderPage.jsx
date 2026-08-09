@@ -53,7 +53,7 @@ function MyOrderPage() {
                 date={new Date(order.created_at).toLocaleDateString("id-ID")}
                 status={order.status}
                 total={`Rp ${Number(order.total).toLocaleString("id-ID")}`}
-                products={[]}
+                products={order.items}
                 showReview={false}
               />
             ))
