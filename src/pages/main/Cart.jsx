@@ -20,7 +20,7 @@ function Cart() {
 
   async function handleIncrease(item) {
     try {
-      await cartService.updateQuantity(item.product_id, item.quantity + 1);
+      await cartService.updateQuantity(item.id, item.quantity + 1);
 
       loadCart();
     } catch (error) {
@@ -31,9 +31,9 @@ function Cart() {
   async function handleDecrease(item) {
     try {
       if (item.quantity === 1) {
-        await cartService.removeProduct(item.product_id);
+        await cartService.removeProduct(item.id);
       } else {
-        await cartService.updateQuantity(item.product_id, item.quantity - 1);
+        await cartService.updateQuantity(item.id, item.quantity - 1);
       }
 
       loadCart();
@@ -44,7 +44,7 @@ function Cart() {
 
   async function handleRemove(item) {
     try {
-      await cartService.removeProduct(item.product_id);
+      await cartService.removeProduct(item.id);
 
       loadCart();
     } catch (error) {

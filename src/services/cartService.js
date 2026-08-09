@@ -14,8 +14,8 @@ async function addToCart(productId, color) {
   });
 }
 
-async function updateQuantity(productId, quantity) {
-  return await api(`/cart/${productId}`, {
+async function updateQuantity(cartItemId, quantity) {
+  return await api(`/cart/${cartItemId}`, {
     method: "PATCH",
     body: JSON.stringify({
       quantity,
@@ -23,8 +23,8 @@ async function updateQuantity(productId, quantity) {
   });
 }
 
-async function removeProduct(productId) {
-  return await api(`/cart/${productId}`, {
+async function removeProduct(cartItemId) {
+  return await api(`/cart/${cartItemId}`, {
     method: "DELETE",
   });
 }
