@@ -20,7 +20,7 @@ function ProfileSidebar({ active }) {
 
   const [profile, setProfile] = useState({});
   const [orders, setOrders] = useState([]);
-  const wishlist = wishlistService.getWishlist();
+  const [wishlist, setWishlist] = useState([]);
 
   const menus = [
     {
@@ -50,53 +50,62 @@ function ProfileSidebar({ active }) {
   ];
 
   useEffect(() => {
-    async function loadProfile() {
+    async function loadSidebarData() {
       try {
-        const result = await profileService.getProfile();
-        setProfile(result.data);
-      } catch (err) {
-        console.error(err);
+        const [profileResult, ordersResult, wishlistResult] = await Promise.all(
+          [
+            profileService.getProfile(),
+            checkoutService.getOrders(),
+            wishlistService.getWishlist(),
+          ],
+        );
+
+        setProfile(profileResult.data || {});
+        setOrders(ordersResult.data || []);
+        setWishlist(wishlistResult.data || []);
+      } catch (error) {
+        console.error("LOAD PROFILE SIDEBAR ERROR:", error);
       }
     }
 
-    loadProfile();
+    loadSidebarData();
   }, []);
 
   return (
-    <aside className="flex flex-col gap-6">
-      <section className="rounded-xl border border-gray-200 p-6 sm:p-8">
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-100 flex justify-center items-center">
-            <span className="text-3xl font-semibold text-blue-600">
+    <aside className="w-full lg:w-72 shrink-0">
+      <section className="rounded-xl border border-gray-200 p-5 sm:p-6">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 sm:h-24 sm:w-24">
+            <span className="text-3xl font-semibold text-blue-600 sm:text-4xl">
               {profile.name?.charAt(0).toUpperCase() || "U"}
             </span>
           </div>
 
-          <h2 className="mt-5 text-xl sm:text-2xl font-semibold">
+          <h2 className="mt-5 text-xl font-semibold sm:text-2xl">
             {profile.name || "User"}
           </h2>
 
           <p className="mt-1 text-sm text-gray-400">{profile.email || "-"}</p>
         </div>
 
-        <div className="mt-8 flex justify-center gap-8 sm:gap-12 border-t border-gray-200 pt-5">
+        <div className="mt-8 flex justify-center gap-8 border-t border-gray-200 pt-5 sm:gap-12">
           <div className="text-center">
-            <p className="text-xl sm:text-2xl font-semibold">{orders.length}</p>
+            <p className="text-xl font-semibold sm:text-2xl">{orders.length}</p>
 
-            <p className="text-xs sm:text-sm text-gray-400">Pesanan</p>
+            <p className="text-xs text-gray-400 sm:text-sm">Pesanan</p>
           </div>
 
           <div className="text-center">
-            <p className="text-xl sm:text-2xl font-semibold">
+            <p className="text-xl font-semibold sm:text-2xl">
               {wishlist.length}
             </p>
 
-            <p className="text-xs sm:text-sm text-gray-400">Wishlist</p>
+            <p className="text-xs text-gray-400 sm:text-sm">Wishlist</p>
           </div>
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-xl border border-gray-200">
+      <section className="mt-5 overflow-hidden rounded-xl border border-gray-200">
         <div className="py-2">
           {menus.map((menu) => {
             const Icon = menu.icon;
@@ -112,12 +121,12 @@ function ProfileSidebar({ active }) {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-5 h-5" />
+                  <Icon className="h-5 w-5" />
 
                   <span className="text-sm font-medium">{menu.title}</span>
                 </div>
 
-                <FiChevronRight className="w-5 h-5" />
+                <FiChevronRight className="h-5 w-5" />
               </Link>
             );
           })}
@@ -130,9 +139,10 @@ function ProfileSidebar({ active }) {
               logout();
               navigate("/login");
             }}
-            className="flex w-full items-center gap-3 px-6 py-5 text-red-500 hover:bg-red-50 cursor-pointer"
+            className="flex w-full cursor-pointer items-center gap-3 px-6 py-5 text-red-500 hover:bg-red-50"
           >
-            <FiLogOut className="w-5 h-5" />
+            <FiLogOut className="h-5 w-5" />
+
             <span className="text-sm font-medium">Keluar</span>
           </button>
         </div>
