@@ -1,15 +1,15 @@
 import { FiCheck, FiPackage, FiTruck, FiMapPin, FiBox } from "react-icons/fi";
 import { BsBoxSeam } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
-import storageService from "../../services/storageService";
 import { useEffect } from "react";
 
 function SuccessPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
+
   const order = state?.order;
-  const shipping = storageService.get("shipping");
-  const payment = storageService.get("payment");
+  const shipping = state?.shipping;
+  const payment = state?.payment;
 
   useEffect(() => {
     if (!order) {
@@ -18,6 +18,7 @@ function SuccessPage() {
   }, [order, navigate]);
 
   if (!order) return null;
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-10">
       <div className="flex flex-col items-center">
@@ -62,7 +63,7 @@ function SuccessPage() {
               <p className="font-medium">{shipping?.shippingMethod}</p>
 
               <p className="text-sm text-gray-400">
-                Estimasi tiba: 2-3 Juni 2026
+                Estimasi tiba 2-3 hari kerja
               </p>
             </div>
           </div>
@@ -142,9 +143,11 @@ function SuccessPage() {
             </div>
 
             <div>
-              <p className="font-medium text-gray-500">Terkirim</p>
+              <p className="font-medium text-gray-500">Pesanan Selesai</p>
 
-              <p className="text-sm text-gray-400">2-3 Juni 2026</p>
+              <p className="text-sm text-gray-400">
+                Menunggu proses pengiriman
+              </p>
             </div>
           </div>
         </div>
