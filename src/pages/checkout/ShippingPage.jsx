@@ -27,6 +27,9 @@ function ShippingPage() {
     shippingMethod: "JNE Reguler",
   });
 
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+
   function handleChange(e) {
     setShipping({
       ...shipping,
@@ -35,29 +38,50 @@ function ShippingPage() {
   }
 
   useEffect(() => {
-    async function loadProfile() {
+    async function loadShippingData() {
       try {
-        const profileResult = await profileService.getProfile();
+        const [profileResult, addressResult] = await Promise.all([
+          profileService.getProfile(),
+          addressService.getAddresses(),
+        ]);
+
         const profile = profileResult.data;
+        const addressList = addressResult.data || [];
 
-        const primaryAddress = addressService.getPrimaryAddress();
+        setAddresses(addressList);
 
-        setShipping((prev) => ({
-          ...prev,
-          name: primaryAddress?.name || profile?.name || "",
-          phone: primaryAddress?.phone || profile?.phone || "",
-          email: profile?.email || "",
-          address: primaryAddress?.address || "",
-          city: primaryAddress?.city || "",
-          province: primaryAddress?.province || "",
-          postalCode: primaryAddress?.postalCode || "",
-        }));
+        const primaryAddress =
+          addressList.find((address) => address.is_primary) ||
+          addressList.find((address) => address.isPrimary);
+
+        if (primaryAddress) {
+          setSelectedAddressId(primaryAddress.id);
+
+          setShipping((prev) => ({
+            ...prev,
+            name: primaryAddress.name || profile?.name || "",
+            phone: primaryAddress.phone || profile?.phone || "",
+            email: profile?.email || "",
+            address: primaryAddress.address || "",
+            city: primaryAddress.city || "",
+            province: primaryAddress.province || "",
+            postalCode:
+              primaryAddress.postal_code || primaryAddress.postalCode || "",
+          }));
+        } else {
+          setShipping((prev) => ({
+            ...prev,
+            name: profile?.name || "",
+            email: profile?.email || "",
+            phone: profile?.phone || "",
+          }));
+        }
       } catch (error) {
-        console.error("Failed to load profile:", error);
+        console.error("Failed to load shipping data:", error);
       }
     }
 
-    loadProfile();
+    loadShippingData();
   }, []);
 
   useEffect(() => {
@@ -112,6 +136,63 @@ function ShippingPage() {
 
             <h2 className="text-2xl font-medium">Alamat Pengiriman</h2>
           </div>
+
+          {addresses.length > 0 && (
+            <div className="mb-6 flex flex-col gap-3">
+              {addresses.map((address) => {
+                const isSelected = selectedAddressId === address.id;
+
+                return (
+                  <button
+                    key={address.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedAddressId(address.id);
+
+                      setShipping((prev) => ({
+                        ...prev,
+                        name: address.name || "",
+                        phone: address.phone || "",
+                        address: address.address || "",
+                        city: address.city || "",
+                        province: address.province || "",
+                        postalCode:
+                          address.postal_code || address.postalCode || "",
+                      }));
+                    }}
+                    className={`w-full rounded-xl border p-4 text-left transition ${
+                      isSelected
+                        ? "border-2 border-blue-600 bg-blue-50"
+                        : "border-gray-200 hover:border-blue-300"
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-medium">
+                          {address.label || "Alamat"}
+                        </p>
+
+                        <p className="text-sm text-gray-600 mt-1">
+                          {address.name} • {address.phone}
+                        </p>
+
+                        <p className="text-sm text-gray-500 mt-2">
+                          {address.address}, {address.city}, {address.province}{" "}
+                          {address.postal_code || address.postalCode}
+                        </p>
+                      </div>
+
+                      {isSelected && (
+                        <span className="text-sm font-medium text-blue-600">
+                          Dipilih
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           <div className="grid sm:grid-cols-2 grid-cols-1 gap-5">
             <div className="flex flex-col gap-2">
