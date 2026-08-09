@@ -2,17 +2,65 @@ import { GoChevronRight } from "react-icons/go";
 import ProductCard from "../../components/home/ProductCard";
 import productService from "../../services/productService";
 import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function BrowseProducts() {
   const [searchParams] = useSearchParams();
+
   const keyword = searchParams.get("search") || "";
   const category = searchParams.get("category") || "";
   const promo = searchParams.get("promo") || "";
-  const displayedProducts = productService.getFilteredProducts({
-    keyword,
-    category,
-    promo,
-  });
+
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const products = await productService.getProductsFromApi();
+
+        let filteredProducts = products;
+
+        if (keyword.trim()) {
+          const search = keyword.trim().toLowerCase();
+
+          filteredProducts = filteredProducts.filter((product) => {
+            return (
+              product.name.toLowerCase().includes(search) ||
+              product.brand.toLowerCase().includes(search) ||
+              product.category.toLowerCase().includes(search)
+            );
+          });
+        }
+
+        if (category.trim()) {
+          filteredProducts = filteredProducts.filter(
+            (product) =>
+              product.category.toLowerCase() === category.toLowerCase(),
+          );
+        }
+
+        if (promo === "true") {
+          filteredProducts = filteredProducts.filter(
+            (product) => product.discount >= 20,
+          );
+        }
+
+        setDisplayedProducts(filteredProducts);
+      } catch (error) {
+        console.error("LOAD PRODUCTS ERROR:", error);
+        setError("Gagal memuat produk.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, [keyword, category, promo]);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
@@ -153,7 +201,15 @@ function BrowseProducts() {
             </div>
           </div>
 
-          {displayedProducts.length === 0 ? (
+          {loading ? (
+            <div className="flex h-72 items-center justify-center">
+              <p className="text-slate-500">Memuat produk...</p>
+            </div>
+          ) : error ? (
+            <div className="flex h-72 items-center justify-center">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : displayedProducts.length === 0 ? (
             <div className="flex h-72 items-center justify-center rounded-xl border border-dashed border-slate-300">
               <p className="text-slate-500">Produk tidak ditemukan.</p>
             </div>
