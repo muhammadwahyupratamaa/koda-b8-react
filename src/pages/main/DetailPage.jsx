@@ -20,14 +20,11 @@ function DetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const initialProduct = productService.getProductById(id);
-
-  const [product, setProduct] = useState(initialProduct);
-  const [selectedImage, setSelectedImage] = useState(initialProduct?.image);
+  const [product, setProduct] = useState(null);
+  const [produkTerkait, setProdukTerkait] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [qty, setQty] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(
-    initialProduct?.colors?.[0] || "",
-  );
+  const [selectedColor, setSelectedColor] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(true);
   const [productLoading, setProductLoading] = useState(true);
@@ -35,14 +32,24 @@ function DetailPage() {
   useEffect(() => {
     async function loadProduct() {
       try {
-        const latestProduct = await productService.getProductDetail(id);
+        setProductLoading(true);
+
+        const latestProduct = await productService.getProductDetailFromApi(id);
+
+        const relatedProducts = await productService.getRelatedProductsFromApi(
+          latestProduct.categoryId,
+          latestProduct.id,
+        );
 
         setProduct(latestProduct);
+        setProdukTerkait(relatedProducts);
         setSelectedImage(latestProduct.image);
         setSelectedColor(latestProduct.colors?.[0] || "");
         setQty(1);
       } catch (error) {
         console.error("LOAD PRODUCT ERROR:", error);
+        setProduct(null);
+        setProdukTerkait([]);
       } finally {
         setProductLoading(false);
       }
@@ -143,11 +150,6 @@ function DetailPage() {
       setWishlistLoading(false);
     }
   }
-
-  const produkTerkait = productService.getRelatedProducts(
-    product.category,
-    product.id,
-  );
 
   const saving = product.priceDisc - product.price;
 
@@ -265,33 +267,35 @@ function DetailPage() {
             </p>
           </div>
 
-          <div>
-            <p className="text-sm font-medium mb-3">Pilih Warna :</p>
+          {product.colors?.length > 0 && (
+            <div>
+              <p className="text-sm font-medium mb-3">Pilih Warna :</p>
 
-            <div className="mt-5 flex flex-wrap gap-3">
-              {product.colors.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => setSelectedColor(color)}
-                  className={`rounded-lg border px-5 py-2 text-sm transition cursor-pointer ${
-                    selectedColor === color
-                      ? "border-blue-600 bg-blue-50 text-blue-600"
-                      : "border-gray-300 hover:border-blue-400"
-                  }`}
-                >
-                  {color}
-                </button>
-              ))}
+              <div className="mt-5 flex flex-wrap gap-3">
+                {product.colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`rounded-lg border px-5 py-2 text-sm transition cursor-pointer ${
+                      selectedColor === color
+                        ? "border-blue-600 bg-blue-50 text-blue-600"
+                        : "border-gray-300 hover:border-blue-400"
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
 
-              <p className="mt-3 text-sm text-gray-500">
-                Warna dipilih:
-                <span className="font-medium text-gray-800">
-                  {" "}
-                  {selectedColor}
-                </span>
-              </p>
+                <p className="mt-3 text-sm text-gray-500">
+                  Warna dipilih:
+                  <span className="font-medium text-gray-800">
+                    {" "}
+                    {selectedColor}
+                  </span>
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <div>
             <p className="text-sm font-medium mb-3">Jumlah</p>
