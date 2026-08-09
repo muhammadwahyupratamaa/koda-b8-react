@@ -1,69 +1,44 @@
-import storageService from "./storageService";
+import { api } from "./api";
 
-const KEY = "addresses";
-
-function getAddresses() {
-  return storageService.get(KEY, []);
+async function getAddresses() {
+  return await api("/addresses");
 }
 
-function saveAddresses(addresses) {
-  storageService.set(KEY, addresses);
+async function getAddressById(id) {
+  return await api(`/addresses/${id}`);
 }
 
-function addAddress(address) {
-  const addresses = getAddresses();
-
-  addresses.push({
-    id: Date.now(),
-    isPrimary: addresses.length === 0,
-    ...address,
+async function createAddress(data) {
+  return await api("/addresses", {
+    method: "POST",
+    body: JSON.stringify(data),
   });
-
-  saveAddresses(addresses);
 }
 
-function updateAddress(id, data) {
-  const addresses = getAddresses().map((address) =>
-    address.id === id
-      ? {
-          ...address,
-          ...data,
-        }
-      : address,
-  );
-
-  saveAddresses(addresses);
+async function updateAddress(id, data) {
+  return await api(`/addresses/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
 }
 
-function deleteAddress(id) {
-  let addresses = getAddresses().filter((address) => address.id !== id);
-
-  if (addresses.length > 0 && !addresses.some((address) => address.isPrimary)) {
-    addresses[0].isPrimary = true;
-  }
-
-  saveAddresses(addresses);
+async function setPrimaryAddress(id) {
+  return await api(`/addresses/${id}/primary`, {
+    method: "PATCH",
+  });
 }
 
-function setPrimaryAddress(id) {
-  const addresses = getAddresses().map((address) => ({
-    ...address,
-    isPrimary: address.id === id,
-  }));
-
-  saveAddresses(addresses);
-}
-
-function getPrimaryAddress() {
-  return getAddresses().find((address) => address.isPrimary) || null;
+async function deleteAddress(id) {
+  return await api(`/addresses/${id}`, {
+    method: "DELETE",
+  });
 }
 
 export default {
   getAddresses,
-  saveAddresses,
-  addAddress,
+  getAddressById,
+  createAddress,
   updateAddress,
-  deleteAddress,
   setPrimaryAddress,
-  getPrimaryAddress,
+  deleteAddress,
 };
