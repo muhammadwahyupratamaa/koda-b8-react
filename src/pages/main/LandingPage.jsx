@@ -27,11 +27,49 @@ import Hero from "../../components/home/Hero";
 import FlashDealSection from "../../components/home/FlashDealSection";
 import ProductSection from "../../components/home/ProductSection";
 import productService from "../../services/productService";
+import { useEffect, useState } from "react";
 
 function LandingPage() {
-  const flashDeal = productService.getFlashDeals();
-  const produkTerbaru = productService.getNewestProducts();
-  const produkUnggulan = productService.getFeaturedProduct();
+  const [flashDeal, setFlashDeal] = useState([]);
+  const [produkTerbaru, setProdukTerbaru] = useState([]);
+  const [produkUnggulan, setProdukUnggulan] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const products = await productService.getProductsFromApi();
+
+        const flashDeals = products
+          .filter((product) => product.discount >= 30)
+          .slice(0, 8);
+
+        const newestProducts = products.slice(0, 8);
+
+        const featuredProducts = products
+          .filter((product) => product.isFeatured)
+          .slice(0, 6);
+
+        setFlashDeal(flashDeals);
+        setProdukTerbaru(newestProducts);
+        setProdukUnggulan(featuredProducts);
+      } catch (error) {
+        console.error("LOAD LANDING PRODUCTS ERROR:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Memuat produk...</p>
+      </main>
+    );
+  }
 
   return (
     <main className="w-full">
