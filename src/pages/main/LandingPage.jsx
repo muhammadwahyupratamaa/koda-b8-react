@@ -1,33 +1,10 @@
-import {
-  bgLandingPage,
-  bgLandingPage1,
-  headphoneWirelessPremium,
-  keyboardMechanical,
-  gamingMouse,
-  smartWatch,
-  bluetoothSpeaker,
-  hoodieOversized,
-  basicTshirt,
-  runningShoes,
-  denimJacket,
-  backpack,
-  officeChair,
-  studyTable,
-  bookshelf,
-  coffeeTable,
-  deskLamp,
-  waterBottle,
-  yogaMat,
-  coffeeMug,
-  travelSuitcase,
-  portableBlender,
-} from "../../assets";
 import CategorySection from "../../components/home/CategorySection";
 import Hero from "../../components/home/Hero";
 import FlashDealSection from "../../components/home/FlashDealSection";
 import ProductSection from "../../components/home/ProductSection";
 import productService from "../../services/productService";
 import { useEffect, useState } from "react";
+import { bgLandingPage, bgLandingPage1 } from "../../assets";
 
 function LandingPage() {
   const [flashDeal, setFlashDeal] = useState([]);
