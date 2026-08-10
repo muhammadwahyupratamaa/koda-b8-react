@@ -30,6 +30,18 @@ function EditProfilePage() {
 
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      alert("File harus berupa gambar");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Ukuran foto maksimal 2 MB");
+      e.target.value = "";
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
       avatar: file,
