@@ -32,6 +32,14 @@ import { AuthProvider } from "./context/AuthContext";
 // Components
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
 
+// Admin
+import AdminLayout from "./components/admin/AdminLayout";
+import Dashboard from "./pages/admin/Dashboard";
+import ProductList from "./pages/admin/ProductList";
+import AddProduct from "./pages/admin/AddProduct";
+import OrderList from "./pages/admin/OrderList";
+import CustomerList from "./pages/admin/CustomerList";
+
 const router = createBrowserRouter([
   // ================= AUTH =================
   {
@@ -72,6 +80,8 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+
+      // ================= CHECKOUT =================
       {
         path: "checkout",
         children: [
@@ -109,6 +119,8 @@ const router = createBrowserRouter([
           },
         ],
       },
+
+      // ================= PROFILE =================
       {
         path: "profile",
         children: [
@@ -145,6 +157,38 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+    ],
+  },
+
+  // ================= ADMIN =================
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "products",
+        element: <ProductList />,
+      },
+      {
+        path: "products/create",
+        element: <AddProduct />,
+      },
+      {
+        path: "orders",
+        element: <OrderList />,
+      },
+      {
+        path: "customers",
+        element: <CustomerList />,
       },
     ],
   },
