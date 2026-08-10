@@ -5,9 +5,21 @@ async function getProfile() {
 }
 
 async function updateProfile(data) {
+  const formData = new FormData();
+
+  formData.append("name", data.name);
+  formData.append("email", data.email);
+  formData.append("phone", data.phone);
+  formData.append("birthDate", data.birthDate);
+  formData.append("gender", data.gender);
+
+  if (data.avatar) {
+    formData.append("avatar", data.avatar);
+  }
+
   return await api("/profile", {
     method: "PUT",
-    body: JSON.stringify(data),
+    body: formData,
   });
 }
 
