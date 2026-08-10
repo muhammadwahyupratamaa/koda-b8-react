@@ -104,7 +104,6 @@ function ProductList() {
 
   return (
     <div className="space-y-6">
-      {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-slate-900">
@@ -126,7 +125,6 @@ function ProductList() {
         </button>
       </div>
 
-      {/* STAT */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Total Produk</p>
@@ -149,9 +147,7 @@ function ProductList() {
         </div>
       </div>
 
-      {/* TABLE */}
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        {/* FILTER */}
         <div className="flex flex-col gap-3 border-b border-slate-200 p-5 lg:flex-row">
           <div className="relative flex-1">
             <FiSearch className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -182,7 +178,6 @@ function ProductList() {
           </select>
         </div>
 
-        {/* TABLE */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] text-left">
             <thead className="bg-slate-50">
@@ -219,21 +214,18 @@ function ProductList() {
                     </div>
                   </td>
 
-                  {/* CATEGORY */}
                   <td className="px-5 py-4">
                     <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
                       {product.category}
                     </span>
                   </td>
 
-                  {/* PRICE */}
                   <td className="px-5 py-4">
                     <p className="font-medium text-slate-800">
                       Rp {product.price.toLocaleString("id-ID")}
                     </p>
                   </td>
 
-                  {/* STOCK */}
                   <td className="px-5 py-4">
                     <span
                       className={
@@ -246,14 +238,12 @@ function ProductList() {
                     </span>
                   </td>
 
-                  {/* RATING */}
                   <td className="px-5 py-4">
                     <span className="text-sm text-slate-600">
                       ⭐ {product.rating}
                     </span>
                   </td>
 
-                  {/* STATUS */}
                   <td className="px-5 py-4">
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
@@ -266,7 +256,6 @@ function ProductList() {
                     </span>
                   </td>
 
-                  {/* ACTION */}
                   <td className="px-5 py-4">
                     <div className="flex justify-end gap-1">
                       <button
@@ -307,7 +296,6 @@ function ProductList() {
           </table>
         </div>
 
-        {/* FOOTER */}
         <div className="flex flex-col gap-3 border-t border-slate-200 px-5 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>
             Menampilkan{" "}

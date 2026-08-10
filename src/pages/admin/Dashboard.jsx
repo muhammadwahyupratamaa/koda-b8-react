@@ -135,9 +135,7 @@ function Dashboard() {
         })}
       </div>
 
-      {/* CHART + CATEGORY */}
       <div className="grid gap-6 xl:grid-cols-[2fr_1fr]">
-        {/* REVENUE CHART */}
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -195,7 +193,6 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* CATEGORY */}
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <h3 className="font-semibold text-slate-900">
             Penjualan per Kategori
@@ -238,9 +235,7 @@ function Dashboard() {
         </section>
       </div>
 
-      {/* ORDERS + PRODUCTS */}
       <div className="grid gap-6 xl:grid-cols-2">
-        {/* RECENT ORDERS */}
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-semibold text-slate-900">Pesanan Terbaru</h3>
@@ -280,7 +275,6 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* TOP PRODUCTS */}
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-semibold text-slate-900">Produk Terlaris</h3>
