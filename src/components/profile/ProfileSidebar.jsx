@@ -69,16 +69,30 @@ function ProfileSidebar({ active }) {
     }
 
     loadSidebarData();
+
+    window.addEventListener("profileUpdated", loadSidebarData);
+
+    return () => {
+      window.removeEventListener("profileUpdated", loadSidebarData);
+    };
   }, []);
 
   return (
     <aside className="w-full lg:w-72 shrink-0">
       <section className="rounded-xl border border-gray-200 p-5 sm:p-6">
         <div className="flex flex-col items-center text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 sm:h-24 sm:w-24">
-            <span className="text-3xl font-semibold text-blue-600 sm:text-4xl">
-              {profile.name?.charAt(0).toUpperCase() || "U"}
-            </span>
+          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-blue-100 sm:h-24 sm:w-24">
+            {profile.avatar_url ? (
+              <img
+                src={`${import.meta.env.VITE_API_URL}${profile.avatar_url}`}
+                alt={profile.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-3xl font-semibold text-blue-600 sm:text-4xl">
+                {profile.name?.charAt(0).toUpperCase() || "U"}
+              </span>
+            )}
           </div>
 
           <h2 className="mt-5 text-xl font-semibold sm:text-2xl">
