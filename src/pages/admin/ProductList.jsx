@@ -6,31 +6,60 @@ import {
   FiSearch,
   FiTrash2,
 } from "react-icons/fi";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import productService from "../../services/productService";
+import ProductFormModal from "./components/ProductFormModal";
 
 function ProductList() {
-  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const data = await productService.getAdminProducts();
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-        setProducts(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchProduct();
-  },[]);
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+
+      const data = await productService.getAdminProducts();
+
+      setProducts(data);
+    } catch (error) {
+      console.error("GET ADMIN PRODUCTS ERROR:", error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const handleCreate = () => {
+    setModalMode("create");
+    setSelectedProductId(null);
+    setIsProductModalOpen(true);
+  };
+
+  const handleEdit = (productId) => {
+    setModalMode("edit");
+    setSelectedProductId(productId);
+    setIsProductModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsProductModalOpen(false);
+    setSelectedProductId(null);
+  };
+
+  const handleProductSuccess = async () => {
+    await fetchProducts();
+  };
 
   const filteredProducts = products.filter((product) =>
     `${product.name} ${product.brand} ${product.category}`
@@ -40,6 +69,7 @@ function ProductList() {
 
   return (
     <div className="space-y-6">
+      {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-semibold text-slate-900">
@@ -53,7 +83,7 @@ function ProductList() {
 
         <button
           type="button"
-          onClick={() => navigate("/admin/products/create")}
+          onClick={handleCreate}
           className="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
         >
           <FiPlus className="h-5 w-5" />
@@ -61,29 +91,55 @@ function ProductList() {
         </button>
       </div>
 
+      {/* STATISTICS */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Total Produk</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">18</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {products.length}
+          </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Produk Aktif</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">15</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {products.filter((product) => product.stock > 0).length}
+          </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Stok Menipis</p>
-          <p className="mt-2 text-2xl font-bold text-orange-500">3</p>
+          <p className="mt-2 text-2xl font-bold text-orange-500">
+            {
+              products.filter(
+                (product) =>
+                  Number(product.stock) > 0 && Number(product.stock) <= 40,
+              ).length
+            }
+          </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Produk Promo</p>
-          <p className="mt-2 text-2xl font-bold text-red-500">5</p>
+          <p className="mt-2 text-2xl font-bold text-red-500">
+            {
+              products.filter((product) => Number(product.price_disc) > 0)
+                .length
+            }
+          </p>
         </div>
       </div>
 
+      {/* ERROR */}
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
+      {/* PRODUCT TABLE */}
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        {/* FILTER */}
         <div className="flex flex-col gap-3 border-b border-slate-200 p-5 lg:flex-row">
           <div className="relative flex-1">
             <FiSearch className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -99,11 +155,12 @@ function ProductList() {
 
           <select className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none">
             <option>Semua Kategori</option>
-            <option>Elektronik</option>
+            <option>Elektronic</option>
             <option>Fashion</option>
             <option>Rumah & Dapur</option>
             <option>Kecantikan</option>
             <option>Olahraga</option>
+            <option>Buku & Alat Tulis</option>
           </select>
 
           <select className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none">
@@ -114,6 +171,7 @@ function ProductList() {
           </select>
         </div>
 
+        {/* TABLE */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] text-left">
             <thead className="bg-slate-50">
@@ -129,109 +187,143 @@ function ProductList() {
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {filteredProducts.map((product) => (
-                <tr key={product.id} className="transition hover:bg-slate-50">
-                  {/* PRODUCT */}
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400">
-                        IMG
-                      </div>
-
-                      <div>
-                        <p className="font-medium text-slate-800">
-                          {product.name}
-                        </p>
-
-                        <p className="mt-1 text-xs text-slate-400">
-                          {product.brand}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
-                      {product.category}
-                    </span>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <p className="font-medium text-slate-800">
-                      Rp {product.price.toLocaleString("id-ID")}
-                    </p>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span
-                      className={
-                        product.stock <= 40
-                          ? "font-medium text-orange-500"
-                          : "text-slate-600"
-                      }
-                    >
-                      {product.stock}
-                    </span>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span className="text-sm text-slate-600">
-                      ⭐ {product.rating}
-                    </span>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        product.status === "Promo"
-                          ? "bg-red-50 text-red-600"
-                          : "bg-emerald-50 text-emerald-600"
-                      }`}
-                    >
-                      {product.status}
-                    </span>
-                  </td>
-
-                  <td className="px-5 py-4">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        type="button"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                        title="Lihat"
-                      >
-                        <FiEye className="h-4 w-4" />
-                      </button>
-
-                      <button
-                        type="button"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
-                        title="Edit"
-                      >
-                        <FiEdit2 className="h-4 w-4" />
-                      </button>
-
-                      <button
-                        type="button"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
-                        title="Hapus"
-                      >
-                        <FiTrash2 className="h-4 w-4" />
-                      </button>
-
-                      <button
-                        type="button"
-                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100"
-                      >
-                        <FiMoreVertical className="h-4 w-4" />
-                      </button>
-                    </div>
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-5 py-12 text-center text-sm text-slate-500"
+                  >
+                    Memuat produk...
                   </td>
                 </tr>
-              ))}
+              ) : filteredProducts.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="7"
+                    className="px-5 py-12 text-center text-sm text-slate-500"
+                  >
+                    Tidak ada produk ditemukan.
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((product) => (
+                  <tr key={product.id} className="transition hover:bg-slate-50">
+                    {/* PRODUCT */}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400">
+                          IMG
+                        </div>
+
+                        <div>
+                          <p className="font-medium text-slate-800">
+                            {product.name}
+                          </p>
+
+                          <p className="mt-1 text-xs text-slate-400">
+                            {product.brand}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* CATEGORY */}
+                    <td className="px-5 py-4">
+                      <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600">
+                        {product.category}
+                      </span>
+                    </td>
+
+                    {/* PRICE */}
+                    <td className="px-5 py-4">
+                      <p className="font-medium text-slate-800">
+                        Rp {Number(product.price).toLocaleString("id-ID")}
+                      </p>
+                    </td>
+
+                    {/* STOCK */}
+                    <td className="px-5 py-4">
+                      <span
+                        className={
+                          Number(product.stock) <= 40
+                            ? "font-medium text-orange-500"
+                            : "text-slate-600"
+                        }
+                      >
+                        {product.stock}
+                      </span>
+                    </td>
+
+                    {/* RATING */}
+                    <td className="px-5 py-4">
+                      <span className="text-sm text-slate-600">
+                        ⭐ {product.rating}
+                      </span>
+                    </td>
+
+                    {/* STATUS */}
+                    <td className="px-5 py-4">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-medium ${
+                          Number(product.price_disc) > 0
+                            ? "bg-red-50 text-red-600"
+                            : product.stock > 0
+                              ? "bg-emerald-50 text-emerald-600"
+                              : "bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {Number(product.price_disc) > 0
+                          ? "Promo"
+                          : product.stock > 0
+                            ? "Aktif"
+                            : "Nonaktif"}
+                      </span>
+                    </td>
+
+                    {/* ACTION */}
+                    <td className="px-5 py-4">
+                      <div className="flex justify-end gap-1">
+                        <button
+                          type="button"
+                          className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                          title="Lihat"
+                        >
+                          <FiEye className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleEdit(product.id)}
+                          className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-blue-600"
+                          title="Edit"
+                        >
+                          <FiEdit2 className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
+                          title="Hapus"
+                        >
+                          <FiTrash2 className="h-4 w-4" />
+                        </button>
+
+                        <button
+                          type="button"
+                          className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100"
+                        >
+                          <FiMoreVertical className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
+        {/* FOOTER */}
         <div className="flex flex-col gap-3 border-t border-slate-200 px-5 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>
             Menampilkan{" "}
@@ -256,6 +348,15 @@ function ProductList() {
           </div>
         </div>
       </section>
+
+      {/* PRODUCT FORM MODAL */}
+      <ProductFormModal
+        open={isProductModalOpen}
+        mode={modalMode}
+        productId={selectedProductId}
+        onClose={handleCloseModal}
+        onSuccess={handleProductSuccess}
+      />
     </div>
   );
 }
