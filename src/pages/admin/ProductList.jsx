@@ -6,95 +6,31 @@ import {
   FiSearch,
   FiTrash2,
 } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import productService from "../../services/productService";
 
 function ProductList() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const products = [
-    {
-      id: 1,
-      name: "Headphone Wireless Premium",
-      brand: "SoundWave",
-      category: "Elektronik",
-      price: 450000,
-      stock: 45,
-      rating: 4.8,
-      status: "Aktif",
-    },
-    {
-      id: 2,
-      name: "Smartphone 5G Ultra",
-      brand: "TechMax",
-      category: "Elektronik",
-      price: 4200000,
-      stock: 30,
-      rating: 4.8,
-      status: "Aktif",
-    },
-    {
-      id: 3,
-      name: "Kaos Polos Premium Cotton",
-      brand: "UrbanWear",
-      category: "Fashion",
-      price: 125000,
-      stock: 200,
-      rating: 4.6,
-      status: "Aktif",
-    },
-    {
-      id: 4,
-      name: "Sneakers Sport Runfast",
-      brand: "SportPro",
-      category: "Fashion",
-      price: 550000,
-      stock: 60,
-      rating: 4.7,
-      status: "Aktif",
-    },
-    {
-      id: 5,
-      name: "LED Desk Lamp",
-      brand: "HomeLight",
-      category: "Rumah & Dapur",
-      price: 280000,
-      stock: 80,
-      rating: 4.5,
-      status: "Aktif",
-    },
-    {
-      id: 6,
-      name: "Blender Portable Mini",
-      brand: "BlendPro",
-      category: "Rumah & Dapur",
-      price: 189000,
-      stock: 120,
-      rating: 4.2,
-      status: "Aktif",
-    },
-    {
-      id: 7,
-      name: "Serum Vitamin C Brightening",
-      brand: "GlowSkin",
-      category: "Kecantikan",
-      price: 185000,
-      stock: 150,
-      rating: 4.8,
-      status: "Promo",
-    },
-    {
-      id: 8,
-      name: "Sepatu Lari Trail Ultra",
-      brand: "TrailMax",
-      category: "Olahraga",
-      price: 780000,
-      stock: 35,
-      rating: 4.6,
-      status: "Aktif",
-    },
-  ];
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const data = await productService.getAdminProducts();
+
+        setProducts(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProduct();
+  },[]);
 
   const filteredProducts = products.filter((product) =>
     `${product.name} ${product.brand} ${product.category}`

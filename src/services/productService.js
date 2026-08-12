@@ -83,6 +83,13 @@ const productService = {
       }))
       .slice(0, 4);
   },
+  async getAdminProducts() {
+    const result = await api("/admin/products");
+
+    return result.data;
+  },
+
+
 };
 
 export default productService;
