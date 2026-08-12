@@ -1,6 +1,7 @@
 import { FiArrowLeft, FiImage, FiSave, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import productService from "../../services/productService";
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -24,13 +25,31 @@ function AddProduct() {
     }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log("PRODUCT DATA:", form);
-    alert("Produk berhasil disimpan (dummy)");
+    try {
+      const payload = {
+        name: form.name,
+        brand: form.brand,
+        category_id: Number(form.category),
+        price: Number(form.price),
+        price_disc: form.priceDisc ? Number(form.priceDisc) : null,
+        stock: Number(form.stock),
+        description: form.description,
+      };
 
-    navigate("/admin/products");
+      console.log("PRODUCT DATA:", payload);
+
+      await productService.createAdminProduct(payload);
+
+      alert("Produk berhasil disimpan");
+
+      navigate("/admin/products");
+    } catch (error) {
+      console.error("CREATE PRODUCT ERROR:", error);
+      alert(error.message);
+    }
   }
 
   return (
@@ -114,12 +133,12 @@ function AddProduct() {
                     className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
                   >
                     <option value="">Pilih kategori</option>
-                    <option value="Elektronik">Elektronik</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Rumah & Dapur">Rumah & Dapur</option>
-                    <option value="Kecantikan">Kecantikan</option>
-                    <option value="Olahraga">Olahraga</option>
-                    <option value="Buku & Alat Tulis">Buku & Alat Tulis</option>
+                    <option value="1">Elektronic</option>
+                    <option value="2">Fashion</option>
+                    <option value="3">Rumah & Dapur</option>
+                    <option value="4">Kecantikan</option>
+                    <option value="5">Olahraga</option>
+                    <option value="6">Buku & Alat tulis</option>
                   </select>
                 </div>
 
