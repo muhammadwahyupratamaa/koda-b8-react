@@ -83,6 +83,7 @@ const productService = {
       }))
       .slice(0, 4);
   },
+
   async getAdminProducts() {
     const result = await api("/admin/products");
 
@@ -92,6 +93,21 @@ const productService = {
   async createAdminProduct(productData) {
     const result = await api("/admin/products", {
       method: "POST",
+      body: JSON.stringify(productData),
+    });
+
+    return result;
+  },
+
+  async getAdminProductById(id) {
+    const result = await api(`/admin/products/${id}`);
+
+    return result.data;
+  },
+
+  async updateAdminProduct(id, productData) {
+    const result = await api(`/admin/products/${id}`, {
+      method: "PUT",
       body: JSON.stringify(productData),
     });
 
