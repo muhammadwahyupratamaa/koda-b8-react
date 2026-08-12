@@ -113,6 +113,14 @@ const productService = {
 
     return result;
   },
+
+  async deleteAdminProduct(id, productData) {
+    const result = await api(`/admin/products/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  },
 };
 
 export default productService;
