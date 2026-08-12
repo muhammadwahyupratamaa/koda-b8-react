@@ -72,7 +72,7 @@ function MainBar() {
   }, [user, dispatch]);
 
   return (
-    <nav className="w-full border-b border-slate-200 bg-white">
+    <nav className="w-full border-b border-slate-200 shadow bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-20 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">

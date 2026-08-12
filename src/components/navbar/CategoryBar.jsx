@@ -71,7 +71,7 @@ function CategoryBar() {
   };
 
   return (
-    <nav className="border-b border-slate-200 bg-slate-50">
+    <nav className="border-b border-slate-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
         <div className="flex flex-col gap-3 lg:hidden">
           <div ref={dropdownRef} className="relative">
@@ -228,6 +228,7 @@ function CategoryBar() {
         </div>
       </div>
     </nav>
+    
   );
 }
 

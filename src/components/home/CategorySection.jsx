@@ -96,13 +96,13 @@ function CategorySection() {
               "
               >
                 <div
-                  className="mb-6 flex sm:h-20 sm:w-20 h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 shadow-sm transition-all duration-300 
+                  className="mb-6 flex sm:h-20 sm:w-20 h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300 
                 "
                 >
                   <img
                     src={category.image}
                     alt={category.title}
-                    className="h-14 w-14 object-contain transition-transform duration-300   
+                    className="h-16 w-16 object-contain rounded-xl transition-transform duration-300   
                   "
                   />
                 </div>
