@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import productService from "../../services/productService";
 import ProductFormModal from "./components/ProductFormModal";
+import DeleteProductModal from "./components/DeleteProductModal";
 
 function ProductList() {
   const [search, setSearch] = useState("");
@@ -19,6 +20,9 @@ function ProductList() {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("create");
   const [selectedProductId, setSelectedProductId] = useState(null);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -66,6 +70,16 @@ function ProductList() {
       .toLowerCase()
       .includes(search.toLowerCase()),
   );
+
+  const handleDelete = (product) => {
+    setSelectedProduct(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="space-y-6">
@@ -302,6 +316,7 @@ function ProductList() {
 
                         <button
                           type="button"
+                          onClick={() => handleDelete(product)}
                           className="rounded-lg p-2 text-slate-400 transition hover:bg-red-50 hover:text-red-500"
                           title="Hapus"
                         >
@@ -356,6 +371,13 @@ function ProductList() {
         productId={selectedProductId}
         onClose={handleCloseModal}
         onSuccess={handleProductSuccess}
+      />
+
+      <DeleteProductModal
+        open={isDeleteModalOpen}
+        product={selectedProduct}
+        onClose={handleCloseDeleteModal}
+        onSuccess={fetchProducts}
       />
     </div>
   );
