@@ -24,12 +24,19 @@ function Login() {
     try {
       const result = await authService.login(data);
 
-      console.log(result);
+      console.log("LOGIN RESULT:", result);
+      console.log("USER:", result.user);
+      console.log("ROLE:", result.user?.role);
+
       login(result.token, result.user);
 
       window.alert("Login berhasil!");
 
-      navigate("/");
+      if (result.user.role == "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       window.alert(error.message);
     }
