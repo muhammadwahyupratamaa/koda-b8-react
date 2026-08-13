@@ -50,9 +50,9 @@ function BrowseProducts() {
 
       products = products.filter((product) => {
         return (
-          product.name.toLowerCase().includes(search) ||
-          product.brand.toLowerCase().includes(search) ||
-          product.category.toLowerCase().includes(search)
+          product.name?.toLowerCase().includes(search) ||
+          product.brand?.toLowerCase().includes(search) ||
+          product.category?.toLowerCase().includes(search)
         );
       });
     }
@@ -60,7 +60,7 @@ function BrowseProducts() {
     // Category
     if (category.trim()) {
       products = products.filter(
-        (product) => product.category.toLowerCase() === category.toLowerCase(),
+        (product) => product.category?.toLowerCase() === category.toLowerCase(),
       );
     }
 
