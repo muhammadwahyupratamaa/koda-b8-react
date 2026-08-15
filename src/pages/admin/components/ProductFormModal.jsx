@@ -2,6 +2,25 @@ import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import productService from "../../../services/productService";
 
+const initialForm = {
+  name: "",
+  brand: "",
+  category: "",
+  price: "",
+  priceDisc: "",
+  stock: "",
+  description: "",
+};
+
+const categories = [
+  { id: 1, name: "Elektronic" },
+  { id: 2, name: "Fashion" },
+  { id: 3, name: "Rumah & Dapur" },
+  { id: 4, name: "Kecantikan" },
+  { id: 5, name: "Olahraga" },
+  { id: 6, name: "Buku & Alat tulis" },
+];
+
 function ProductFormModal({
   open,
   mode = "create",
@@ -9,15 +28,7 @@ function ProductFormModal({
   onClose,
   onSuccess,
 }) {
-  const [form, setForm] = useState({
-    name: "",
-    brand: "",
-    category: "",
-    price: "",
-    priceDisc: "",
-    stock: "",
-    description: "",
-  });
+  const [form, setForm] = useState(initialForm);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -29,26 +40,18 @@ function ProductFormModal({
     if (!open) return;
 
     if (!isEdit) {
-      setForm({
-        name: "",
-        brand: "",
-        category: "",
-        price: "",
-        priceDisc: "",
-        stock: "",
-        description: "",
-      });
-
+      setForm(initialForm);
       setError("");
       return;
     }
 
-    const fetchProduct = async () => {
+    async function fetchProduct() {
       try {
         setIsLoading(true);
         setError("");
 
-        const product = await productService.getAdminProductById(productId);
+        const product =
+          await productService.getAdminProductById(productId);
 
         setForm({
           name: product.name ?? "",
@@ -65,7 +68,7 @@ function ProductFormModal({
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
     fetchProduct();
   }, [open, isEdit, productId]);
@@ -79,6 +82,23 @@ function ProductFormModal({
     }));
   }
 
+  function calculateDiscount(price, priceDisc) {
+    const normalPrice = Number(price);
+    const discountPrice = Number(priceDisc);
+
+    if (
+      !normalPrice ||
+      !discountPrice ||
+      discountPrice >= normalPrice
+    ) {
+      return 0;
+    }
+
+    return Math.round(
+      ((normalPrice - discountPrice) / normalPrice) * 100,
+    );
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -86,18 +106,66 @@ function ProductFormModal({
       setIsSaving(true);
       setError("");
 
+      const price = Number(form.price);
+      const priceDisc = form.priceDisc
+        ? Number(form.priceDisc)
+        : null;
+      const stock = Number(form.stock);
+      const categoryId = Number(form.category);
+
+      if (!form.name.trim()) {
+        throw new Error("Nama produk wajib diisi.");
+      }
+
+      if (!form.brand.trim()) {
+        throw new Error("Brand wajib diisi.");
+      }
+
+      if (!categoryId) {
+        throw new Error("Kategori wajib dipilih.");
+      }
+
+      if (!price || price <= 0) {
+        throw new Error("Harga harus lebih dari 0.");
+      }
+
+      if (stock < 0) {
+        throw new Error("Stok tidak boleh kurang dari 0.");
+      }
+
+      if (priceDisc !== null) {
+        if (priceDisc <= 0) {
+          throw new Error("Harga diskon harus lebih dari 0.");
+        }
+
+        if (priceDisc >= price) {
+          throw new Error(
+            "Harga diskon harus lebih rendah dari harga normal.",
+          );
+        }
+      }
+
+      const discount = calculateDiscount(
+        price,
+        priceDisc,
+      );
+
       const payload = {
-        name: form.name,
-        brand: form.brand,
-        category_id: Number(form.category),
-        price: Number(form.price),
-        price_disc: form.priceDisc ? Number(form.priceDisc) : null,
-        stock: Number(form.stock),
-        description: form.description,
+        name: form.name.trim(),
+        brand: form.brand.trim(),
+        category_id: categoryId,
+        price,
+        price_disc: priceDisc,
+        discount,
+        stock,
+        description: form.description.trim(),
       };
 
       if (isEdit) {
-        await productService.updateAdminProduct(productId, payload);
+        await productService.updateAdminProduct(
+          productId,
+          payload,
+        );
       } else {
         await productService.createAdminProduct(payload);
       }
@@ -113,6 +181,11 @@ function ProductFormModal({
   }
 
   if (!open) return null;
+
+  const calculatedDiscount = calculateDiscount(
+    form.price,
+    form.priceDisc,
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -162,6 +235,7 @@ function ProductFormModal({
                   name="name"
                   value={form.name}
                   onChange={handleChange}
+                  required
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                 />
               </div>
@@ -176,6 +250,7 @@ function ProductFormModal({
                   name="brand"
                   value={form.brand}
                   onChange={handleChange}
+                  required
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                 />
               </div>
@@ -190,15 +265,21 @@ function ProductFormModal({
                     name="category"
                     value={form.category}
                     onChange={handleChange}
+                    required
                     className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500"
                   >
-                    <option value="">Pilih kategori</option>
-                    <option value="1">Elektronic</option>
-                    <option value="2">Fashion</option>
-                    <option value="3">Rumah & Dapur</option>
-                    <option value="4">Kecantikan</option>
-                    <option value="5">Olahraga</option>
-                    <option value="6">Buku & Alat tulis</option>
+                    <option value="">
+                      Pilih kategori
+                    </option>
+
+                    {categories.map((category) => (
+                      <option
+                        key={category.id}
+                        value={category.id}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -210,8 +291,10 @@ function ProductFormModal({
                   <input
                     type="number"
                     name="stock"
+                    min="0"
                     value={form.stock}
                     onChange={handleChange}
+                    required
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -220,30 +303,40 @@ function ProductFormModal({
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Harga
+                    Harga Normal
                   </label>
 
                   <input
                     type="number"
                     name="price"
+                    min="1"
                     value={form.price}
                     onChange={handleChange}
+                    required
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-sm font-medium text-slate-700">
-                    Harga Diskon
+                    Harga Promo
                   </label>
 
                   <input
                     type="number"
                     name="priceDisc"
+                    min="1"
                     value={form.priceDisc}
                     onChange={handleChange}
+                    placeholder="Kosongkan jika tidak promo"
                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                   />
+
+                  {calculatedDiscount > 0 && (
+                    <p className="mt-2 text-xs font-medium text-emerald-600">
+                      Promo aktif · Diskon {calculatedDiscount}%
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -265,7 +358,8 @@ function ProductFormModal({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                  disabled={isSaving}
+                  className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
                 >
                   Batal
                 </button>
