@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiUpload } from "react-icons/fi";
 import productService from "../../../services/productService";
 import categoryService from "../../../services/categoryService";
 
@@ -27,6 +27,9 @@ function ProductFormModal({
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
 
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
   const isEdit = mode === "edit";
 
   useEffect(() => {
@@ -36,6 +39,9 @@ function ProductFormModal({
       try {
         setIsLoading(true);
         setError("");
+
+        setImage(null);
+        setImagePreview("");
 
         const categoriesData = await categoryService.getCategories();
 
@@ -57,8 +63,13 @@ function ProductFormModal({
           stock: product.stock ?? "",
           description: product.description ?? "",
         });
+
+        if (product.image_url) {
+          setImagePreview(product.image_url);
+        }
       } catch (error) {
         console.error("LOAD PRODUCT FORM ERROR:", error);
+
         setError(error.message);
       } finally {
         setIsLoading(false);
@@ -68,6 +79,14 @@ function ProductFormModal({
     loadData();
   }, [open, isEdit, productId]);
 
+  useEffect(() => {
+    return () => {
+      if (imagePreview && imagePreview.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+    };
+  }, [imagePreview]);
+
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -75,6 +94,31 @@ function ProductFormModal({
       ...prev,
       [name]: value,
     }));
+  }
+
+  function handleImageChange(e) {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("File harus berupa gambar.");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Ukuran gambar maksimal 2 MB.");
+      return;
+    }
+
+    setError("");
+
+    if (imagePreview && imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(imagePreview);
+    }
+
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file));
   }
 
   function calculateDiscount(price, priceDisc) {
@@ -134,27 +178,41 @@ function ProductFormModal({
 
       const discount = calculateDiscount(price, priceDisc);
 
-      const payload = {
-        name: form.name.trim(),
-        brand: form.brand.trim(),
-        category_id: categoryId,
-        price,
-        price_disc: priceDisc,
-        discount,
-        stock,
-        description: form.description.trim(),
-      };
+      const formData = new FormData();
+
+      formData.append("name", form.name.trim());
+
+      formData.append("brand", form.brand.trim());
+
+      formData.append("category_id", categoryId);
+
+      formData.append("price", price);
+
+      if (priceDisc !== null) {
+        formData.append("price_disc", priceDisc);
+      }
+
+      formData.append("discount", discount);
+
+      formData.append("stock", stock);
+
+      formData.append("description", form.description.trim());
+
+      if (image) {
+        formData.append("image", image);
+      }
 
       if (isEdit) {
-        await productService.updateAdminProduct(productId, payload);
+        await productService.updateAdminProduct(productId, formData);
       } else {
-        await productService.createAdminProduct(payload);
+        await productService.createAdminProduct(formData);
       }
 
       onSuccess?.();
       onClose();
     } catch (error) {
       console.error("SAVE PRODUCT ERROR:", error);
+
       setError(error.message);
     } finally {
       setIsSaving(false);
@@ -232,6 +290,55 @@ function ProductFormModal({
                   required
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-emerald-500"
                 />
+              </div>
+
+              {/* Image */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Gambar Produk
+                </label>
+
+                <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 px-6 py-8 transition hover:border-emerald-400 hover:bg-emerald-50/30">
+                  <FiUpload className="mb-3 h-6 w-6 text-slate-400" />
+
+                  <span className="text-sm font-medium text-slate-700">
+                    Pilih gambar produk
+                  </span>
+
+                  <span className="mt-1 text-xs text-slate-400">
+                    JPG, PNG, WEBP · Maksimal 2 MB
+                  </span>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+
+                {imagePreview && (
+                  <div className="mt-4">
+                    <p className="mb-2 text-xs font-medium text-slate-500">
+                      Preview
+                    </p>
+
+                    <div className="relative h-48 w-48 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                      <img
+                        src={imagePreview}
+                        alt="Preview produk"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+
+                    {image && (
+                      <p className="mt-2 text-xs text-slate-400">
+                        {image.name} · {(image.size / 1024 / 1024).toFixed(2)}{" "}
+                        MB
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">
@@ -344,7 +451,7 @@ function ProductFormModal({
                   className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSaving
-                    ? "Menyimpan..."
+                    ? "Mengupload & Menyimpan..."
                     : isEdit
                       ? "Simpan Perubahan"
                       : "Simpan Produk"}

@@ -84,7 +84,11 @@ function ProfileSidebar({ active }) {
           <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-blue-100 sm:h-24 sm:w-24">
             {profile.avatar_url ? (
               <img
-                src={`${import.meta.env.VITE_API_URL}${profile.avatar_url}`}
+                src={
+                  profile.avatar_url?.startsWith("http")
+                    ? profile.avatar_url
+                    : `${import.meta.env.VITE_API_URL}${profile.avatar_url}`
+                }
                 alt={profile.name}
                 className="h-full w-full object-cover"
               />

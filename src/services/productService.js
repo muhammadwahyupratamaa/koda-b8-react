@@ -2,6 +2,14 @@ import * as images from "../assets";
 import { api } from "./api";
 
 function getProductImage(imageKey) {
+  if (!imageKey) {
+    return images.productPlaceholder;
+  }
+
+  if (imageKey.startsWith("http://") || imageKey.startsWith("https://")) {
+    return imageKey;
+  }
+
   if (imageKey === "headphoneWirelessPremium") {
     return images.productPlaceholder;
   }
@@ -128,7 +136,7 @@ const productService = {
   async createAdminProduct(productData) {
     const result = await api("/admin/products", {
       method: "POST",
-      body: JSON.stringify(productData),
+      body: productData,
     });
 
     return result;
@@ -137,7 +145,7 @@ const productService = {
   async updateAdminProduct(id, productData) {
     const result = await api(`/admin/products/${id}`, {
       method: "PUT",
-      body: JSON.stringify(productData),
+      body: productData,
     });
 
     return result;

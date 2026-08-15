@@ -59,7 +59,9 @@ function EditProfilePage() {
       const result = await profileService.getProfile();
 
       const avatarUrl = result.data.avatar_url
-        ? `${BASE_URL}${result.data.avatar_url}`
+        ? result.data.avatar_url.startsWith("http")
+          ? result.data.avatar_url
+          : `${BASE_URL}${result.data.avatar_url}`
         : "";
 
       setForm({
