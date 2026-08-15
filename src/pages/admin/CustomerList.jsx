@@ -276,11 +276,11 @@ function CustomerList() {
 
         <div className="flex flex-col gap-3 border-t border-slate-200 px-5 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            Menampilkan
+            Menampilkan {" "}
             <span className="font-medium text-slate-700">
               {filteredCustomers.length}
             </span>
-            pelanggan
+            {" "}pelanggan
           </p>
 
           <div className="flex items-center gap-2">

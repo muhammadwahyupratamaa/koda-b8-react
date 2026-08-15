@@ -24,10 +24,6 @@ function Login() {
     try {
       const result = await authService.login(data);
 
-      console.log("LOGIN RESULT:", result);
-      console.log("USER:", result.user);
-      console.log("ROLE:", result.user?.role);
-
       login(result.token, result.user);
 
       window.alert("Login berhasil!");
