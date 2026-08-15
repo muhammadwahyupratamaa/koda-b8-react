@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import productService from "../../services/productService";
 import ProductFormModal from "./components/ProductFormModal";
 import DeleteProductModal from "./components/DeleteProductModal";
+import ProductDetailModal from "./components/ProductDetailModal";
 
 function ProductList() {
   const [search, setSearch] = useState("");
@@ -23,6 +24,9 @@ function ProductList() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedDetailProduct, setSelectedDetailProduct] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -79,6 +83,25 @@ function ProductList() {
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setSelectedProduct(null);
+  };
+
+  const handleView = async (productId) => {
+    try {
+      setError("");
+
+      const product = await productService.getAdminProductById(productId);
+
+      setSelectedDetailProduct(product);
+      setIsDetailModalOpen(true);
+    } catch (error) {
+      console.error("GET PRODUCT DETAIL ERROR:", error);
+      setError(error.message);
+    }
+  };
+
+  const handleCloseDetailModal = () => {
+    setIsDetailModalOpen(false);
+    setSelectedDetailProduct(null);
   };
 
   return (
@@ -299,6 +322,7 @@ function ProductList() {
                       <div className="flex justify-end gap-1">
                         <button
                           type="button"
+                          onClick={() => handleView(product.id)}
                           className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                           title="Lihat"
                         >
@@ -378,6 +402,12 @@ function ProductList() {
         product={selectedProduct}
         onClose={handleCloseDeleteModal}
         onSuccess={fetchProducts}
+      />
+
+      <ProductDetailModal
+        open={isDetailModalOpen}
+        product={selectedDetailProduct}
+        onClose={handleCloseDetailModal}
       />
     </div>
   );
