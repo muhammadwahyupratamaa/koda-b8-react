@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../../services/api";
 import formatCurrency from "../../utils/formatCurrency";
 import formatDate from "../../utils/formatDate";
+import OrderDetailModal from "./components/OrderDetailModal";
 
 function OrderList() {
   const [search, setSearch] = useState("");
@@ -421,6 +422,10 @@ function OrderList() {
           </div>
         </div>
       </section>
+      <OrderDetailModal
+        order={selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+      />
     </div>
   );
 }
