@@ -28,6 +28,13 @@ function ProductList() {
     totalPages: 0,
   });
 
+  const [statistics, setStatistics] = useState({
+    total: 0,
+    active: 0,
+    lowStock: 0,
+    promo: 0,
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -54,8 +61,11 @@ function ProductList() {
         limit,
       });
 
+      const statistics = await productService.getAdminProductStatistics();
+
       setProducts(result.data);
       setPagination(result.pagination);
+      setStatistics(statistics);
     } catch (error) {
       console.error("GET ADMIN PRODUCTS ERROR:", error);
       setError(error.message);
@@ -147,36 +157,28 @@ function ProductList() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Total Produk</p>
           <p className="mt-2 text-2xl font-bold text-slate-900">
-            {products.length}
+            {statistics.total}
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Produk Aktif</p>
           <p className="mt-2 text-2xl font-bold text-slate-900">
-            {products.filter((product) => product.stock > 0).length}
+            {statistics.active}
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Stok Menipis</p>
           <p className="mt-2 text-2xl font-bold text-orange-500">
-            {
-              products.filter(
-                (product) =>
-                  Number(product.stock) > 0 && Number(product.stock) <= 40,
-              ).length
-            }
+            {statistics.lowStock}
           </p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">Produk Promo</p>
           <p className="mt-2 text-2xl font-bold text-red-500">
-            {
-              products.filter((product) => Number(product.price_disc) > 0)
-                .length
-            }
+            {statistics.promo}
           </p>
         </div>
       </div>

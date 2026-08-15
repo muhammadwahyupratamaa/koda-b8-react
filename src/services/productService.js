@@ -113,6 +113,12 @@ const productService = {
     return result;
   },
 
+  async getAdminProductStatistics() {
+    const result = await api("/admin/products/statistics");
+
+    return result.data;
+  },
+
   async getAdminProductById(id) {
     const result = await api(`/admin/products/${id}`);
 
