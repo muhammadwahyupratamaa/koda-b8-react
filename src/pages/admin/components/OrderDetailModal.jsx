@@ -1,14 +1,62 @@
+import { useState } from "react";
 import { FiX, FiMapPin, FiCreditCard, FiPackage } from "react-icons/fi";
+
 import formatCurrency from "../../../utils/formatCurrency";
 import formatDate from "../../../utils/formatDate";
+import { api } from "../../../services/api";
 
-function OrderDetailModal({ order, onClose }) {
+function OrderDetailModal({ order, onClose, onStatusUpdated }) {
+  const [status, setStatus] = useState(order?.status || "pending");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState("");
+
   if (!order) {
     return null;
   }
 
   const address = order.shipping_address;
   const items = order.OrderItems || [];
+
+  async function handleStatusChange(event) {
+    const newStatus = event.target.value;
+
+    if (newStatus === order.status) {
+      return;
+    }
+
+    try {
+      setIsUpdating(true);
+      setError("");
+
+      const response = await api(`/admin/orders/${order.id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      });
+
+      const updatedOrder = response.data;
+
+      setStatus(updatedOrder.status);
+
+      if (onStatusUpdated) {
+        onStatusUpdated(updatedOrder);
+      }
+    } catch (error) {
+      setError(error.message || "Gagal mengubah status pesanan");
+
+      setStatus(order.status);
+    } finally {
+      setIsUpdating(false);
+    }
+  }
+
+  const statusLabel = {
+    pending: "Pending",
+    processing: "Diproses",
+    shipped: "Dikirim",
+    delivered: "Terkirim",
+  };
 
   return (
     <div
@@ -43,26 +91,39 @@ function OrderDetailModal({ order, onClose }) {
         <div className="space-y-6 p-6">
           {/* Order Information */}
           <div className="grid gap-4 sm:grid-cols-3">
+            {/* Status */}
             <div className="rounded-xl border border-slate-200 p-4">
               <div className="mb-2 flex items-center gap-2 text-slate-500">
                 <FiPackage className="h-4 w-4" />
+
                 <span className="text-xs">Status</span>
               </div>
 
-              <p className="font-semibold text-slate-800">
-                {order.status === "pending"
-                  ? "Pending"
-                  : order.status === "shipped"
-                    ? "Dikirim"
-                    : order.status === "delivered"
-                      ? "Terkirim"
-                      : order.status}
-              </p>
+              <select
+                value={status}
+                onChange={handleStatusChange}
+                disabled={isUpdating}
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 outline-none transition focus:border-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {Object.entries(statusLabel).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+
+              {isUpdating && (
+                <p className="mt-2 text-xs text-slate-500">Updating...</p>
+              )}
+
+              {error && <p className="mt-2 text-xs text-red-500">{error}</p>}
             </div>
 
+            {/* Payment */}
             <div className="rounded-xl border border-slate-200 p-4">
               <div className="mb-2 flex items-center gap-2 text-slate-500">
                 <FiCreditCard className="h-4 w-4" />
+
                 <span className="text-xs">Pembayaran</span>
               </div>
 
@@ -71,9 +132,11 @@ function OrderDetailModal({ order, onClose }) {
               </p>
             </div>
 
+            {/* Total */}
             <div className="rounded-xl border border-slate-200 p-4">
               <div className="mb-2 flex items-center gap-2 text-slate-500">
                 <FiPackage className="h-4 w-4" />
+
                 <span className="text-xs">Total</span>
               </div>
 

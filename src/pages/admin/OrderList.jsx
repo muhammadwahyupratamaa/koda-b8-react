@@ -57,23 +57,56 @@ function OrderList() {
       try {
         const message = JSON.parse(event.data);
 
-        if (message.event !== "order_created") {
+        // Order baru
+        if (message.event === "order_created") {
+          const newOrder = message.data;
+
+          setOrders((currentOrders) => {
+            const exists = currentOrders.some(
+              (order) => String(order.id) === String(newOrder.id),
+            );
+
+            if (exists) {
+              return currentOrders;
+            }
+
+            return [newOrder, ...currentOrders];
+          });
+
           return;
         }
 
-        const newOrder = message.data;
+        // Status order berubah
+        if (message.event === "order_status_updated") {
+          const updatedOrder = message.data;
 
-        setOrders((currentOrders) => {
-          const exists = currentOrders.some(
-            (order) => String(order.id) === String(newOrder.id),
+          setOrders((currentOrders) =>
+            currentOrders.map((order) =>
+              String(order.id) === String(updatedOrder.id)
+                ? {
+                    ...order,
+                    ...updatedOrder,
+                  }
+                : order,
+            ),
           );
 
-          if (exists) {
-            return currentOrders;
-          }
+          setSelectedOrder((currentOrder) => {
+            if (
+              !currentOrder ||
+              String(currentOrder.id) !== String(updatedOrder.id)
+            ) {
+              return currentOrder;
+            }
 
-          return [newOrder, ...currentOrders];
-        });
+            return {
+              ...currentOrder,
+              ...updatedOrder,
+            };
+          });
+
+          return;
+        }
       } catch (error) {
         console.error("WebSocket message error:", error);
       }
@@ -114,11 +147,11 @@ function OrderList() {
 
       pending: orders.filter((order) => order.status === "pending").length,
 
-      diproses: orders.filter((order) => order.status === "Diproses").length,
+      diproses: orders.filter((order) => order.status === "processing").length,
 
-      dikirim: orders.filter(
-        (order) => order.status === "shipped" || order.status === "Dikirim",
-      ).length,
+      dikirim: orders.filter((order) => order.status === "shipped").length,
+
+      terkirim: orders.filter((order) => order.status === "delivered").length,
     };
   }, [orders]);
 
