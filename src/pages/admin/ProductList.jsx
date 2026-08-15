@@ -15,6 +15,19 @@ import ProductDetailModal from "./components/ProductDetailModal";
 function ProductList() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
+  const [status, setStatus] = useState("");
+
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -33,9 +46,16 @@ function ProductList() {
       setIsLoading(true);
       setError("");
 
-      const data = await productService.getAdminProducts();
+      const result = await productService.getAdminProducts({
+        search,
+        categoryId,
+        status,
+        page,
+        limit,
+      });
 
-      setProducts(data);
+      setProducts(result.data);
+      setPagination(result.pagination);
     } catch (error) {
       console.error("GET ADMIN PRODUCTS ERROR:", error);
       setError(error.message);
@@ -46,7 +66,7 @@ function ProductList() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [search, categoryId, status, page]);
 
   const handleCreate = () => {
     setModalMode("create");
@@ -68,12 +88,6 @@ function ProductList() {
   const handleProductSuccess = async () => {
     await fetchProducts();
   };
-
-  const filteredProducts = products.filter((product) =>
-    `${product.name} ${product.brand} ${product.category}`
-      .toLowerCase()
-      .includes(search.toLowerCase()),
-  );
 
   const handleDelete = (product) => {
     setSelectedProduct(product);
@@ -184,27 +198,44 @@ function ProductList() {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Cari produk, brand, atau kategori..."
               className="w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-sm outline-none transition focus:border-emerald-500"
             />
           </div>
 
-          <select className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none">
-            <option>Semua Kategori</option>
-            <option>Elektronic</option>
-            <option>Fashion</option>
-            <option>Rumah & Dapur</option>
-            <option>Kecantikan</option>
-            <option>Olahraga</option>
-            <option>Buku & Alat Tulis</option>
+          <select
+            value={categoryId}
+            onChange={(e) => {
+              setCategoryId(e.target.value);
+              setPage(1);
+            }}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none"
+          >
+            <option value="">Semua Kategori</option>
+            <option value="1">Elektronic</option>
+            <option value="2">Fashion</option>
+            <option value="3">Rumah & Dapur</option>
+            <option value="4">Kecantikan</option>
+            <option value="5">Olahraga</option>
+            <option value="6">Buku & Alat Tulis</option>
           </select>
 
-          <select className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none">
-            <option>Semua Status</option>
-            <option>Aktif</option>
-            <option>Promo</option>
-            <option>Nonaktif</option>
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(1);
+            }}
+            className="rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none"
+          >
+            <option value="">Semua Status</option>
+            <option value="active">Aktif</option>
+            <option value="promo">Promo</option>
+            <option value="inactive">Nonaktif</option>
           </select>
         </div>
 
@@ -233,7 +264,7 @@ function ProductList() {
                     Memuat produk...
                   </td>
                 </tr>
-              ) : filteredProducts.length === 0 ? (
+              ) : products.length === 0 ? (
                 <tr>
                   <td
                     colSpan="7"
@@ -243,7 +274,7 @@ function ProductList() {
                   </td>
                 </tr>
               ) : (
-                filteredProducts.map((product) => (
+                products.map((product) => (
                   <tr key={product.id} className="transition hover:bg-slate-50">
                     {/* PRODUCT */}
                     <td className="px-5 py-4">
@@ -367,21 +398,35 @@ function ProductList() {
           <p>
             Menampilkan{" "}
             <span className="font-medium text-slate-700">
-              {filteredProducts.length}
+              {products.length}
             </span>{" "}
-            dari {products.length} produk
+            dari{" "}
+            <span className="font-medium text-slate-700">
+              {pagination.total}
+            </span>{" "}
+            produk
           </p>
 
           <div className="flex items-center gap-2">
-            <button className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
+            <button
+              type="button"
+              disabled={page === 1}
+              onClick={() => setPage((prev) => prev - 1)}
+              className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
               Sebelumnya
             </button>
 
-            <button className="rounded-lg bg-emerald-600 px-3 py-2 text-white">
-              1
-            </button>
+            <span className="rounded-lg bg-emerald-600 px-3 py-2 text-white">
+              {pagination.page}
+            </span>
 
-            <button className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50">
+            <button
+              type="button"
+              disabled={page >= pagination.totalPages}
+              onClick={() => setPage((prev) => prev + 1)}
+              className="rounded-lg border border-slate-200 px-3 py-2 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
               Selanjutnya
             </button>
           </div>

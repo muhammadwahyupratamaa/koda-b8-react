@@ -8,6 +8,7 @@ function getProductImage(imageKey) {
 
   return images[imageKey] || images.productPlaceholder;
 }
+
 const productService = {
   async getProductsFromApi() {
     const result = await api("/products");
@@ -83,9 +84,37 @@ const productService = {
       }))
       .slice(0, 4);
   },
+  async getAdminProducts({
+    search = "",
+    categoryId = "",
+    status = "",
+    page = 1,
+    limit = 10,
+  } = {}) {
+    const params = new URLSearchParams();
 
-  async getAdminProducts() {
-    const result = await api("/admin/products");
+    if (search.trim()) {
+      params.set("search", search.trim());
+    }
+
+    if (categoryId) {
+      params.set("category_id", categoryId);
+    }
+
+    if (status) {
+      params.set("status", status);
+    }
+
+    params.set("page", page);
+    params.set("limit", limit);
+
+    const result = await api(`/admin/products?${params.toString()}`);
+
+    return result;
+  },
+
+  async getAdminProductById(id) {
+    const result = await api(`/admin/products/${id}`);
 
     return result.data;
   },
@@ -99,12 +128,6 @@ const productService = {
     return result;
   },
 
-  async getAdminProductById(id) {
-    const result = await api(`/admin/products/${id}`);
-
-    return result.data;
-  },
-
   async updateAdminProduct(id, productData) {
     const result = await api(`/admin/products/${id}`, {
       method: "PUT",
@@ -114,7 +137,7 @@ const productService = {
     return result;
   },
 
-  async deleteAdminProduct(id, productData) {
+  async deleteAdminProduct(id) {
     const result = await api(`/admin/products/${id}`, {
       method: "DELETE",
     });
