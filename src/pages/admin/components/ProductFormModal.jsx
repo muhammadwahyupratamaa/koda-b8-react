@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import productService from "../../../services/productService";
+import categoryService from "../../../services/categoryService";
 
 const initialForm = {
   name: "",
@@ -12,15 +13,6 @@ const initialForm = {
   description: "",
 };
 
-const categories = [
-  { id: 1, name: "Elektronic" },
-  { id: 2, name: "Fashion" },
-  { id: 3, name: "Rumah & Dapur" },
-  { id: 4, name: "Kecantikan" },
-  { id: 5, name: "Olahraga" },
-  { id: 6, name: "Buku & Alat tulis" },
-];
-
 function ProductFormModal({
   open,
   mode = "create",
@@ -29,6 +21,7 @@ function ProductFormModal({
   onSuccess,
 }) {
   const [form, setForm] = useState(initialForm);
+  const [categories, setCategories] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -39,19 +32,21 @@ function ProductFormModal({
   useEffect(() => {
     if (!open) return;
 
-    if (!isEdit) {
-      setForm(initialForm);
-      setError("");
-      return;
-    }
-
-    async function fetchProduct() {
+    async function loadData() {
       try {
         setIsLoading(true);
         setError("");
 
-        const product =
-          await productService.getAdminProductById(productId);
+        const categoriesData = await categoryService.getCategories();
+
+        setCategories(categoriesData);
+
+        if (!isEdit) {
+          setForm(initialForm);
+          return;
+        }
+
+        const product = await productService.getAdminProductById(productId);
 
         setForm({
           name: product.name ?? "",
@@ -63,14 +58,14 @@ function ProductFormModal({
           description: product.description ?? "",
         });
       } catch (error) {
-        console.error("GET PRODUCT ERROR:", error);
+        console.error("LOAD PRODUCT FORM ERROR:", error);
         setError(error.message);
       } finally {
         setIsLoading(false);
       }
     }
 
-    fetchProduct();
+    loadData();
   }, [open, isEdit, productId]);
 
   function handleChange(e) {
@@ -86,17 +81,11 @@ function ProductFormModal({
     const normalPrice = Number(price);
     const discountPrice = Number(priceDisc);
 
-    if (
-      !normalPrice ||
-      !discountPrice ||
-      discountPrice >= normalPrice
-    ) {
+    if (!normalPrice || !discountPrice || discountPrice >= normalPrice) {
       return 0;
     }
 
-    return Math.round(
-      ((normalPrice - discountPrice) / normalPrice) * 100,
-    );
+    return Math.round(((normalPrice - discountPrice) / normalPrice) * 100);
   }
 
   async function handleSubmit(e) {
@@ -107,9 +96,9 @@ function ProductFormModal({
       setError("");
 
       const price = Number(form.price);
-      const priceDisc = form.priceDisc
-        ? Number(form.priceDisc)
-        : null;
+
+      const priceDisc = form.priceDisc ? Number(form.priceDisc) : null;
+
       const stock = Number(form.stock);
       const categoryId = Number(form.category);
 
@@ -135,20 +124,15 @@ function ProductFormModal({
 
       if (priceDisc !== null) {
         if (priceDisc <= 0) {
-          throw new Error("Harga diskon harus lebih dari 0.");
+          throw new Error("Harga promo harus lebih dari 0.");
         }
 
         if (priceDisc >= price) {
-          throw new Error(
-            "Harga diskon harus lebih rendah dari harga normal.",
-          );
+          throw new Error("Harga promo harus lebih rendah dari harga normal.");
         }
       }
 
-      const discount = calculateDiscount(
-        price,
-        priceDisc,
-      );
+      const discount = calculateDiscount(price, priceDisc);
 
       const payload = {
         name: form.name.trim(),
@@ -162,10 +146,7 @@ function ProductFormModal({
       };
 
       if (isEdit) {
-        await productService.updateAdminProduct(
-          productId,
-          payload,
-        );
+        await productService.updateAdminProduct(productId, payload);
       } else {
         await productService.createAdminProduct(payload);
       }
@@ -182,10 +163,7 @@ function ProductFormModal({
 
   if (!open) return null;
 
-  const calculatedDiscount = calculateDiscount(
-    form.price,
-    form.priceDisc,
-  );
+  const calculatedDiscount = calculateDiscount(form.price, form.priceDisc);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
@@ -206,7 +184,8 @@ function ProductFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            disabled={isSaving}
+            className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
           >
             <FiX className="h-5 w-5" />
           </button>
@@ -268,15 +247,10 @@ function ProductFormModal({
                     required
                     className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-emerald-500"
                   >
-                    <option value="">
-                      Pilih kategori
-                    </option>
+                    <option value="">Pilih kategori</option>
 
                     {categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.id}
-                      >
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}
@@ -366,7 +340,7 @@ function ProductFormModal({
 
                 <button
                   type="submit"
-                  disabled={isSaving}
+                  disabled={isSaving || categories.length === 0}
                   className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSaving
