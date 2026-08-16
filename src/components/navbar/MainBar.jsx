@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import wishlistService from "../../services/wishlistService";
 import cartService from "../../services/cartService";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { setCart } from "../../features/cart/cartSlice";
@@ -10,12 +10,14 @@ import { setWishlist } from "../../features/wishlist/wishlistSlice";
 
 import {
   FaShoppingBag,
-  FaSearch,
   FaBell,
   FaHeart,
   FaShoppingCart,
   FaUserCircle,
   FaBars,
+  FaTimes,
+  FaHome,
+  FaBoxOpen,
 } from "react-icons/fa";
 
 import SearchBar from "../common/SearchBar";
@@ -23,6 +25,8 @@ import SearchBar from "../common/SearchBar";
 function MainBar() {
   const { user } = useAuth();
   const dispatch = useDispatch();
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const cart = useSelector((state) => state.cart.items);
   const wishlist = useSelector((state) => state.wishlist.items);
@@ -71,11 +75,16 @@ function MainBar() {
     loadWishlist();
   }, [user, dispatch]);
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
-    <nav className="w-full border-b border-slate-200 shadow bg-white">
+    <nav className="w-full border-b border-slate-200 bg-white shadow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-20 items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
+          {/* LOGO */}
+          <Link to="/" onClick={closeMenu} className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 shadow-md">
               <FaShoppingBag className="text-lg text-white" />
             </div>
@@ -90,13 +99,15 @@ function MainBar() {
               </p>
             </div>
           </Link>
-
           <div className="mx-8 hidden flex-1 lg:block">
             <SearchBar placeholder="Cari produk, merek, kategori..." />
           </div>
 
           <div className="hidden items-center gap-2 lg:flex">
-            <button className="rounded-full p-3 transition hover:bg-slate-100 hover:text-emerald-600">
+            <button
+              type="button"
+              className="rounded-full p-3 transition hover:bg-slate-100 hover:text-emerald-600"
+            >
               <FaBell />
             </button>
 
@@ -167,8 +178,14 @@ function MainBar() {
               )}
             </Link>
 
-            <button className="rounded-full p-3 transition hover:bg-slate-100">
-              <FaBars />
+            <button
+              type="button"
+              onClick={() => setMenuOpen((current) => !current)}
+              className="rounded-full p-3 transition hover:bg-slate-100"
+              aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
             </button>
           </div>
         </div>
@@ -176,6 +193,74 @@ function MainBar() {
         <div className="pb-5 lg:hidden">
           <SearchBar placeholder="Cari produk..." />
         </div>
+
+        {/* MOBILE MENU */}
+        {menuOpen && (
+          <div className="border-t border-slate-100 pb-5 pt-3 lg:hidden">
+            <div className="space-y-1">
+              <Link
+                to="/"
+                onClick={closeMenu}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-600"
+              >
+                <FaHome className="w-4 text-emerald-600" />
+                <span>Beranda</span>
+              </Link>
+
+              <Link
+                to="/products"
+                onClick={closeMenu}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-600"
+              >
+                <FaBoxOpen className="w-4 text-emerald-600" />
+                <span>Semua Produk</span>
+              </Link>
+
+              <Link
+                to="/profile/wishlist"
+                onClick={closeMenu}
+                className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-600"
+              >
+                <div className="flex items-center gap-3">
+                  <FaHeart className="w-4 text-red-500" />
+                  <span>Wishlist</span>
+                </div>
+
+                {wishlistCount > 0 && (
+                  <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-red-500 px-2 text-xs text-white">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              <div className="my-2 border-t border-slate-100" />
+
+              {user ? (
+                <Link
+                  to="/profile/edit"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-emerald-50 hover:text-emerald-600"
+                >
+                  <FaUserCircle className="w-4 text-emerald-600" />
+
+                  <div>
+                    <p className="text-xs text-slate-400">Akun Saya</p>
+
+                    <p className="font-semibold text-slate-700">{user.name}</p>
+                  </div>
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className="flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );
