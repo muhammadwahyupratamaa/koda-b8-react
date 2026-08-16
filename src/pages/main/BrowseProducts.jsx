@@ -20,6 +20,7 @@ function BrowseProducts() {
   const [stockOnly, setStockOnly] = useState(false);
   const [priceRange, setPriceRange] = useState(20000000);
   const [sortBy, setSortBy] = useState("popular");
+  const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     async function loadProducts() {
@@ -123,6 +124,14 @@ function BrowseProducts() {
     sortBy,
   ]);
 
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
+
+  const remainingProducts = filteredProducts.length - visibleCount;
+
+  const handleLoadMore = () => {
+    setVisibleCount((current) => current + 6);
+  };
+
   const handleBrandChange = (brand) => {
     setSelectedBrands((current) => {
       if (current.includes(brand)) {
@@ -132,6 +141,7 @@ function BrowseProducts() {
       return [...current, brand];
     });
   };
+
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
       <section className="flex items-center gap-2 text-sm text-gray-400 mb-6">
@@ -299,17 +309,23 @@ function BrowseProducts() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredProducts.map((product) => (
+              {visibleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}
 
-          <div className="flex justify-center mt-10">
-            <button className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer">
-              Muat Lebih Banyak (6 produk lagi)
-            </button>
-          </div>
+          {!loading && !error && visibleCount < filteredProducts.length && (
+            <div className="flex justify-center mt-10">
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer"
+              >
+                Muat Lebih Banyak ({Math.min(6, remainingProducts)} produk lagi)
+              </button>
+            </div>
+          )}
         </section>
       </section>
     </main>
