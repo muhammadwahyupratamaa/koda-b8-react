@@ -36,7 +36,6 @@ import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import ProductList from "./pages/admin/ProductList";
-import AddProduct from "./pages/admin/AddProduct";
 import OrderList from "./pages/admin/OrderList";
 import CustomerList from "./pages/admin/CustomerList";
 
@@ -177,10 +176,6 @@ const router = createBrowserRouter([
       {
         path: "products",
         element: <ProductList />,
-      },
-      {
-        path: "products/create",
-        element: <AddProduct />,
       },
       {
         path: "orders",
