@@ -1,31 +1,69 @@
+import { useEffect, useState } from "react";
 import { FiBox, FiDollarSign, FiShoppingBag, FiUsers } from "react-icons/fi";
+import productService from "../../services/productService";
+import { api } from "../../services/api";
 
 function Dashboard() {
+  const [productStatistics, setProductStatistics] = useState({
+    total: 0,
+    active: 0,
+    lowStock: 0,
+    promo: 0,
+  });
+
+  const [orderStatistics, setOrderStatistics] = useState({
+    total: 0,
+    pending: 0,
+    processing: 0,
+    shipped: 0,
+  });
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStatistics() {
+      try {
+        const [products, orders] = await Promise.all([
+          productService.getAdminProductStatistics(),
+          api("/admin/orders/statistics"),
+        ]);
+
+        setProductStatistics(products || {});
+        setOrderStatistics(orders?.data || {});
+      } catch (error) {
+        console.error("Failed to fetch dashboard statistics:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchStatistics();
+  }, []);
+
   const stats = [
     {
-      title: "Pendapatan Bulan Ini",
-      value: "Rp 125.000.000",
-      change: "+18,2% dari bulan lalu",
-      icon: FiDollarSign,
+      title: "Total Produk",
+      value: productStatistics.total,
+      change: `${productStatistics.active} produk aktif`,
+      icon: FiBox,
     },
     {
-      title: "Pesanan Baru",
-      value: "890",
-      change: "+12,5% dari bulan lalu",
+      title: "Total Pesanan",
+      value: orderStatistics.total,
+      change: `${orderStatistics.pending} pesanan pending`,
       icon: FiShoppingBag,
     },
     {
-      title: "Pelanggan Aktif",
-      value: "3.284",
-      change: "+8,1% dari bulan lalu",
-      icon: FiUsers,
+      title: "Pesanan Diproses",
+      value: orderStatistics.processing,
+      change: `${orderStatistics.shipped} pesanan dikirim`,
+      icon: FiShoppingBag,
     },
     {
-      title: "Produk Aktif",
-      value: "247",
-      change: "-2,3% dari bulan lalu",
-      icon: FiBox,
-      negative: true,
+      title: "Produk Promo",
+      value: productStatistics.promo,
+      change: `${productStatistics.lowStock} produk stok menipis`,
+      icon: FiDollarSign,
     },
   ];
 
@@ -114,7 +152,7 @@ function Dashboard() {
                   <p className="text-sm text-slate-500">{stat.title}</p>
 
                   <h3 className="mt-2 text-2xl font-bold text-slate-900">
-                    {stat.value}
+                    {isLoading ? "..." : stat.value}
                   </h3>
                 </div>
 
@@ -123,12 +161,8 @@ function Dashboard() {
                 </div>
               </div>
 
-              <p
-                className={`mt-4 text-xs font-medium ${
-                  stat.negative ? "text-red-500" : "text-emerald-600"
-                }`}
-              >
-                {stat.change}
+              <p className="mt-4 text-xs font-medium text-emerald-600">
+                {isLoading ? "Memuat data..." : stat.change}
               </p>
             </div>
           );
