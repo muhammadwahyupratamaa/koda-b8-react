@@ -1,7 +1,7 @@
 import * as images from "../assets";
 import { api } from "./api";
 
-function getProductImage(imageKey) {
+export function getProductImage(imageKey) {
   if (!imageKey) {
     return images.productPlaceholder;
   }

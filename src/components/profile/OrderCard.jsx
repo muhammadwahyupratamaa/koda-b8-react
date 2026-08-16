@@ -1,5 +1,5 @@
 import { FiTruck, FiStar } from "react-icons/fi";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 
 function OrderCard({
   orderId,
@@ -46,7 +46,7 @@ function OrderCard({
               className="flex flex-col gap-3 sm:flex-row sm:items-center"
             >
               <img
-                src={productImages[product.image_url]}
+                src={getProductImage(product.image_url)}
                 alt={product.name}
                 className="h-14 w-14 sm:h-16 sm:w-16 rounded-lg object-cover"
               />

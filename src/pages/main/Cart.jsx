@@ -1,6 +1,6 @@
 import { FiHeart, FiMinus, FiPlus, FiTag, FiTrash2 } from "react-icons/fi";
 import { useEffect } from "react";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 import cartService from "../../services/cartService";
 import { useNavigate } from "react-router-dom";
 import wishlistService from "../../services/wishlistService";
@@ -84,7 +84,7 @@ function Cart() {
               <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <img
-                    src={productImages[item.image_url]}
+                    src={getProductImage(item.image_url)}
                     alt={item.name}
                     className="sm:w-24 sm:h-24 w-20 h-20 rounded-xl object-cover"
                   />

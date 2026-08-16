@@ -2,7 +2,7 @@ import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 import wishlistService from "../../services/wishlistService";
 import cartService from "../../services/cartService";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 import { useDispatch } from "react-redux";
 import { setCart } from "../../features/cart/cartSlice";
 import { setWishlist } from "../../features/wishlist/wishlistSlice";
@@ -24,7 +24,7 @@ function WishlistCard({ product, onRemove }) {
     <article className="w-full rounded-xl border border-gray-200 overflow-hidden bg-white">
       <div className="relative">
         <img
-          src={productImages[image_url]}
+          src={getProductImage(image_url)}
           alt={name}
           className="w-full aspect-square object-cover"
         />
