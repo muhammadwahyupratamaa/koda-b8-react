@@ -37,11 +37,6 @@ function AdminLayout() {
       path: "/admin/orders",
       icon: FiShoppingBag,
     },
-    {
-      title: "Pelanggan",
-      path: "/admin/customers",
-      icon: FiUsers,
-    },
   ];
 
   function handleLogout() {

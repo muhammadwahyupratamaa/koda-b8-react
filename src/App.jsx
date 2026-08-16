@@ -37,7 +37,6 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import ProductList from "./pages/admin/ProductList";
 import OrderList from "./pages/admin/OrderList";
-import CustomerList from "./pages/admin/CustomerList";
 
 const router = createBrowserRouter([
   // ================= AUTH =================
@@ -180,10 +179,6 @@ const router = createBrowserRouter([
       {
         path: "orders",
         element: <OrderList />,
-      },
-      {
-        path: "customers",
-        element: <CustomerList />,
       },
     ],
   },
