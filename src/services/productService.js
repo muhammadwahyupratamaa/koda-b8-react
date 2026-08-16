@@ -18,8 +18,38 @@ export function getProductImage(imageKey) {
 }
 
 const productService = {
-  async getProductsFromApi() {
-    const result = await api("/products");
+  async getProductsFromApi({
+    search = "",
+    categoryId = "",
+    minPrice = "",
+    maxPrice = "",
+    sort = "",
+  } = {}) {
+    const params = new URLSearchParams();
+
+    if (search.trim()) {
+      params.set("search", search.trim());
+    }
+
+    if (categoryId) {
+      params.set("category_id", categoryId);
+    }
+
+    if (minPrice) {
+      params.set("min_price", minPrice);
+    }
+
+    if (maxPrice) {
+      params.set("max_price", maxPrice);
+    }
+
+    if (sort) {
+      params.set("sort", sort);
+    }
+
+    const query = params.toString();
+
+    const result = await api(`/products${query ? `?${query}` : ""}`);
 
     return result.data.map((product) => ({
       id: Number(product.id),
@@ -28,7 +58,7 @@ const productService = {
       category: product.category,
       categoryId: Number(product.category_id),
       price: Number(product.price),
-      priceDisc: Number(product.price_disc),
+      priceDisc: product.price_disc ? Number(product.price_disc) : null,
       discount: Number(product.discount),
       rating: Number(product.rating),
       review: Number(product.review),

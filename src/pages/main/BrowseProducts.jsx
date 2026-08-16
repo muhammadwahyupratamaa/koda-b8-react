@@ -2,7 +2,7 @@ import { GoChevronRight } from "react-icons/go";
 import ProductCard from "../../components/home/ProductCard";
 import productService from "../../services/productService";
 import { useSearchParams } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 function BrowseProducts() {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,19 @@ function BrowseProducts() {
         setLoading(true);
         setError(null);
 
-        const products = await productService.getProductsFromApi();
+        const products = await productService.getProductsFromApi({
+          search: keyword,
+          minPrice: 0,
+          maxPrice: priceRange,
+          sort:
+            sortBy === "price-low"
+              ? "price_asc"
+              : sortBy === "price-high"
+                ? "price_desc"
+                : sortBy === "newest"
+                  ? "newest"
+                  : "popular",
+        });
 
         setDisplayedProducts(products);
       } catch (error) {
@@ -40,92 +52,39 @@ function BrowseProducts() {
     }
 
     loadProducts();
-  }, []);
+  }, [keyword, priceRange, sortBy]);
 
-  const filteredProducts = useMemo(() => {
-    let products = [...displayedProducts];
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [keyword, priceRange, sortBy]);
 
-    // Search
-    if (keyword.trim()) {
-      const search = keyword.trim().toLowerCase();
-
-      products = products.filter((product) => {
-        return (
-          product.name?.toLowerCase().includes(search) ||
-          product.brand?.toLowerCase().includes(search) ||
-          product.category?.toLowerCase().includes(search)
-        );
-      });
-    }
-
-    // Category
+  const filteredProducts = displayedProducts.filter((product) => {
     if (category.trim()) {
-      products = products.filter(
-        (product) => product.category?.toLowerCase() === category.toLowerCase(),
-      );
+      if (product.category?.toLowerCase() !== category.trim().toLowerCase()) {
+        return false;
+      }
     }
 
-    // Promo
-    if (promo === "true") {
-      products = products.filter((product) => Number(product.discount) >= 20);
+    if (promo === "true" && Number(product.discount) < 20) {
+      return false;
     }
 
-    // Brand
-    if (selectedBrands.length > 0) {
-      products = products.filter((product) =>
-        selectedBrands.includes(product.brand),
-      );
+    if (selectedBrands.length > 0 && !selectedBrands.includes(product.brand)) {
+      return false;
     }
 
-    // Rating
-    if (minRating > 0) {
-      products = products.filter(
-        (product) => Number(product.rating) >= minRating,
-      );
+    if (minRating > 0 && Number(product.rating) < minRating) {
+      return false;
     }
 
-    // Stock
-    if (stockOnly) {
-      products = products.filter((product) => Number(product.stock) > 0);
+    if (stockOnly && Number(product.stock) <= 0) {
+      return false;
     }
 
-    // Price
-    products = products.filter(
-      (product) => Number(product.price) <= priceRange,
-    );
-
-    // Sort
-    if (sortBy === "popular") {
-      products.sort((a, b) => Number(b.sold) - Number(a.sold));
-    }
-
-    if (sortBy === "price-low") {
-      products.sort((a, b) => Number(a.price) - Number(b.price));
-    }
-
-    if (sortBy === "price-high") {
-      products.sort((a, b) => Number(b.price) - Number(a.price));
-    }
-
-    if (sortBy === "newest") {
-      products.sort((a, b) => Number(b.id) - Number(a.id));
-    }
-
-    return products;
-  }, [
-    displayedProducts,
-    keyword,
-    category,
-    promo,
-    selectedBrands,
-    minRating,
-    stockOnly,
-    priceRange,
-    sortBy,
-  ]);
+    return true;
+  });
 
   const visibleProducts = filteredProducts.slice(0, visibleCount);
-
   const remainingProducts = filteredProducts.length - visibleCount;
 
   const handleLoadMore = () => {
@@ -144,15 +103,15 @@ function BrowseProducts() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8">
-      <section className="flex items-center gap-2 text-sm text-gray-400 mb-6">
+      <section className="mb-6 flex items-center gap-2 text-sm text-gray-400">
         <span>Beranda</span>
 
-        <GoChevronRight className="w-4 h-4" />
+        <GoChevronRight className="h-4 w-4" />
 
         <span>Toko</span>
       </section>
 
-      <h1 className="text-2xl sm:text-3xl font-semibold mb-8">
+      <h1 className="mb-8 text-2xl font-semibold sm:text-3xl">
         {keyword
           ? `Hasil Pencarian "${keyword}"`
           : category
@@ -160,10 +119,10 @@ function BrowseProducts() {
             : "Semua Produk"}
       </h1>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
-        <aside className="hidden lg:block border border-gray-200 rounded-xl p-5 h-fit">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
+        <aside className="hidden h-fit rounded-xl border border-gray-200 p-5 lg:block">
           <div className="mb-8">
-            <h2 className="text-base font-semibold mb-5">Harga</h2>
+            <h2 className="mb-5 text-base font-semibold">Harga</h2>
 
             <div className="flex justify-between text-xs text-gray-400">
               <span>Rp 0</span>
@@ -186,7 +145,7 @@ function BrowseProducts() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-base font-semibold mb-5">Brand : </h2>
+            <h2 className="mb-5 text-base font-semibold">Brand :</h2>
 
             <div className="flex flex-col gap-3 text-sm text-gray-500">
               {[
@@ -216,7 +175,7 @@ function BrowseProducts() {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-base font-semibold mb-5">Rating Minimum</h2>
+            <h2 className="mb-5 text-base font-semibold">Rating Minimum</h2>
 
             <div className="flex flex-col gap-3 text-sm text-gray-500">
               <label className="flex items-center gap-2">
@@ -260,7 +219,7 @@ function BrowseProducts() {
           </div>
 
           <div>
-            <h2 className="text-base font-semibold mb-5">Ketersediaan</h2>
+            <h2 className="mb-5 text-base font-semibold">Ketersediaan</h2>
 
             <label className="flex items-center gap-2 text-sm text-gray-500">
               <input
@@ -285,7 +244,7 @@ function BrowseProducts() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full sm:w-auto border rounded-lg px-3 py-2 text-sm outline-none cursor-pointer"
+                className="w-full cursor-pointer rounded-lg border px-3 py-2 text-sm outline-none sm:w-auto"
               >
                 <option value="popular">Paling Populer</option>
                 <option value="price-low">Harga Terendah</option>
@@ -308,7 +267,7 @@ function BrowseProducts() {
               <p className="text-slate-500">Produk tidak ditemukan.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
               {visibleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -316,11 +275,11 @@ function BrowseProducts() {
           )}
 
           {!loading && !error && visibleCount < filteredProducts.length && (
-            <div className="flex justify-center mt-10">
+            <div className="mt-10 flex justify-center">
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="border border-blue-600 text-blue-600 rounded-lg w-full sm:w-auto px-8 py-3 text-sm font-medium hover:bg-blue-600 hover:text-white transition-all duration-300 cursor-pointer"
+                className="w-full cursor-pointer rounded-lg border border-blue-600 px-8 py-3 text-sm font-medium text-blue-600 transition-all duration-300 hover:bg-blue-600 hover:text-white sm:w-auto"
               >
                 Muat Lebih Banyak ({Math.min(6, remainingProducts)} produk lagi)
               </button>
