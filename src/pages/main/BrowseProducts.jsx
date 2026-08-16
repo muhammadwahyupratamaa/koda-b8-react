@@ -19,8 +19,17 @@ function BrowseProducts() {
   const [minRating, setMinRating] = useState(0);
   const [stockOnly, setStockOnly] = useState(false);
   const [priceRange, setPriceRange] = useState(20000000);
+  const [debouncedPriceRange, setDebouncedPriceRange] = useState(20000000);
   const [sortBy, setSortBy] = useState("popular");
   const [visibleCount, setVisibleCount] = useState(6);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedPriceRange(priceRange);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [priceRange]);
 
   useEffect(() => {
     async function loadProducts() {
@@ -31,7 +40,7 @@ function BrowseProducts() {
         const products = await productService.getProductsFromApi({
           search: keyword,
           minPrice: 0,
-          maxPrice: priceRange,
+          maxPrice: debouncedPriceRange,
           sort:
             sortBy === "price-low"
               ? "price_asc"
@@ -52,11 +61,11 @@ function BrowseProducts() {
     }
 
     loadProducts();
-  }, [keyword, priceRange, sortBy]);
+  }, [keyword, debouncedPriceRange, sortBy]);
 
   useEffect(() => {
     setVisibleCount(6);
-  }, [keyword, priceRange, sortBy]);
+  }, [keyword, debouncedPriceRange, sortBy]);
 
   const filteredProducts = displayedProducts.filter((product) => {
     if (category.trim()) {
