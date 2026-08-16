@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import storageService from "../../services/storageService";
 import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 
 function PaymentPage() {
   const navigate = useNavigate();
@@ -234,8 +234,7 @@ function PaymentPage() {
               <div className="flex gap-3 items-center">
                 <img
                   src={
-                    productImages[item.image_url] ||
-                    productImages.productPlaceholder
+                    getProductImage(item.image_url)
                   }
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"

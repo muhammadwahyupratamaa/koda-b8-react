@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import cartService from "../../services/cartService";
 import checkoutService from "../../services/checkoutService";
 import storageService from "../../services/storageService";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../../features/cart/cartSlice";
 
@@ -145,10 +145,7 @@ function ConfirmationPage() {
               >
                 <div className="flex gap-3">
                   <img
-                    src={
-                      productImages[item.image_url] ||
-                      productImages.productPlaceholder
-                    }
+                    src={getProductImage(item.image_url)}
                     alt={item.name}
                     className="h-12 w-12 rounded-lg object-cover sm:h-14 sm:w-14"
                   />
@@ -241,10 +238,7 @@ function ConfirmationPage() {
             >
               <div className="flex gap-3 items-center">
                 <img
-                  src={
-                    productImages[item.image_url] ||
-                    productImages.productPlaceholder
-                  }
+                  src={getProductImage(item.image_url)}
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
                 />

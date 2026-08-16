@@ -1,5 +1,5 @@
 import { FiTruck, FiLock, FiChevronRight } from "react-icons/fi";
-import { productImages } from "../../assets";
+import { getProductImage } from "../../services/productService";
 import { useNavigate } from "react-router-dom";
 import addressService from "../../services/addressService";
 import profileService from "../../services/profileService";
@@ -440,8 +440,7 @@ function ShippingPage() {
               <div className="flex items-center gap-3">
                 <img
                   src={
-                    productImages[item.image_url] ||
-                    productImages.productPlaceholder
+                    getProductImage(item.image_url)
                   }
                   alt={item.name}
                   className="w-14 h-14 rounded-lg object-cover"
