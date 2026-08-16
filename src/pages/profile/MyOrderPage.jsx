@@ -18,7 +18,7 @@ function MyOrderPage() {
       return;
     }
 
-    const wsUrl = `ws://localhost:8081?token=${token}`;
+    const wsUrl = `${import.meta.env.VITE_WS_URL}?token=${token}`;
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
