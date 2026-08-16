@@ -1,12 +1,15 @@
 import AuthLayout from "../../components/auth/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Mail, Lock, User, Eye, ArrowRight } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from "lucide-react";
 import registerSchema from "../../validation/registerSchema";
 import authService from "../../services/authService";
 
 function Register() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -129,20 +132,35 @@ function Register() {
             <div
               className={`flex w-full items-center bg-gray-100 justify-between gap-5 border ${errors.password ? "border-red-500" : "border-gray-300"} rounded-xl p-3`}
             >
-              <div className="flex gap-5">
+              <div className="flex gap-10">
                 <Lock
                   className={`w-5 h-5 ${errors.password ? "text-red-500" : "text-gray-300"}`}
                 />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password")}
                   id="password"
                   placeholder="Minimal 6 karakter"
                   className="bg-transparent outline-none flex-1"
                 />
-              </div>
 
-              <Eye className="w-5 h-5 text-gray-400" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label={
+                    showPassword
+                      ? "Sembunyikan kata sandi"
+                      : "Tampilkan kata sandi"
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
             {errors.password && (
               <p className="text-sm text-red-500 ">
@@ -161,20 +179,35 @@ function Register() {
             <div
               className={`flex w-full items-center justify-between bg-gray-100 gap-5 border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} rounded-xl p-3`}
             >
-              <div className="flex gap-5">
+              <div className="flex gap-10">
                 <Lock
                   className={`w-5 h-5 ${errors.confirmPassword ? "text-red-500" : "text-gray-300"}`}
                 />
                 <input
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   {...register("confirmPassword")}
                   id="confirmPassword"
                   placeholder="Ulangi Kata Sandi"
                   className="bg-transparent outline-none flex-1"
                 />
-              </div>
 
-              <Eye className="w-5 h-5 text-gray-400" />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label={
+                    showConfirmPassword
+                      ? "Sembunyikan konfirmasi kata sandi"
+                      : "Tampilkan konfirmasi kata sandi"
+                  }
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
             {errors.confirmPassword && (
               <p className="text-sm text-red-500 ">

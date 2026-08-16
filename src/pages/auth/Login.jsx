@@ -1,15 +1,17 @@
 import AuthLayout from "../../components/auth/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, SquareArrowRight, Eye } from "lucide-react";
+import { Mail, Lock, SquareArrowRight, Eye, EyeOff } from "lucide-react";
 import authService from "../../services/authService";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import loginSchema from "../../validation/loginSchema";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -114,20 +116,35 @@ function Login() {
                 errors.password ? "border-red-500" : "border-gray-300"
               } rounded-xl px-5 py-4`}
             >
-              <div className="flex gap-5">
+              <div className="flex gap-8">
                 <Lock
                   className={`w-5 h-5  text-gray-400 ${errors.password ? "text-red-500" : "text-gray-300"}`}
                 />
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password")}
                   id="password"
                   placeholder="Masukkan Kata sandi"
                   className="bg-transparent outline-none flex-1"
                 />
-              </div>
 
-              <Eye className="w-5 h-5 text-gray-400" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="text-gray-400 hover:text-gray-600"
+                  aria-label={
+                    showPassword
+                      ? "Sembunyikan kata sandi"
+                      : "Tampilkan kata sandi"
+                  }
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
             {errors.password && (
               <p className="text-sm text-red-500 mt-2 ml-1">
